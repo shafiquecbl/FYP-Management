@@ -8,6 +8,6 @@
         <bitmap
             android:gravity="center"
             android:background="#FC9A1E"
-            android:src="@mipmap/launch_image" />
+            android:src="@mipmap/ic_launcher1" />
     </item>
 </layer-list>

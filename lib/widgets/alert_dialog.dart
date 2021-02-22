@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
-import 'package:shop_app/models/verify_email.dart';
+import 'package:fyp_management/models/verify_email.dart';
 
 showAlertDialog(BuildContext context, title, content) {
   // set up the button
-  Widget okButton = CupertinoDialogAction(
+  Widget okButton = FlatButton(
     child: Text("Ok"),
     onPressed: () {
       Navigator.of(context).pop();
@@ -12,7 +11,7 @@ showAlertDialog(BuildContext context, title, content) {
   );
 
   // set up the AlertDialog
-  CupertinoAlertDialog alert = CupertinoAlertDialog(
+  AlertDialog alert = AlertDialog(
     title: Text(title),
     content: Text(content),
     actions: [
@@ -31,15 +30,15 @@ showAlertDialog(BuildContext context, title, content) {
 
 verifyEmailDialog(BuildContext context, title, content) {
   // set up the button
-  Widget okButton = CupertinoDialogAction(
+  Widget okButton = FlatButton(
     child: Text("Verify"),
     onPressed: () {
-      Navigator.pushNamed(context, VerifyEmail.routeName);
+      Navigator.pushReplacementNamed(context, VerifyEmail.routeName);
     },
   );
 
   // set up the AlertDialog
-  CupertinoAlertDialog alert = CupertinoAlertDialog(
+  AlertDialog alert = AlertDialog(
     title: Text(title),
     content: Text(content),
     actions: [

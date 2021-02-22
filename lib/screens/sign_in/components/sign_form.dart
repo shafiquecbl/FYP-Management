@@ -3,16 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shop_app/components/custom_surfix_icon.dart';
-import 'package:shop_app/components/form_error.dart';
-import 'package:shop_app/screens/forgot_password/forgot_password_screen.dart';
-import 'package:shop_app/screens/Home_Screen/home_screen.dart';
-import 'package:shop_app/widgets/alert_dialog.dart';
-import 'package:shop_app/widgets/outline_input_border.dart';
-import 'package:shop_app/widgets/snack_bar.dart';
+import 'package:fyp_management/components/custom_surfix_icon.dart';
+import 'package:fyp_management/components/form_error.dart';
+import 'package:fyp_management/screens/forgot_password/forgot_password_screen.dart';
+import 'package:fyp_management/widgets/alert_dialog.dart';
+import 'package:fyp_management/widgets/outline_input_border.dart';
+import 'package:fyp_management/widgets/snack_bar.dart';
 import '../../../components/default_button.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
+import 'package:fyp_management/screens/Home_Screen/home_screen.dart';
 
 class SignForm extends StatefulWidget {
   @override
@@ -26,6 +26,7 @@ class _SignFormState extends State<SignForm> {
   String email;
   String password;
   bool remember = false;
+  bool isLoading = false;
 
   final List<String> errors = [];
 
@@ -54,24 +55,17 @@ class _SignFormState extends State<SignForm> {
           buildPasswordFormField(),
           SizedBox(height: getProportionateScreenHeight(30)),
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Checkbox(
-                value: remember,
-                activeColor: kPrimaryColor,
-                onChanged: (value) {
-                  setState(() {
-                    remember = value;
-                  });
-                },
-              ),
-              Text("Remember me"),
-              Spacer(),
-              GestureDetector(
-                onTap: () => Navigator.pushNamed(
-                    context, ForgotPasswordScreen.routeName),
-                child: Text(
-                  "Forgot Password",
-                  style: TextStyle(decoration: TextDecoration.underline),
+              Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: GestureDetector(
+                  onTap: () => Navigator.pushNamed(
+                      context, ForgotPasswordScreen.routeName),
+                  child: Text(
+                    "Forgot Password",
+                    style: TextStyle(decoration: TextDecoration.underline),
+                  ),
                 ),
               )
             ],
@@ -83,6 +77,7 @@ class _SignFormState extends State<SignForm> {
             press: () async {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
+                user = auth.currentUser;
                 FirebaseFirestore.instance.terminate();
                 FirebaseFirestore.instance
                     .clearPersistence()
@@ -172,7 +167,7 @@ class _SignFormState extends State<SignForm> {
         .then((value) {
       if (value.user.emailVerified) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => MainScreen()),
+            MaterialPageRoute(builder: (context) => HomeScreen()),
             (Route<dynamic> route) => false);
       } else {
         String title = "Email not verified";

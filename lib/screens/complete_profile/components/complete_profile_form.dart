@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shop_app/components/custom_surfix_icon.dart';
-import 'package:shop_app/components/default_button.dart';
-import 'package:shop_app/components/form_error.dart';
+import 'package:fyp_management/components/custom_surfix_icon.dart';
+import 'package:fyp_management/components/default_button.dart';
+import 'package:fyp_management/components/form_error.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shop_app/models/updateData.dart';
-import 'package:shop_app/widgets/outline_input_border.dart';
+import 'package:fyp_management/models/updateData.dart';
+import 'package:fyp_management/widgets/outline_input_border.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 
@@ -15,17 +15,12 @@ class CompleteProfileForm extends StatefulWidget {
 }
 
 class _CompleteProfileFormState extends State<CompleteProfileForm> {
-  UpdateData updateData = UpdateData();
   final _formKey = GlobalKey<FormState>();
   final List<String> errors = [];
 
   String name;
   String gender;
-  String address;
   String phoneNo;
-  // String smsCode;
-  // String verificationCode;
-  // String email;
 
   final auth = FirebaseAuth.instance;
   User user;
@@ -64,51 +59,21 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         children: [
           buildNameFormField(),
           SizedBox(height: getProportionateScreenHeight(30)),
-          buildDOBFormField(),
+          buildGenderFormField(),
           SizedBox(height: getProportionateScreenHeight(30)),
           buildPhoneNumberFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildAddressFormField(),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
             text: "Continue",
             press: () {
               if (_formKey.currentState.validate()) {
-                updateData.saveUserProfile(
-                    context, name, gender, phoneNo, address);
+                UpdateData().saveUserProfile(context, name, gender, phoneNo);
                 auth.currentUser.updateProfile(displayName: name);
               }
             },
           ),
         ],
-      ),
-    );
-  }
-
-  TextFormField buildAddressFormField() {
-    return TextFormField(
-      onSaved: (newValue) => address = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kAddressNullError);
-        }
-        address = value;
-      },
-      validator: (value) {
-        if (value.isEmpty) {
-          addError(error: kAddressNullError);
-          return "";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        border: outlineBorder,
-        labelText: "Address",
-        hintText: "Enter your phone address",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon:
-            CustomSurffixIcon(svgIcon: "assets/icons/Location point.svg"),
       ),
     );
   }
@@ -142,7 +107,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     );
   }
 
-  DropdownButtonFormField buildDOBFormField() {
+  DropdownButtonFormField buildGenderFormField() {
     return DropdownButtonFormField(
       onSaved: (newValue) {
         gender = newValue;

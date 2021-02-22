@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shop_app/components/custom_surfix_icon.dart';
-import 'package:shop_app/components/default_button.dart';
-import 'package:shop_app/components/form_error.dart';
-import 'package:shop_app/models/verify_email.dart';
-import 'package:shop_app/widgets/outline_input_border.dart';
-import 'package:shop_app/widgets/snack_bar.dart';
+import 'package:fyp_management/components/custom_surfix_icon.dart';
+import 'package:fyp_management/components/default_button.dart';
+import 'package:fyp_management/components/form_error.dart';
+import 'package:fyp_management/models/verify_email.dart';
+import 'package:fyp_management/widgets/outline_input_border.dart';
+import 'package:fyp_management/widgets/snack_bar.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
@@ -24,7 +24,6 @@ class _SignUpFormState extends State<SignUpForm> {
   String password;
   // ignore: non_constant_identifier_names
   String conform_password;
-  bool remember = false;
   // Strings Ends
   final List<String> errors = [];
 
@@ -183,7 +182,7 @@ class _SignUpFormState extends State<SignUpForm> {
       await auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((currentUser) {
-        Navigator.pushNamed(context, VerifyEmail.routeName);
+        Navigator.pushReplacementNamed(context, VerifyEmail.routeName);
       }).catchError((e) {
         Snack_Bar.show(context, e.message);
       });

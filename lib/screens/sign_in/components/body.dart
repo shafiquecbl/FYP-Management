@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/components/no_account_text.dart';
-import 'package:shop_app/components/socal_card.dart';
+import 'package:fyp_management/components/no_account_text.dart';
 import '../../../size_config.dart';
 import 'sign_form.dart';
 
@@ -32,18 +31,6 @@ class Body extends StatelessWidget {
                 SizedBox(height: SizeConfig.screenHeight * 0.08),
                 SignForm(),
                 SizedBox(height: SizeConfig.screenHeight * 0.08),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SocialCard(
-                      icon: "assets/icons/google-icon.svg",
-                      press: () {
-                        
-                      },
-                    ),
-                  ],
-                ),
-                SizedBox(height: getProportionateScreenHeight(20)),
                 NoAccountText(),
               ],
             ),

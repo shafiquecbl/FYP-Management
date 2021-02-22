@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/components/custom_surfix_icon.dart';
-import 'package:shop_app/components/default_button.dart';
-import 'package:shop_app/components/form_error.dart';
-import 'package:shop_app/components/no_account_text.dart';
-import 'package:shop_app/size_config.dart';
-import 'package:shop_app/widgets/outline_input_border.dart';
+import 'package:fyp_management/components/custom_surfix_icon.dart';
+import 'package:fyp_management/components/default_button.dart';
+import 'package:fyp_management/components/form_error.dart';
+import 'package:fyp_management/components/no_account_text.dart';
+import 'package:fyp_management/size_config.dart';
+import 'package:fyp_management/widgets/outline_input_border.dart';
 
 import '../../../constants.dart';
 

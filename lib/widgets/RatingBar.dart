@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/constants.dart';
+import 'package:fyp_management/constants.dart';
 
 class RatingBar extends StatelessWidget {
   final double rating;

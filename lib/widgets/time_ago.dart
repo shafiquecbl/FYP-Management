@@ -1,11 +1,10 @@
 import 'package:intl/intl.dart';
 
-class TimeAgo {
-  static String timeAgoSinceDate(String dateString,
-      {bool numericDates = true}) {
-    DateTime notificationDate =
-        DateFormat("dd-MM-yyyy h:mma").parse(dateString);
-    final difference = DateTime.now().difference(notificationDate);
+class TimeAgo{
+  static String timeAgoSinceDate(String dateString, {bool numericDates = true}) {
+    DateTime notificationDate = DateFormat("dd-MM-yyyy h:mma").parse(dateString);
+    final date2 = DateTime.now();
+    final difference = date2.difference(notificationDate);
 
     if (difference.inDays > 8) {
       return dateString;
@@ -29,4 +28,5 @@ class TimeAgo {
       return 'Just now';
     }
   }
-}
+
+} 

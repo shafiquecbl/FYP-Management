@@ -12,9 +12,9 @@ class Snack_Bar {
     BuildContext context,
     String message,
   ) {
-    ScaffoldMessenger.of(context).showSnackBar(
+    // ignore: deprecated_member_use
+    Scaffold.of(context).showSnackBar(
       SnackBar(
-        duration: Duration(seconds: 2),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
         content: Text(message),
@@ -25,7 +25,8 @@ class Snack_Bar {
           textColor: Color(0xFFFAF2FB),
           label: 'OK',
           onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            // ignore: deprecated_member_use
+            Scaffold.of(context).hideCurrentSnackBar();
           },
         ),
       ),

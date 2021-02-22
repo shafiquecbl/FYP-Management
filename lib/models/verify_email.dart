@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:shop_app/constants.dart';
-import 'package:shop_app/models/setData.dart';
-import 'package:shop_app/screens/complete_profile/complete_profile_screen.dart';
+import 'package:fyp_management/constants.dart';
+import 'package:fyp_management/models/setData.dart';
+import 'package:fyp_management/screens/complete_profile/complete_profile_screen.dart';
 
 final auth = FirebaseAuth.instance;
 User user = auth.currentUser;
@@ -49,7 +49,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SpinKitCircle(
+            SpinKitDoubleBounce(
               color: kPrimaryColor,
             ),
             SizedBox(height: 20),
@@ -64,10 +64,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
               style:
                   TextStyle(fontWeight: FontWeight.w500, color: kPrimaryColor),
             ),
-            SizedBox(height: 5),
-            Text("( Verify first to continue! )",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.green)),
           ],
         ),
       ),
@@ -79,7 +75,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     await user.reload();
     if (user.emailVerified) {
       timer.cancel();
-      Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+      Navigator.pushReplacementNamed(context, CompleteProfileScreen.routeName);
       SetData().saveNewUser(email, context);
     }
   }

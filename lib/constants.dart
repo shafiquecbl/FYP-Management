@@ -1,11 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shop_app/size_config.dart';
+import 'package:fyp_management/size_config.dart';
 
 const kPrimaryColor = Color(0xFFFF7643);
 const kPrimaryLightColor = Color(0xFFFFECDF);
 const kGreenColor = Color(0xFF388E3C);
-const greenColor = Colors.green;
 const kWhiteColor = Colors.white;
 const hexColor = Color(0xFFf5f4f4);
 const kOfferColor = Color(0xFFE3E9F5);
@@ -45,17 +43,6 @@ const String kMatchPassError = "Passwords don't match";
 const String kNamelNullError = "Please Enter your name";
 const String kPhoneNumberNullError = "Please Enter your phone number";
 const String kAddressNullError = "Please Enter your address";
-const String kAboutNullError = "Please Enter about yourself";
-const String kEducationNullError = "Please Enter your education";
-const String kSkillsNullError = "Please Enter your specialities";
-const String kLanguagesNullError = "Please Enter your languages";
-const String kWorkNullError = "Please Enter your work";
-const String kDescriptionNullError = "Please add task Description";
-const String kCategoryNullError = "Please select category";
-const String kdurationNullError = "Please select duration";
-const String kbudgetNullError = "Please add your budget";
-final String initText =
-    "Hi ${FirebaseAuth.instance.currentUser.displayName}. This is Muhammad Shafique from Instant Tasker. I'll be accompanying you in this chat, please don't share your contact details or any other personal information in this chat.";
 
 final otpInputDecoration = InputDecoration(
   contentPadding:
@@ -92,21 +79,3 @@ class UniversalVariables {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight);
 }
-
-BoxDecoration boxDecoration = BoxDecoration(
-  borderRadius: BorderRadius.all(Radius.circular(5)),
-  border: Border.all(color: Colors.grey[200]),
-);
-
-Divider divider = new Divider(
-  height: 1,
-  color: Colors.grey,
-);
-
-Padding dividerPad = new Padding(
-  padding: const EdgeInsets.only(left: 70),
-  child: Divider(
-    height: 1,
-    color: Colors.grey,
-  ),
-);
