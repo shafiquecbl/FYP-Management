@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/components/custom_surfix_icon.dart';
 import 'package:fyp_management/components/default_button.dart';
 import 'package:fyp_management/components/form_error.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/size_config.dart';
+import 'package:fyp_management/widgets/alert_dialog.dart';
 import 'package:fyp_management/widgets/outline_input_border.dart';
 import 'package:fyp_management/widgets/snack_bar.dart';
 import 'package:fyp_management/models/setData.dart';
@@ -21,7 +23,6 @@ class _AddUsersFormState extends State<AddUsersForm> {
 
   String email;
   String password;
-  String confirmPassword;
 
   String department;
   String batch;
@@ -62,9 +63,6 @@ class _AddUsersFormState extends State<AddUsersForm> {
           SizedBox(height: getProportionateScreenHeight(30)),
           buildEmailFormField(),
           SizedBox(height: getProportionateScreenHeight(30)),
-          buildPasswordFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildConformPassFormField(),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
@@ -77,8 +75,16 @@ class _AddUsersFormState extends State<AddUsersForm> {
               }
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
-                createUser(email, password, context).then(
-                    (value) => print(FirebaseAuth.instance.currentUser.email));
+                if (batch == "B") {
+                  addError(error: "Please select batch");
+                }
+                if (batch != "B") {
+                  removeError(error: "Please select batch");
+                  password = email.substring(0, 12);
+                  removeError(error: kInvalidEmailError);
+                  show();
+                  createUser(email, password, context);
+                }
               }
             },
           ),
@@ -139,79 +145,6 @@ class _AddUsersFormState extends State<AddUsersForm> {
 
   //////////////////////////////////////////////////////////////////////////////
 
-  TextFormField buildConformPassFormField() {
-    return TextFormField(
-      obscureText: true,
-      onSaved: (newValue) => confirmPassword = newValue,
-      onChanged: (value) {
-        setState(() {
-          if (value.isNotEmpty) {
-            removeError(error: kPassNullError);
-          } else if (value.isNotEmpty && password == confirmPassword) {
-            removeError(error: kMatchPassError);
-          }
-          confirmPassword = value;
-        });
-      },
-      validator: (value) {
-        if (value.isEmpty) {
-          addError(error: kPassNullError);
-          return "";
-        } else if ((password != value)) {
-          addError(error: kMatchPassError);
-          return "";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        border: outlineBorder,
-        labelText: "Confirm Password",
-        hintText: "Re-enter your password",
-        // If  you are using latest version of flutter then lable text and hint text shown like this
-        // if you r using flutter less then 1.20.* then maybe this is not working properly
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
-      ),
-    );
-  }
-
-  TextFormField buildPasswordFormField() {
-    return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      obscureText: true,
-      onSaved: (newValue) => password = newValue,
-      onChanged: (value) {
-        setState(() {
-          if (value.isNotEmpty) {
-            removeError(error: kPassNullError);
-          } else if (value.length >= 8) {
-            removeError(error: kShortPassError);
-          }
-          password = value;
-        });
-      },
-      validator: (value) {
-        if (value.isEmpty) {
-          addError(error: kPassNullError);
-          return "";
-        } else if (value.length < 8) {
-          addError(error: kShortPassError);
-          return "";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        border: outlineBorder,
-        labelText: "Password",
-        hintText: "Enter your password",
-        // If  you are using latest version of flutter then lable text and hint text shown like this
-        // if you r using flutter less then 1.20.* then maybe this is not working properly
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
-      ),
-    );
-  }
-
   TextFormField buildEmailFormField() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
@@ -221,7 +154,7 @@ class _AddUsersFormState extends State<AddUsersForm> {
           if (value.isNotEmpty) {
             removeError(error: kEmailNullError);
           }
-          // else if (emailValidatorRegExp.hasMatch(value)) {
+          // else if (studentEmail.hasMatch(value)) {
           //   removeError(error: kInvalidEmailError);
           // }
           email = value;
@@ -232,7 +165,7 @@ class _AddUsersFormState extends State<AddUsersForm> {
           addError(error: kEmailNullError);
           return "";
         }
-        // else if (!emailValidatorRegExp.hasMatch(value)) {
+        // else if (!studentEmail.hasMatch(value)) {
         //   addError(error: kInvalidEmailError);
         //   return "";
         // }
@@ -267,5 +200,15 @@ class _AddUsersFormState extends State<AddUsersForm> {
       Snack_Bar.show(context, e.message);
     }
     await app.delete();
+  }
+
+  show() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

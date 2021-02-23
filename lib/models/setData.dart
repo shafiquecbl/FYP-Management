@@ -32,10 +32,8 @@ class SetData {
       @required batch,
       @required department,
       @required regNo}) async {
-    final CollectionReference students = FirebaseFirestore.instance
-        .collection('Students')
-        .doc('$department')
-        .collection('$batch');
+    final CollectionReference students =
+        FirebaseFirestore.instance.collection('Students');
     students.doc(email).set({
       'Email': email,
       'Uid': uid,
@@ -43,9 +41,16 @@ class SetData {
       'Batch': batch,
       'Registeration No': regNo
     }).then((value) {
+      Navigator.pop(context);
       Snack_Bar.show(context, "Student added successfully!");
     }).catchError((e) {
-      Snack_Bar.show(context, e.message);
+      pop(context).then((value) {
+        Snack_Bar.show(context, e.message);
+      });
     });
+  }
+
+  pop(context) {
+    Navigator.pop(context);
   }
 }
