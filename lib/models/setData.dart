@@ -3,12 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fyp_management/screens/complete_profile/complete_profile_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:fyp_management/widgets/snack_bar.dart';
 
 class SetData {
-  final User user = FirebaseAuth.instance.currentUser;
-  final email = FirebaseAuth.instance.currentUser.email;
   String uid = FirebaseAuth.instance.currentUser.uid.toString();
-  String name = FirebaseAuth.instance.currentUser.displayName;
   static DateTime now = DateTime.now();
   String dateTime = DateFormat("dd-MM-yyyy h:mma").format(now);
 
@@ -27,5 +25,27 @@ class SetData {
         .catchError((e) {
           print(e);
         });
+  }
+
+  Future addStudent(context,
+      {@required email,
+      @required batch,
+      @required department,
+      @required regNo}) async {
+    final CollectionReference students = FirebaseFirestore.instance
+        .collection('Students')
+        .doc('$department')
+        .collection('$batch');
+    students.doc(email).set({
+      'Email': email,
+      'Uid': uid,
+      'Department': department,
+      'Batch': batch,
+      'Registeration No': regNo
+    }).then((value) {
+      Snack_Bar.show(context, "Student added successfully!");
+    }).catchError((e) {
+      Snack_Bar.show(context, e.message);
+    });
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp_management/constants.dart';
-import 'package:fyp_management/screens/Home_Screen/Users/users.dart';
+import 'package:fyp_management/screens/Home_Screen/Users/Add Users/add_users.dart';
 
 class GridDashboard extends StatelessWidget {
   @override
@@ -28,7 +28,7 @@ class GridDashboard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => ManageUsers(),
+              builder: (_) => AddUsers(),
             ),
           );
         },
