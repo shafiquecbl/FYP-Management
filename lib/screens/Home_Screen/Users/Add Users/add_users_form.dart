@@ -185,32 +185,12 @@ class _AddUsersFormState extends State<AddUsersForm> {
   }
 
   Future createUser(email, password, context) async {
-    if (Firebase.apps.length == 1) {
-      FirebaseApp app = await Firebase.initializeApp(
-          name: 'Secondary', options: Firebase.app().options);
-
-      await FirebaseAuth.instanceFor(app: app)
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) async {
-        SetData().addStudent(context,
-            email: email,
-            batch: batch,
-            department: department,
-            regNo: password);
-        await app.delete();
-      }).catchError((e) {
-        FirebaseAuth.instanceFor(app: app).signOut();
-        Navigator.pop(context);
-        Snack_Bar.show(context, e.message);
-      });
-    }
-
     await FirebaseAuth.instanceFor(app: fbApp)
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) async {
       SetData().addStudent(context,
           email: email, batch: batch, department: department, regNo: password);
-      await fbApp.delete();
+      FirebaseAuth.instanceFor(app: fbApp).signOut();
     }).catchError((e) {
       FirebaseAuth.instanceFor(app: fbApp).signOut();
       Navigator.pop(context);

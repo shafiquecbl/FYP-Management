@@ -16,6 +16,9 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    if (Firebase.apps.length == 1) {
+      createFBapp();
+    }
     User user = FirebaseAuth.instance.currentUser;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -26,5 +29,10 @@ class MyApp extends StatelessWidget {
           : SignInScreen.routeName,
       routes: routes,
     );
+  }
+
+  createFBapp() async {
+    await Firebase.initializeApp(
+        name: 'Secondary', options: Firebase.app().options);
   }
 }
