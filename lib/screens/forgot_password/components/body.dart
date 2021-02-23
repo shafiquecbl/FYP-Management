@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fyp_management/components/custom_surfix_icon.dart';
 import 'package:fyp_management/components/default_button.dart';
 import 'package:fyp_management/components/form_error.dart';
-import 'package:fyp_management/components/no_account_text.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/outline_input_border.dart';
 
@@ -108,7 +107,6 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
             },
           ),
           SizedBox(height: SizeConfig.screenHeight * 0.1),
-          NoAccountText(),
         ],
       ),
     );

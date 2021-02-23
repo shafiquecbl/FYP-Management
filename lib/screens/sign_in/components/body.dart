@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_management/components/no_account_text.dart';
 import '../../../size_config.dart';
 import 'sign_form.dart';
 
@@ -31,7 +30,6 @@ class Body extends StatelessWidget {
                 SizedBox(height: SizeConfig.screenHeight * 0.08),
                 SignForm(),
                 SizedBox(height: SizeConfig.screenHeight * 0.08),
-                NoAccountText(),
               ],
             ),
           ),

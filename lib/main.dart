@@ -16,23 +16,14 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (Firebase.apps.length == 1) {
-      createFBapp();
-    }
     User user = FirebaseAuth.instance.currentUser;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Admin App',
+      title: 'FYP Management',
       theme: theme(),
-      initialRoute: user != null && user.emailVerified
-          ? HomeScreen.routeName
-          : SignInScreen.routeName,
+      initialRoute:
+          user != null ? MainScreen.routeName : SignInScreen.routeName,
       routes: routes,
     );
-  }
-
-  createFBapp() async {
-    await Firebase.initializeApp(
-        name: 'Secondary', options: Firebase.app().options);
   }
 }

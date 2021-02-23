@@ -1,43 +1,25 @@
 import "package:flutter/material.dart";
 import 'package:fyp_management/constants.dart';
-import 'package:fyp_management/models/verify_email.dart';
 
-verifyEmailDialog(BuildContext context, title, content) {
-  // set up the button
-  Widget okButton = FlatButton(
-    child: Text("Verify"),
-    onPressed: () {
-      Navigator.pushReplacementNamed(context, VerifyEmail.routeName);
-    },
-  );
-
-  // set up the AlertDialog
+showLoadingDialog(context) {
   AlertDialog alert = AlertDialog(
-    title: Text(title),
-    content: Text(content),
-    actions: [
-      okButton,
-    ],
+    contentPadding: EdgeInsets.fromLTRB(0, 30, 0, 30),
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        CircularProgressIndicator.adaptive(
+          valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
+        ),
+        Text("Please Wait...")
+      ],
+    ),
   );
 
-  // show the dialog
   showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (BuildContext context) {
       return alert;
     },
   );
 }
-
-AlertDialog alert = AlertDialog(
-  contentPadding: EdgeInsets.fromLTRB(0, 30, 0, 30),
-  content: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      CircularProgressIndicator.adaptive(
-        valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
-      ),
-      Text("Adding Student...")
-    ],
-  ),
-);

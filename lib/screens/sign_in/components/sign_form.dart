@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fyp_management/components/custom_surfix_icon.dart';
 import 'package:fyp_management/components/form_error.dart';
+import 'package:fyp_management/screens/Home_Screen/home_screen.dart';
 import 'package:fyp_management/screens/forgot_password/forgot_password_screen.dart';
 import 'package:fyp_management/widgets/alert_dialog.dart';
 import 'package:fyp_management/widgets/outline_input_border.dart';
 import 'package:fyp_management/widgets/snack_bar.dart';
 import '../../../components/default_button.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
-import 'package:fyp_management/screens/Home_Screen/home_screen.dart';
 
 class SignForm extends StatefulWidget {
   @override
@@ -22,7 +23,6 @@ class SignForm extends StatefulWidget {
 class _SignFormState extends State<SignForm> {
   final _formKey = GlobalKey<FormState>();
   final FirebaseAuth auth = FirebaseAuth.instance;
-  User user = FirebaseAuth.instance.currentUser;
   String email;
   String password;
   bool remember = false;
@@ -72,19 +72,36 @@ class _SignFormState extends State<SignForm> {
           ),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
-          DefaultButton(
-            text: "Continue",
-            press: () async {
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                user = auth.currentUser;
-                FirebaseFirestore.instance.terminate();
-                FirebaseFirestore.instance
-                    .clearPersistence()
-                    .then((value) => signinUser(email, password, context));
-              }
-            },
-          ),
+          email == null || email == ""
+              ? DefaultButton(
+                  text: "Continue",
+                  press: () async {
+                    if (_formKey.currentState.validate()) {
+                      _formKey.currentState.save();
+                    }
+                  },
+                )
+              : StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('Role')
+                      .doc(email)
+                      .snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting)
+                      return SpinKitCircle(color: kPrimaryColor);
+                    return DefaultButton(
+                      text: "Continue",
+                      press: () async {
+                        if (_formKey.currentState.validate()) {
+                          _formKey.currentState.save();
+                          showLoadingDialog(context);
+                          signinUser(
+                              email, password, context, snapshot.data['Role']);
+                        }
+                      },
+                    );
+                  },
+                ),
         ],
       ),
     );
@@ -133,8 +150,6 @@ class _SignFormState extends State<SignForm> {
       onChanged: (value) {
         if (value.isNotEmpty) {
           removeError(error: kEmailNullError);
-        } else if (emailValidatorRegExp.hasMatch(value)) {
-          removeError(error: kInvalidEmailError);
         }
         email = value;
         return null;
@@ -142,9 +157,6 @@ class _SignFormState extends State<SignForm> {
       validator: (value) {
         if (value.isEmpty) {
           addError(error: kEmailNullError);
-          return "";
-        } else if (!emailValidatorRegExp.hasMatch(value)) {
-          addError(error: kInvalidEmailError);
           return "";
         }
         return null;
@@ -161,20 +173,20 @@ class _SignFormState extends State<SignForm> {
     );
   }
 
-  Future signinUser(email, password, context) async {
+  Future signinUser(email, password, context, role) async {
     auth
         .signInWithEmailAndPassword(email: email, password: password)
         .then((value) {
-      if (value.user.emailVerified) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-            (Route<dynamic> route) => false);
-      } else {
-        String title = "Email not verified";
-        String content = "Please verify the Email first to Sigin.";
-        verifyEmailDialog(context, title, content);
-      }
+      Navigator.pop(context);
+      role == "Student"
+          ? Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => MainScreen()),
+              (Route<dynamic> route) => false)
+          : Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => MainScreen()),
+              (Route<dynamic> route) => false);
     }).catchError((e) {
+      Navigator.pop(context);
       Snack_Bar.show(context, e.message);
     });
   }
