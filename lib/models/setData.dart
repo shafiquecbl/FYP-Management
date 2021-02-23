@@ -36,7 +36,6 @@ class SetData {
         FirebaseFirestore.instance.collection('Students');
     students.doc(email).set({
       'Email': email,
-      'Uid': uid,
       'Department': department,
       'Batch': batch,
       'Registeration No': regNo
@@ -44,13 +43,8 @@ class SetData {
       Navigator.pop(context);
       Snack_Bar.show(context, "Student added successfully!");
     }).catchError((e) {
-      pop(context).then((value) {
-        Snack_Bar.show(context, e.message);
-      });
+      Navigator.pop(context);
+      Snack_Bar.show(context, e.message);
     });
-  }
-
-  pop(context) {
-    Navigator.pop(context);
   }
 }

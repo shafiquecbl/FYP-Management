@@ -37,7 +37,7 @@ AlertDialog alert = AlertDialog(
       CircularProgressIndicator.adaptive(
         valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
       ),
-      Text("Adding User...")
+      Text("Adding Student...")
     ],
   ),
 );
