@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
-import 'package:fyp_management/screens/Home_Screen/components/pages/Inbox/chat_screen.dart';
+import 'package:fyp_management/models/updateData.dart';
+import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp_management/size_config.dart';
@@ -23,7 +24,7 @@ class _InboxState extends State<Inbox> {
       appBar: customAppBar("Inbox"),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('Users')
+            .collection('Students')
             .doc(email)
             .collection('Contacts')
             .orderBy("Time", descending: true)
@@ -46,7 +47,7 @@ class _InboxState extends State<Inbox> {
             onRefresh: () async {
               setState(() {
                 FirebaseFirestore.instance
-                    .collection('Users')
+                    .collection('Students')
                     .doc(email)
                     .collection('Contacts')
                     .snapshots();
@@ -66,16 +67,17 @@ class _InboxState extends State<Inbox> {
 
   Widget userList(DocumentSnapshot snapshot) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => ChatScreen(
-            receiverEmail: snapshot['Email'],
-            receiverRegNo: snapshot['Registeration No'],
-            receiverPhotoURL: snapshot['PhotoURL'],
-          ),
-        ),
-      ),
+      onTap: () => {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (builder) => ChatScreen(
+                      receiverEmail: snapshot['Email'],
+                      receiverRegNo: snapshot['RegNo'],
+                      receiverPhotoURL: snapshot['PhotoURL'],
+                    ))).then(
+            (value) => UpdateData().updateMessageStatus(snapshot['Email']))
+      },
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: 20,
@@ -100,30 +102,28 @@ class _InboxState extends State<Inbox> {
                 ],
               ),
               child: CircleAvatar(
-                radius: snapshot['PhotoURL'] == null ? 30 : 30,
-                backgroundColor: kPrimaryColor.withOpacity(0.8),
-                child: user.photoURL != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(70),
-                        child: Image.network(
-                          snapshot['PhotoURL'],
-                          width: 60,
-                          height: 60,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(50)),
-                        width: 100,
-                        height: 100,
-                        child: Icon(
-                          Icons.camera_alt,
-                          color: Colors.grey[800],
-                        ),
-                      ),
-              ),
+                  radius: 30,
+                  backgroundColor: Colors.grey[100],
+                  child:
+                      snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(70),
+                              child: Image.asset(
+                                "assets/images/nullUser.png",
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(70),
+                              child: Image.network(
+                                snapshot['PhotoURL'],
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              ),
+                            )),
             ),
             Container(
               width: MediaQuery.of(context).size.width * 0.7,
@@ -136,12 +136,16 @@ class _InboxState extends State<Inbox> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        snapshot['Registeration No'],
+                        snapshot['RegNo'],
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      snapshot['Status'] == "unread"
+                          ? Icon(Icons.mark_email_unread,
+                              color: UniversalVariables.blueColor)
+                          : Container()
                     ],
                   ),
                   SizedBox(
@@ -153,7 +157,6 @@ class _InboxState extends State<Inbox> {
                     children: [
                       Container(
                         width: 145,
-                        // margin: EdgeInsets.only(bottom:15),
                         alignment: Alignment.topLeft,
                         child: Text(
                           snapshot['Last Message'],

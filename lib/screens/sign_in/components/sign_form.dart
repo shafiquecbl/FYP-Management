@@ -27,6 +27,7 @@ class _SignFormState extends State<SignForm> {
   String password;
   bool remember = false;
   bool isLoading = false;
+  String role;
 
   final List<String> errors = [];
 
@@ -95,8 +96,7 @@ class _SignFormState extends State<SignForm> {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
                           showLoadingDialog(context);
-                          signinUser(
-                              email, password, context, snapshot.data['Role']);
+                          signinUser(email, password, context);
                         }
                       },
                     );
@@ -173,7 +173,7 @@ class _SignFormState extends State<SignForm> {
     );
   }
 
-  Future signinUser(email, password, context, role) async {
+  Future signinUser(email, password, context) async {
     auth
         .signInWithEmailAndPassword(email: email, password: password)
         .then((value) {

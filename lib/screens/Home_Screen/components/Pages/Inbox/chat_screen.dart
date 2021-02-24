@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
+import 'package:fyp_management/models/Messages.dart';
 import 'package:fyp_management/models/getData.dart';
 import 'package:fyp_management/screens/Home_Screen/components/pages/Inbox/modal_tile.dart';
 import 'package:fyp_management/size_config.dart';
@@ -10,10 +11,10 @@ import 'package:fyp_management/widgets/outline_input_border.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverRegNo;
-  final String receiverEmail;
   final String receiverPhotoURL;
+  final String receiverEmail;
 
-  ChatScreen({this.receiverRegNo, this.receiverEmail, this.receiverPhotoURL});
+  ChatScreen({this.receiverRegNo, this.receiverPhotoURL, this.receiverEmail});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -40,27 +41,29 @@ class _ChatScreenState extends State<ChatScreen> {
           title: ListTile(
             onTap: () {},
             leading: CircleAvatar(
+                backgroundColor: Colors.grey[100],
                 child: ClipRRect(
-              borderRadius: BorderRadius.circular(70),
-              child: Image.network(
-                widget.receiverPhotoURL,
-                width: 130,
-                height: 130,
-                fit: BoxFit.cover,
-              ),
-            )),
+                  borderRadius: BorderRadius.circular(70),
+                  child: widget.receiverPhotoURL == null ||
+                          widget.receiverPhotoURL == ""
+                      ? Image.asset(
+                          "assets/images/nullUser.png",
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.network(
+                          widget.receiverPhotoURL,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        ),
+                )),
             title: Text(widget.receiverRegNo,
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: kPrimaryColor)),
-            subtitle: Text(
-              'Online',
-              style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w400,
-                  color: kPrimaryColor),
-            ),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                )),
           )),
       body: Column(
         children: <Widget>[
@@ -228,13 +231,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
     sendMessage() {
       var text = textFieldController.text;
-      // Messages()
-      //     .addMessage(
-      //         widget.receiverEmail, user.displayName, user.photoURL, text)
-      //     .then((value) {
-      //   Messages().addContact(widget.receiverEmail, widget.receiverName,
-      //       widget.receiverPhotoURL, text);
-      // });
+      Messages()
+          .addMessage(
+              widget.receiverEmail, user.displayName, user.photoURL, text)
+          .then((value) {
+        Messages().addContact(widget.receiverEmail, widget.receiverRegNo,
+            widget.receiverPhotoURL, text);
+      });
       setState(() {
         isWriting = false;
       });
