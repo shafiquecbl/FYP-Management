@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp_management/screens/Home_Screen/components/Pages/More/Groups/groups.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/More/components/profile_menu.dart';
 import 'package:fyp_management/screens/sign_in/sign_in_screen.dart';
 import 'package:fyp_management/size_config.dart';
@@ -65,6 +66,14 @@ class _MoreState extends State<More> {
                   text: "My Profile",
                   icon: "assets/icons/User Icon.svg",
                   press: () => {},
+                ),
+                ProfileMenu(
+                  text: "Manage Group",
+                  icon: "assets/icons/group.svg",
+                  press: () => {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (builder) => Groups()))
+                  },
                 ),
                 ProfileMenu(
                   text: "Sign Out",
