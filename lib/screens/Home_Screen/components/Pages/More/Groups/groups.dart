@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
+import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/chat_screen.dart';
 import 'package:fyp_management/size_config.dart';
 
 class Groups extends StatefulWidget {
@@ -8,6 +12,7 @@ class Groups extends StatefulWidget {
 }
 
 class _GroupsState extends State<Groups> {
+  User user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -32,13 +37,144 @@ class _GroupsState extends State<Groups> {
               indicatorColor: kPrimaryColor,
               tabs: [
                 Tab(text: "Group Members"),
-                Tab(text: "Invites"),
+                StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('Students')
+                      .doc(user.email)
+                      .collection('Invites')
+                      .snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting)
+                      return Tab(text: "Invites (0)");
+                    return Tab(text: "Invites (${snapshot.data.docs.length})");
+                  },
+                ),
               ]),
         ),
         body: TabBarView(
-          children: [Text("Tab1"), Text("Tab2")],
+          children: [Center(child: Text("Group Members")), invites()],
         ),
       ),
+    );
+  }
+
+  invites() {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('Students')
+          .doc(user.email)
+          .collection('Invites')
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Center(child: SpinKitCircle(color: kPrimaryColor));
+        if (snapshot.data.docs.length == 0)
+          return SizedBox(
+            child: Center(
+              child: Text(
+                "No Invites Yet",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: kPrimaryColor),
+              ),
+            ),
+          );
+        return RefreshIndicator(
+            onRefresh: () async {
+              setState(() {
+                FirebaseFirestore.instance
+                    .collection('Students')
+                    .doc(user.email)
+                    .collection('Invites')
+                    .snapshots();
+              });
+            },
+            child: ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, index) {
+                  return invitesList(snapshot.data.docs[index]);
+                }));
+      },
+    );
+  }
+
+  invitesList(DocumentSnapshot snapshot) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: ListTile(
+        leading: CircleAvatar(
+            radius: 27,
+            backgroundColor: kPrimaryColor.withOpacity(0.8),
+            child: snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
+                ? Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage("assets/images/nullUser.png")),
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(70)),
+                    width: 50,
+                    height: 50,
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(70),
+                    child: Image.network(
+                      snapshot['PhotoURL'],
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  )),
+        title: Text(snapshot['Registeration No']),
+        trailing: IconButton(
+          icon: Icon(Icons.more_vert),
+          onPressed: () {
+            moreDialog(snapshot);
+          },
+        ),
+      ),
+    );
+  }
+
+  moreDialog(DocumentSnapshot snapshot) {
+    Widget message = FlatButton(
+      onPressed: () {
+        Navigator.maybePop(context).then((value) => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (builder) => ChatScreen(
+                      receiverEmail: snapshot['Email'],
+                      receiverRegNo: snapshot['Registeration No'],
+                      receiverPhotoURL: snapshot['PhotoURL'],
+                    ))));
+      },
+      child: ListTile(
+          leading: Icon(
+            Icons.message_outlined,
+            color: kPrimaryColor,
+          ),
+          title: Text("Message")),
+    );
+    Widget accept = FlatButton(
+      onPressed: () {},
+      child: ListTile(
+          leading: Icon(
+            Icons.insert_invitation_outlined,
+            color: kPrimaryColor,
+          ),
+          title: Text("Accept")),
+    );
+    SimpleDialog alert = SimpleDialog(
+      children: [
+        message,
+        accept,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

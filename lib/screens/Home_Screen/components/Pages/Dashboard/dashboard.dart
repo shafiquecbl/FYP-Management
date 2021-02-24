@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
+import 'package:fyp_management/models/setData.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/chat_screen.dart';
+import 'package:fyp_management/widgets/alert_dialog.dart';
 import 'package:fyp_management/widgets/customAppBar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -118,7 +120,12 @@ class _DashboardState extends State<Dashboard> {
           title: Text("Message")),
     );
     Widget invite = FlatButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.maybePop(context).then((value) => {
+              showLoadingDialog(context),
+              SetData().sendInvite(context, snapshot['Email'])
+            });
+      },
       child: ListTile(
           leading: Icon(
             Icons.insert_invitation_outlined,
