@@ -26,7 +26,10 @@ class SetData {
             });
   }
 
-  Future acceptInvite({receiverEmail, receiverRegNo, receiverPhotoURL}) async {
+  Future acceptInvite(context,
+      {@required receiverEmail,
+      @required receiverRegNo,
+      @required receiverPhotoURL}) async {
     await FirebaseFirestore.instance
         .collection('Students')
         .doc(user.email)
@@ -38,7 +41,7 @@ class SetData {
       'PhotoURL': receiverPhotoURL,
     });
 
-    return await FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('Students')
         .doc(receiverEmail)
         .collection('Group Members')
@@ -48,14 +51,27 @@ class SetData {
       'Email': user.email,
       'PhotoURL': user.photoURL,
     });
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(user.email)
+        .collection('Invites')
+        .doc(receiverEmail)
+        .delete()
+        .then((value) => {
+              Navigator.maybePop(context),
+              Snack_Bar.show(context, "Invite sent successfully!"),
+            });
   }
 
-  Future accept2ndInvite(
-      {receiverEmail,
-      receiverRegNo,
-      receiverPhotoURL,
-      previousMemberEmail,
-      previousMemberPhoto}) async {
+  Future accept2ndInvite(context,
+      {@required receiverEmail,
+      @required receiverRegNo,
+      @required receiverPhotoURL,
+      @required previousMemberEmail,
+      @required previousMemberPhoto,
+      @required department,
+      @required batch}) async {
     await FirebaseFirestore.instance
         .collection('Students')
         .doc(user.email)
@@ -89,7 +105,7 @@ class SetData {
       'PhotoURL': user.photoURL,
     });
 
-    return await FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('Students')
         .doc(receiverEmail)
         .collection('Group Members')
@@ -99,5 +115,39 @@ class SetData {
       'Email': user.email,
       'PhotoURL': user.photoURL,
     });
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(department)
+        .collection(batch)
+        .doc(receiverEmail)
+        .delete();
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(department)
+        .collection(batch)
+        .doc(previousMemberEmail)
+        .delete();
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(department)
+        .collection(batch)
+        .doc(user.email)
+        .delete();
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(user.email)
+        .collection('Invites')
+        .doc(receiverEmail)
+        .delete()
+        .then((value) => {
+              Navigator.maybePop(context),
+              Snack_Bar.show(context, "Invite sent successfully!"),
+            });
   }
 }

@@ -8,7 +8,6 @@ import 'package:fyp_management/models/setData.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/chat_screen.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/alert_dialog.dart';
-import 'package:fyp_management/widgets/snack_bar.dart';
 
 class Groups extends StatefulWidget {
   @override
@@ -321,29 +320,24 @@ class _GroupsState extends State<Groups> {
         Navigator.pop(context);
         showLoadingDialog(context);
         if (membersLength == 0) {
-          setData
-              .acceptInvite(
-                receiverEmail: snapshot['Email'],
-                receiverRegNo: snapshot['Registeration No'],
-                receiverPhotoURL: snapshot['PhotoURL'],
-              )
-              .then((value) =>
-                  deleteData.deleteInvite(snapshot['Email'], context));
+          setData.acceptInvite(
+            context,
+            receiverEmail: snapshot['Email'],
+            receiverRegNo: snapshot['Registeration No'],
+            receiverPhotoURL: snapshot['PhotoURL'],
+          );
         }
         if (membersLength == 1) {
-          setData
-              .accept2ndInvite(
-                receiverEmail: snapshot['Email'],
-                receiverRegNo: snapshot['Registeration No'],
-                receiverPhotoURL: snapshot['PhotoURL'],
-                previousMemberEmail: previousEmail,
-                previousMemberPhoto: previousPhoto,
-              )
-              .then((value) => deleteData.deleteInviteAndUsersFromList(context,
-                  receiverEmail1: snapshot['Email'],
-                  receiverEmail2: previousEmail,
-                  batch: batch,
-                  department: department));
+          setData.accept2ndInvite(
+            context,
+            receiverEmail: snapshot['Email'],
+            receiverRegNo: snapshot['Registeration No'],
+            receiverPhotoURL: snapshot['PhotoURL'],
+            previousMemberEmail: previousEmail,
+            previousMemberPhoto: previousPhoto,
+            department: department,
+            batch: batch,
+          );
         }
       },
       child: ListTile(
