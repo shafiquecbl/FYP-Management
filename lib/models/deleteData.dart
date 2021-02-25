@@ -13,8 +13,10 @@ class DeleteData {
         .collection('Invites')
         .doc(receiverEmail)
         .delete()
-        .then((value) =>
-            {Snack_Bar.show(context, "Invite accepted successfully!")});
+        .then((value) => {
+              Navigator.maybePop(context).then((value) =>
+                  Snack_Bar.show(context, "Invite accepted successfully!"))
+            });
   }
 
   Future deleteInviteAndUsersFromList(context,
@@ -47,8 +49,8 @@ class DeleteData {
         .doc(receiverEmail1)
         .delete()
         .then((value) => {
-              Navigator.pop(context),
-              Snack_Bar.show(context, "Invite accepted successfully!")
+              Navigator.maybePop(context).then((value) =>
+                  Snack_Bar.show(context, "Invite accepted successfully!"))
             });
   }
 }
