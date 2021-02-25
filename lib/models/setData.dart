@@ -60,7 +60,6 @@ class SetData {
         .delete()
         .then((value) => {
               Navigator.maybePop(context),
-              Snack_Bar.show(context, "Invite sent successfully!"),
             });
   }
 
@@ -147,7 +146,91 @@ class SetData {
         .delete()
         .then((value) => {
               Navigator.maybePop(context),
-              Snack_Bar.show(context, "Invite sent successfully!"),
+            });
+  }
+
+  Future accept3rdInvite(context,
+      {@required receiverEmail,
+      @required receiverRegNo,
+      @required receiverPhotoURL,
+      @required previousMemberEmail,
+      @required previousMemberPhoto,
+      @required department,
+      @required batch}) async {
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(receiverEmail)
+        .collection('Group Members')
+        .doc(user.email)
+        .set({
+      'Registeration No': user.email.substring(0, 12),
+      'Email': user.email,
+      'PhotoURL': user.photoURL,
+    });
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(user.email)
+        .collection('Group Members')
+        .doc(receiverEmail)
+        .set({
+      'Registeration No': receiverRegNo,
+      'Email': receiverEmail,
+      'PhotoURL': receiverPhotoURL,
+    });
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(user.email)
+        .collection('Group Members')
+        .doc(previousMemberEmail)
+        .set({
+      'Registeration No': previousMemberEmail.substring(0, 12),
+      'Email': previousMemberEmail,
+      'PhotoURL': previousMemberPhoto,
+    });
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(previousMemberEmail)
+        .collection('Group Members')
+        .doc(user.email)
+        .set({
+      'Registeration No': user.email.substring(0, 12),
+      'Email': user.email,
+      'PhotoURL': user.photoURL,
+    });
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(department)
+        .collection(batch)
+        .doc(receiverEmail)
+        .delete();
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(department)
+        .collection(batch)
+        .doc(previousMemberEmail)
+        .delete();
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(department)
+        .collection(batch)
+        .doc(user.email)
+        .delete();
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(user.email)
+        .collection('Invites')
+        .doc(receiverEmail)
+        .delete()
+        .then((value) => {
+              Navigator.maybePop(context),
             });
   }
 }

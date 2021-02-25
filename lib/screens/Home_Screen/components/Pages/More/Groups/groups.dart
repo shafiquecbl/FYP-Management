@@ -16,6 +16,13 @@ class Groups extends StatefulWidget {
 
 class _GroupsState extends State<Groups> {
   User user = FirebaseAuth.instance.currentUser;
+  //
+  int checkLength;
+  String checkLengthEmail;
+  String checkLengthPhoto;
+  String checkLengthReceiverEmail;
+  String checkLengthReceiverPhoto;
+  //
   int membersLength;
   String previousEmail;
   String previousPhoto;
@@ -56,6 +63,12 @@ class _GroupsState extends State<Groups> {
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting)
                       return Tab(text: "Group Members (0)");
+                    membersLength = snapshot.data.docs.length;
+                    if (membersLength == 1) {
+                      previousEmail = snapshot.data.docs[0]['Email'];
+                      previousPhoto = snapshot.data.docs[0]['PhotoURL'];
+                    }
+
                     return Tab(
                         text: "Group Members (${snapshot.data.docs.length})");
                   },
@@ -103,11 +116,6 @@ class _GroupsState extends State<Groups> {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting)
               return Center(child: SpinKitCircle(color: kPrimaryColor));
-            membersLength = snapshot.data.docs.length;
-            if (membersLength == 1) {
-              previousEmail = snapshot.data.docs[0]['Email'];
-              previousPhoto = snapshot.data.docs[0]['PhotoURL'];
-            }
             if (snapshot.data.docs.length == 0)
               return SizedBox(
                 child: Center(
@@ -186,12 +194,12 @@ class _GroupsState extends State<Groups> {
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
-          return Center(child: SpinKitCircle(color: kPrimaryColor));
+          return Container();
         if (snapshot.data.docs.length == 0)
           return SizedBox(
             child: Center(
               child: Text(
-                "No Invites Yet",
+                "No Invites",
                 style: TextStyle(
                     fontWeight: FontWeight.bold, color: kPrimaryColor),
               ),
@@ -217,39 +225,83 @@ class _GroupsState extends State<Groups> {
   }
 
   invitesList(DocumentSnapshot snapshot) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: ListTile(
-          leading: CircleAvatar(
-              radius: 27,
-              backgroundColor: kPrimaryColor.withOpacity(0.8),
-              child: snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
-                  ? Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage("assets/images/nullUser.png")),
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(70)),
-                      width: 50,
-                      height: 50,
-                    )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(70),
-                      child: Image.network(
-                        snapshot['PhotoURL'],
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    )),
-          title: Text(snapshot['Registeration No']),
-          trailing: IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: () {
-              moreDialog(snapshot);
-            },
-          )),
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('Students')
+          .doc(snapshot['Email'])
+          .collection('Group Members')
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot snap) {
+        if (snap.connectionState == ConnectionState.waiting)
+          return SpinKitCircle(
+            color: kPrimaryColor,
+          );
+        // if group is completed then delete all invites ////
+        if (membersLength == 2) {
+          FirebaseFirestore.instance
+              .collection('Students')
+              .doc(user.email)
+              .collection('Invites')
+              .doc(snapshot['Email'])
+              .delete();
+        }
+        ////////////////////////////////////////////////////
+
+        checkLength = snap.data.docs.length;
+        checkLengthEmail = snapshot['Email'];
+        checkLengthPhoto = snapshot['PhotoURL'];
+
+        // if the user who send invite has already 1 member
+        // in group then get that member detail
+        if (checkLength == 1) {
+          checkLengthReceiverEmail = snap.data.docs[0]['Email'];
+          checkLengthReceiverPhoto = snap.data.docs[0]['PhotoURL'];
+        }
+        //////////////////////////////////////////////////////////
+
+        // if the user who sent invite completed his/her
+        // group then delete his/her invite
+        if (checkLength == 2) {
+          DeleteData().deleteInvite(context, snapshot['Email']);
+        }
+        /////////////////////////////////////////////////////////
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: ListTile(
+              leading: CircleAvatar(
+                  radius: 27,
+                  backgroundColor: kPrimaryColor.withOpacity(0.8),
+                  child: snapshot['PhotoURL'] == null ||
+                          snapshot['PhotoURL'] == ""
+                      ? Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image:
+                                      AssetImage("assets/images/nullUser.png")),
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(70)),
+                          width: 50,
+                          height: 50,
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(70),
+                          child: Image.network(
+                            snapshot['PhotoURL'],
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+              title: Text(snapshot['Registeration No']),
+              trailing: IconButton(
+                icon: Icon(Icons.more_vert),
+                onPressed: () {
+                  moreDialog(snapshot);
+                },
+              )),
+        );
+      },
     );
   }
 
@@ -315,38 +367,54 @@ class _GroupsState extends State<Groups> {
           ),
           title: Text("Message")),
     );
-    Widget accept = FlatButton(
-      onPressed: () {
-        Navigator.pop(context);
-        showLoadingDialog(context);
-        if (membersLength == 0) {
-          setData.acceptInvite(
-            context,
-            receiverEmail: snapshot['Email'],
-            receiverRegNo: snapshot['Registeration No'],
-            receiverPhotoURL: snapshot['PhotoURL'],
+    Widget accept = checkLength == 2
+        ? Container()
+        : FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+              showLoadingDialog(context);
+              if (membersLength == 0) {
+                setData.acceptInvite(
+                  context,
+                  receiverEmail: snapshot['Email'],
+                  receiverRegNo: snapshot['Registeration No'],
+                  receiverPhotoURL: snapshot['PhotoURL'],
+                );
+              }
+              if (membersLength == 1) {
+                setData.accept2ndInvite(
+                  context,
+                  receiverEmail: snapshot['Email'],
+                  receiverRegNo: snapshot['Registeration No'],
+                  receiverPhotoURL: snapshot['PhotoURL'],
+                  previousMemberEmail: previousEmail,
+                  previousMemberPhoto: previousPhoto,
+                  department: department,
+                  batch: batch,
+                );
+              }
+
+              // if the user who sent invite already has a group member
+              // then add currentUser to his group
+              if (checkLength == 1) {
+                setData.accept3rdInvite(context,
+                    receiverEmail: checkLengthEmail,
+                    receiverRegNo: checkLengthEmail.substring(0, 12),
+                    receiverPhotoURL: checkLengthPhoto,
+                    previousMemberEmail: checkLengthReceiverEmail,
+                    previousMemberPhoto: checkLengthReceiverPhoto,
+                    department: department,
+                    batch: batch);
+              }
+              /////////////////////////////////////////////////////////
+            },
+            child: ListTile(
+                leading: Icon(
+                  Icons.insert_invitation_outlined,
+                  color: kPrimaryColor,
+                ),
+                title: Text("Accept")),
           );
-        }
-        if (membersLength == 1) {
-          setData.accept2ndInvite(
-            context,
-            receiverEmail: snapshot['Email'],
-            receiverRegNo: snapshot['Registeration No'],
-            receiverPhotoURL: snapshot['PhotoURL'],
-            previousMemberEmail: previousEmail,
-            previousMemberPhoto: previousPhoto,
-            department: department,
-            batch: batch,
-          );
-        }
-      },
-      child: ListTile(
-          leading: Icon(
-            Icons.insert_invitation_outlined,
-            color: kPrimaryColor,
-          ),
-          title: Text("Accept")),
-    );
     SimpleDialog alert = SimpleDialog(
       children: [message, membersLength < 2 ? accept : Container()],
     );
