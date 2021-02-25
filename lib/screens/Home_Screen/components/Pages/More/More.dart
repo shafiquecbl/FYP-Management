@@ -62,6 +62,19 @@ class _MoreState extends State<More> {
                 SizedBox(
                   height: getProportionateScreenHeight(10),
                 ),
+                Center(
+                  child: Text(
+                    user.email.substring(0, 12).toUpperCase(),
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.black.withOpacity(0.6),
+                        letterSpacing: 2.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  height: getProportionateScreenHeight(10),
+                ),
                 ProfileMenu(
                   text: "My Profile",
                   icon: "assets/icons/User Icon.svg",

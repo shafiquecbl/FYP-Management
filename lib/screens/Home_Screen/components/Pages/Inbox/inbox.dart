@@ -137,7 +137,7 @@ class _InboxState extends State<Inbox> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        snapshot['RegNo'],
+                        snapshot['RegNo'].toUpperCase(),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

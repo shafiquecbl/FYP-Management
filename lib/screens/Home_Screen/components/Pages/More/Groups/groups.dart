@@ -174,7 +174,7 @@ class _GroupsState extends State<Groups> {
                       fit: BoxFit.cover,
                     ),
                   )),
-        title: Text(snapshot['Registeration No']),
+        title: Text(snapshot['Registeration No'].toUpperCase()),
         trailing: IconButton(
           icon: Icon(Icons.more_vert),
           onPressed: () {
@@ -293,7 +293,7 @@ class _GroupsState extends State<Groups> {
                             fit: BoxFit.cover,
                           ),
                         )),
-              title: Text(snapshot['Registeration No']),
+              title: Text(snapshot['Registeration No'].toUpperCase()),
               trailing: IconButton(
                 icon: Icon(Icons.more_vert),
                 onPressed: () {

@@ -59,7 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           fit: BoxFit.cover,
                         ),
                 )),
-            title: Text(widget.receiverRegNo,
+            title: Text(widget.receiverRegNo.toUpperCase(),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

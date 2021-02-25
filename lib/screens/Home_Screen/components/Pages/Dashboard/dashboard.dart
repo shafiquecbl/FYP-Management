@@ -107,7 +107,7 @@ class _DashboardState extends State<Dashboard> {
                     fit: BoxFit.cover,
                   ),
                 )),
-      title: Text(snapshot['Registeration No']),
+      title: Text(snapshot['Registeration No'].toUpperCase()),
       subtitle: Text("${snapshot['Department']} - ${snapshot['Batch']}"),
       trailing: IconButton(
         icon: Icon(Icons.more_vert),
