@@ -13,7 +13,42 @@ class DeleteData {
         .collection('Invites')
         .doc(receiverEmail)
         .delete()
-        .then((value) => Navigator.maybePop(context).then((value) =>
-            Snack_Bar.show(context, "Invite accepted successfully!")));
+        .then((value) =>
+            {Snack_Bar.show(context, "Invite accepted successfully!")});
+  }
+
+  Future deleteInviteAndUsersFromList(context,
+      {receiverEmail1, receiverEmail2, batch, department}) async {
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(department)
+        .collection(batch)
+        .doc(receiverEmail1)
+        .delete();
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(department)
+        .collection(batch)
+        .doc(receiverEmail2)
+        .delete();
+
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(department)
+        .collection(batch)
+        .doc(user.email)
+        .delete();
+
+    return await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(user.email)
+        .collection('Invites')
+        .doc(receiverEmail1)
+        .delete()
+        .then((value) => {
+              Navigator.pop(context),
+              Snack_Bar.show(context, "Invite accepted successfully!")
+            });
   }
 }

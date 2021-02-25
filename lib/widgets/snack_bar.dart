@@ -15,6 +15,7 @@ class Snack_Bar {
     // ignore: deprecated_member_use
     Scaffold.of(context).showSnackBar(
       SnackBar(
+        duration: Duration(seconds: 2),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
         content: Text(message),

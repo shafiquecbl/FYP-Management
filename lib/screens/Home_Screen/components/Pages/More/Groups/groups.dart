@@ -17,6 +17,14 @@ class Groups extends StatefulWidget {
 
 class _GroupsState extends State<Groups> {
   User user = FirebaseAuth.instance.currentUser;
+  int membersLength;
+  String previousEmail;
+  String previousPhoto;
+  String batch;
+  String department;
+
+  SetData setData = SetData();
+  DeleteData deleteData = DeleteData();
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -75,40 +83,59 @@ class _GroupsState extends State<Groups> {
   }
 
   groupMembers() {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance
+    return FutureBuilder(
+      future: FirebaseFirestore.instance
           .collection('Students')
           .doc(user.email)
-          .collection('Group Members')
-          .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return Center(child: SpinKitCircle(color: kPrimaryColor));
-        if (snapshot.data.docs.length == 0)
-          return SizedBox(
-            child: Center(
-              child: Text(
-                "No Members Yet",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: kPrimaryColor),
-              ),
-            ),
+          .get(),
+      builder: (BuildContext context, AsyncSnapshot currentUser) {
+        if (currentUser.connectionState == ConnectionState.waiting)
+          return SpinKitCircle(
+            color: kPrimaryColor,
           );
-        return RefreshIndicator(
-            onRefresh: () async {
-              setState(() {
-                FirebaseFirestore.instance
-                    .collection('Students')
-                    .doc(user.email)
-                    .collection('Group Members')
-                    .snapshots();
-              });
-            },
-            child: ListView.builder(
-                itemCount: snapshot.data.docs.length,
-                itemBuilder: (context, index) {
-                  return membersList(snapshot.data.docs[index]);
-                }));
+        department = currentUser.data['Department'];
+        batch = currentUser.data['Batch'];
+        return StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('Students')
+              .doc(user.email)
+              .collection('Group Members')
+              .snapshots(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return Center(child: SpinKitCircle(color: kPrimaryColor));
+            membersLength = snapshot.data.docs.length;
+            if (membersLength == 1) {
+              previousEmail = snapshot.data.docs[0]['Email'];
+              previousPhoto = snapshot.data.docs[0]['PhotoURL'];
+            }
+            if (snapshot.data.docs.length == 0)
+              return SizedBox(
+                child: Center(
+                  child: Text(
+                    "No Members Yet",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: kPrimaryColor),
+                  ),
+                ),
+              );
+            return RefreshIndicator(
+                onRefresh: () async {
+                  setState(() {
+                    FirebaseFirestore.instance
+                        .collection('Students')
+                        .doc(user.email)
+                        .collection('Group Members')
+                        .snapshots();
+                  });
+                },
+                child: ListView.builder(
+                    itemCount: snapshot.data.docs.length,
+                    itemBuilder: (context, index) {
+                      return membersList(snapshot.data.docs[index]);
+                    }));
+          },
+        );
       },
     );
   }
@@ -194,37 +221,36 @@ class _GroupsState extends State<Groups> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
-        leading: CircleAvatar(
-            radius: 27,
-            backgroundColor: kPrimaryColor.withOpacity(0.8),
-            child: snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
-                ? Container(
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/nullUser.png")),
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(70)),
-                    width: 50,
-                    height: 50,
-                  )
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(70),
-                    child: Image.network(
-                      snapshot['PhotoURL'],
+          leading: CircleAvatar(
+              radius: 27,
+              backgroundColor: kPrimaryColor.withOpacity(0.8),
+              child: snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
+                  ? Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage("assets/images/nullUser.png")),
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(70)),
                       width: 50,
                       height: 50,
-                      fit: BoxFit.cover,
-                    ),
-                  )),
-        title: Text(snapshot['Registeration No']),
-        trailing: IconButton(
-          icon: Icon(Icons.more_vert),
-          onPressed: () {
-            moreDialog(snapshot);
-          },
-        ),
-      ),
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(70),
+                      child: Image.network(
+                        snapshot['PhotoURL'],
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                    )),
+          title: Text(snapshot['Registeration No']),
+          trailing: IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: () {
+              moreDialog(snapshot);
+            },
+          )),
     );
   }
 
@@ -292,20 +318,33 @@ class _GroupsState extends State<Groups> {
     );
     Widget accept = FlatButton(
       onPressed: () {
-        Navigator.maybePop(context).then((value) => showLoadingDialog(context));
-
-        SetData()
-            .acceptInvite(
-              receiverEmail: snapshot['Email'],
-              receiverRegNo: snapshot['Registeration No'],
-              receiverPhotoURL: snapshot['PhotoURL'],
-            )
-            .then((value) =>
-                DeleteData().deleteInvite(snapshot['Email'], context))
-            .catchError((e) {
-          Navigator.maybePop(context)
-              .then((value) => Snack_Bar.show(context, e.message));
-        });
+        Navigator.pop(context);
+        showLoadingDialog(context);
+        if (membersLength == 0) {
+          setData
+              .acceptInvite(
+                receiverEmail: snapshot['Email'],
+                receiverRegNo: snapshot['Registeration No'],
+                receiverPhotoURL: snapshot['PhotoURL'],
+              )
+              .then((value) =>
+                  deleteData.deleteInvite(snapshot['Email'], context));
+        }
+        if (membersLength == 1) {
+          setData
+              .accept2ndInvite(
+                receiverEmail: snapshot['Email'],
+                receiverRegNo: snapshot['Registeration No'],
+                receiverPhotoURL: snapshot['PhotoURL'],
+                previousMemberEmail: previousEmail,
+                previousMemberPhoto: previousPhoto,
+              )
+              .then((value) => deleteData.deleteInviteAndUsersFromList(context,
+                  receiverEmail1: snapshot['Email'],
+                  receiverEmail2: previousEmail,
+                  batch: batch,
+                  department: department));
+        }
       },
       child: ListTile(
           leading: Icon(
@@ -315,10 +354,7 @@ class _GroupsState extends State<Groups> {
           title: Text("Accept")),
     );
     SimpleDialog alert = SimpleDialog(
-      children: [
-        message,
-        accept,
-      ],
+      children: [message, membersLength < 2 ? accept : Container()],
     );
 
     showDialog(

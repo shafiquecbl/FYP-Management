@@ -24,18 +24,36 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar("Dashboard"),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('Students')
-            .doc(user.email)
-            .snapshots(),
+      body: FutureBuilder(
+        initialData: [],
+        future: Future.wait({
+          FirebaseFirestore.instance
+              .collection('Students')
+              .doc(user.email)
+              .get(),
+          FirebaseFirestore.instance
+              .collection('Students')
+              .doc(user.email)
+              .collection('Group Members')
+              .get()
+        }),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return SpinKitCircle(color: kPrimaryColor);
-          department = snapshot.data['Department'];
-          batch = snapshot.data['Batch'];
-          regNo = snapshot.data['Registeration No'];
-          photoURL = snapshot.data['PhotoURL'];
+          department = snapshot.data[0]['Department'];
+          batch = snapshot.data[0]['Batch'];
+          regNo = snapshot.data[0]['Registeration No'];
+          photoURL = snapshot.data[0]['PhotoURL'];
+          if (snapshot.data[1].docs.length == 2)
+            return Center(
+              child: Text(
+                "Group Full",
+                style: TextStyle(
+                    color: kPrimaryColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+            );
           return StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('Students')
