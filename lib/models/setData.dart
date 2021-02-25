@@ -26,27 +26,27 @@ class SetData {
             });
   }
 
-  // Future acceptInvite(receiverEmail, receiverRegNo, receiverPhotoURl) async {
-  //   await FirebaseFirestore.instance
-  //       .collection('Students')
-  //       .doc(email)
-  //       .collection('Invites')
-  //       .doc(receiverEmail)
-  //       .set({
-  //     'Registeration No': receiverRegNo,
-  //     'Email': receiverEmail,
-  //     'PhotoURL': receiverPhotoURl,
-  //   });
+  Future acceptInvite({receiverEmail, receiverRegNo, receiverPhotoURL}) async {
+    await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(user.email)
+        .collection('Group Members')
+        .doc(receiverEmail)
+        .set({
+      'Registeration No': receiverRegNo,
+      'Email': receiverEmail,
+      'PhotoURL': receiverPhotoURL,
+    });
 
-  //   return await FirebaseFirestore.instance
-  //       .collection('Students')
-  //       .doc(receiverEmail)
-  //       .collection('Group Members')
-  //       .doc(email)
-  //       .set({
-  //     'Registeration No': user.email.substring(0, 12),
-  //     'Email': email,
-  //     'PhotoURL': user.photoURL,
-  //   });
-  // }
+    return await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(receiverEmail)
+        .collection('Group Members')
+        .doc(user.email)
+        .set({
+      'Registeration No': user.email.substring(0, 12),
+      'Email': user.email,
+      'PhotoURL': user.photoURL,
+    });
+  }
 }

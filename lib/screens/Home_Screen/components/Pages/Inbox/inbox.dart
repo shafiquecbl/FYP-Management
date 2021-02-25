@@ -50,6 +50,7 @@ class _InboxState extends State<Inbox> {
                     .collection('Students')
                     .doc(email)
                     .collection('Contacts')
+                    .orderBy("Time", descending: true)
                     .snapshots();
               });
             },

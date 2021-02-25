@@ -89,7 +89,14 @@ class _SignFormState extends State<SignForm> {
                       .snapshots(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting)
-                      return SpinKitCircle(color: kPrimaryColor);
+                      return DefaultButton(
+                        text: "Continue",
+                        press: () async {
+                          if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
+                          }
+                        },
+                      );
                     return DefaultButton(
                       text: "Continue",
                       press: () async {

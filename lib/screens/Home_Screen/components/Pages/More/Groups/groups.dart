@@ -3,8 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
+import 'package:fyp_management/models/deleteData.dart';
+import 'package:fyp_management/models/setData.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/chat_screen.dart';
 import 'package:fyp_management/size_config.dart';
+import 'package:fyp_management/widgets/alert_dialog.dart';
+import 'package:fyp_management/widgets/snack_bar.dart';
 
 class Groups extends StatefulWidget {
   @override
@@ -36,7 +40,19 @@ class _GroupsState extends State<Groups> {
               unselectedLabelColor: Colors.grey,
               indicatorColor: kPrimaryColor,
               tabs: [
-                Tab(text: "Group Members"),
+                StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('Students')
+                      .doc(user.email)
+                      .collection('Group Members')
+                      .snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting)
+                      return Tab(text: "Group Members (0)");
+                    return Tab(
+                        text: "Group Members (${snapshot.data.docs.length})");
+                  },
+                ),
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('Students')
@@ -52,7 +68,84 @@ class _GroupsState extends State<Groups> {
               ]),
         ),
         body: TabBarView(
-          children: [Center(child: Text("Group Members")), invites()],
+          children: [groupMembers(), invites()],
+        ),
+      ),
+    );
+  }
+
+  groupMembers() {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('Students')
+          .doc(user.email)
+          .collection('Group Members')
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Center(child: SpinKitCircle(color: kPrimaryColor));
+        if (snapshot.data.docs.length == 0)
+          return SizedBox(
+            child: Center(
+              child: Text(
+                "No Members Yet",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: kPrimaryColor),
+              ),
+            ),
+          );
+        return RefreshIndicator(
+            onRefresh: () async {
+              setState(() {
+                FirebaseFirestore.instance
+                    .collection('Students')
+                    .doc(user.email)
+                    .collection('Group Members')
+                    .snapshots();
+              });
+            },
+            child: ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, index) {
+                  return membersList(snapshot.data.docs[index]);
+                }));
+      },
+    );
+  }
+
+  membersList(DocumentSnapshot snapshot) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: ListTile(
+        leading: CircleAvatar(
+            radius: 27,
+            backgroundColor: kPrimaryColor.withOpacity(0.8),
+            child: snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
+                ? Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage("assets/images/nullUser.png")),
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(70)),
+                    width: 50,
+                    height: 50,
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(70),
+                    child: Image.network(
+                      snapshot['PhotoURL'],
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  )),
+        title: Text(snapshot['Registeration No']),
+        trailing: IconButton(
+          icon: Icon(Icons.more_vert),
+          onPressed: () {
+            membersDialog(snapshot);
+          },
         ),
       ),
     );
@@ -135,6 +228,49 @@ class _GroupsState extends State<Groups> {
     );
   }
 
+  membersDialog(DocumentSnapshot snapshot) {
+    Widget message = FlatButton(
+      onPressed: () {
+        Navigator.maybePop(context).then((value) => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (builder) => ChatScreen(
+                      receiverEmail: snapshot['Email'],
+                      receiverRegNo: snapshot['Registeration No'],
+                      receiverPhotoURL: snapshot['PhotoURL'],
+                    ))));
+      },
+      child: ListTile(
+          leading: Icon(
+            Icons.message_outlined,
+            color: kPrimaryColor,
+          ),
+          title: Text("Message")),
+    );
+    Widget viewProfile = FlatButton(
+      onPressed: () {},
+      child: ListTile(
+          leading: Icon(
+            Icons.supervised_user_circle_outlined,
+            color: kPrimaryColor,
+          ),
+          title: Text("View Profile")),
+    );
+    SimpleDialog alert = SimpleDialog(
+      children: [
+        message,
+        viewProfile,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   moreDialog(DocumentSnapshot snapshot) {
     Widget message = FlatButton(
       onPressed: () {
@@ -155,7 +291,22 @@ class _GroupsState extends State<Groups> {
           title: Text("Message")),
     );
     Widget accept = FlatButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.maybePop(context).then((value) => showLoadingDialog(context));
+
+        SetData()
+            .acceptInvite(
+              receiverEmail: snapshot['Email'],
+              receiverRegNo: snapshot['Registeration No'],
+              receiverPhotoURL: snapshot['PhotoURL'],
+            )
+            .then((value) =>
+                DeleteData().deleteInvite(snapshot['Email'], context))
+            .catchError((e) {
+          Navigator.maybePop(context)
+              .then((value) => Snack_Bar.show(context, e.message));
+        });
+      },
       child: ListTile(
           leading: Icon(
             Icons.insert_invitation_outlined,
