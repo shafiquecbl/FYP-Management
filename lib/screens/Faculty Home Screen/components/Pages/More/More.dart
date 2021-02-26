@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp_management/screens/Home_Screen/components/Pages/More/Groups/groups.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/More/components/profile_menu.dart';
 import 'package:fyp_management/screens/sign_in/sign_in_screen.dart';
 import 'package:fyp_management/size_config.dart';
@@ -8,12 +7,12 @@ import 'package:fyp_management/widgets/customAppBar.dart';
 import 'package:fyp_management/widgets/snack_bar.dart';
 import 'package:fyp_management/constants.dart';
 
-class More extends StatefulWidget {
+class FMore extends StatefulWidget {
   @override
-  _MoreState createState() => _MoreState();
+  _FMoreState createState() => _FMoreState();
 }
 
-class _MoreState extends State<More> {
+class _FMoreState extends State<FMore> {
   User user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
@@ -64,7 +63,7 @@ class _MoreState extends State<More> {
                 ),
                 Center(
                   child: Text(
-                    user.email.substring(0, 12).toUpperCase(),
+                    user.displayName,
                     style: TextStyle(
                         fontSize: 18.0,
                         color: Colors.black.withOpacity(0.6),
@@ -79,14 +78,6 @@ class _MoreState extends State<More> {
                   text: "My Profile",
                   icon: "assets/icons/User Icon.svg",
                   press: () => {},
-                ),
-                ProfileMenu(
-                  text: "Manage Group",
-                  icon: "assets/icons/group.svg",
-                  press: () => {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (builder) => Groups()))
-                  },
                 ),
                 ProfileMenu(
                   text: "Sign Out",

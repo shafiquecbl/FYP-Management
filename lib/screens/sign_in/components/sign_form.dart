@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fyp_management/components/custom_surfix_icon.dart';
 import 'package:fyp_management/components/form_error.dart';
+import 'package:fyp_management/screens/Faculty%20Home%20Screen/faculty_homeScreen.dart';
 import 'package:fyp_management/screens/Home_Screen/home_screen.dart';
 import 'package:fyp_management/screens/forgot_password/forgot_password_screen.dart';
 import 'package:fyp_management/widgets/alert_dialog.dart';
@@ -97,7 +98,7 @@ class _SignFormState extends State<SignForm> {
                         },
                       );
                     role = snapshot.data['Role'];
-                    if (role != "Admin") {
+                    if (role == "Student") {
                       batch = snapshot.data['Batch'];
                       department = snapshot.data['Department'];
                     }
@@ -111,7 +112,8 @@ class _SignFormState extends State<SignForm> {
                             Navigator.pop(context);
                             addError(error: "Admin cannot signin to this app");
                           } else {
-                            addError(error: "Admin cannot signin to this app");
+                            removeError(
+                                error: "Admin cannot signin to this app");
                             signinUser(email, password, context);
                           }
                         }
@@ -200,7 +202,7 @@ class _SignFormState extends State<SignForm> {
               MaterialPageRoute(builder: (context) => MainScreen()),
               (Route<dynamic> route) => false)
           : Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => MainScreen()),
+              MaterialPageRoute(builder: (context) => FHomeScreen()),
               (Route<dynamic> route) => false);
     }).catchError((e) {
       Navigator.pop(context);

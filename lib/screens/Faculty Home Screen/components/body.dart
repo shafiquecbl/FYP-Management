@@ -1,18 +1,85 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp_management/widgets/customAppBar.dart';
+import 'package:fyp_management/constants.dart';
+import 'Pages/Inbox/inbox.dart';
+import 'Pages/More/More.dart';
+import 'Pages/Dashboard/dashboard.dart';
 
-class BODY extends StatefulWidget {
+class Body extends StatefulWidget {
   @override
-  _BODYState createState() => _BODYState();
+  _BodyState createState() => _BodyState();
 }
 
-class _BODYState extends State<BODY> {
+class _BodyState extends State<Body> {
+  int pageIndex = 0;
+
+  final FInbox _inboxPage = FInbox();
+  final FDashboard _dashboard = FDashboard();
+  final FMore _morePage = FMore();
+
+  Widget _showPage = new FDashboard();
+
+  Widget _pageChooser(int page) {
+    switch (page) {
+      case 0:
+        return _dashboard;
+        break;
+
+      case 1:
+        return _inboxPage;
+        break;
+
+      case 2:
+        return _morePage;
+        break;
+
+      default:
+        return Container(
+            child: Center(
+                child: Text(
+          'No Page Found',
+          style: TextStyle(fontSize: 30),
+        )));
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar("Home Screen"),
+      bottomNavigationBar: CurvedNavigationBar(
+        color: hexColor,
+        backgroundColor: Colors.white,
+        height: 60,
+        index: pageIndex,
+        items: <Widget>[
+          Icon(
+            Icons.dashboard,
+            color: kPrimaryColor,
+          ),
+          Icon(
+            Icons.message_outlined,
+            color: kPrimaryColor,
+          ),
+          Icon(
+            Icons.more_horiz_outlined,
+            color: kPrimaryColor,
+          ),
+        ],
+        animationDuration: Duration(
+          milliseconds: 550,
+        ),
+        onTap: (int tappedindex) {
+          setState(() {
+            _showPage = _pageChooser(tappedindex);
+          });
+        },
+      ),
       body: Container(
-        child: Text("Home"),
+        color: Colors.white,
+        child: Center(
+          child: _showPage,
+        ),
       ),
     );
   }

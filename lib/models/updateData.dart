@@ -13,4 +13,22 @@ class UpdateData {
         .doc(receiverEmail)
         .update({'Status': "read"});
   }
+
+  Future updateTeacherMessageStatus(receiverEmail) async {
+    return await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(email)
+        .collection('Teacher Contacts')
+        .doc(receiverEmail)
+        .update({'Status': "read"});
+  }
+
+  Future updateTeacherSideStatus(receiverEmail) async {
+    return await FirebaseFirestore.instance
+        .collection('Students')
+        .doc(email)
+        .collection('Contacts')
+        .doc(receiverEmail)
+        .update({'Status': "read"});
+  }
 }

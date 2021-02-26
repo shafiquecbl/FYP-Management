@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/models/updateData.dart';
-import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/customAppBar.dart';
 import 'package:fyp_management/widgets/time_ago.dart';
+import 'chat_screen.dart';
 
-class Inbox extends StatefulWidget {
+class FInbox extends StatefulWidget {
   @override
-  _InboxState createState() => _InboxState();
+  _FInboxState createState() => _FInboxState();
 }
 
-class _InboxState extends State<Inbox> {
+class _FInboxState extends State<FInbox> {
   User user = FirebaseAuth.instance.currentUser;
   final email = FirebaseAuth.instance.currentUser.email;
   @override
@@ -72,9 +72,9 @@ class _InboxState extends State<Inbox> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (builder) => ChatScreen(
+                builder: (builder) => FChatScreen(
                       receiverEmail: snapshot['Email'],
-                      receiverRegNo: snapshot['RegNo'],
+                      receiverRegNo: snapshot['Registeration No'],
                       receiverPhotoURL: snapshot['PhotoURL'],
                     ))).then(
             (value) => UpdateData().updateMessageStatus(snapshot['Email']))
@@ -137,7 +137,7 @@ class _InboxState extends State<Inbox> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        snapshot['RegNo'].toUpperCase(),
+                        snapshot['Registeration No'].toUpperCase(),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

@@ -7,7 +7,7 @@ class FHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
-      child: BODY(),
+      child: Body(),
     );
   }
 }

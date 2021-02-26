@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp_management/constants.dart';
 
 import 'Pages/Dashboard/dashboard.dart';
-import 'Pages/Inbox/inbox.dart';
+import 'Pages/Inbox/Inboxx.dart';
 import 'Pages/More/More.dart';
 
 class Body extends StatefulWidget {
@@ -14,7 +14,7 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   int pageIndex = 0;
 
-  final Inbox _inboxPage = Inbox();
+  final Inboxx _inboxPage = Inboxx();
   final Dashboard _dashboard = Dashboard();
   final More _morePage = More();
 
