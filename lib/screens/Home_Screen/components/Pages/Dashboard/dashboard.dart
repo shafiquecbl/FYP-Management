@@ -27,12 +27,9 @@ class _DashboardState extends State<Dashboard> {
       body: FutureBuilder(
         initialData: [],
         future: Future.wait({
+          FirebaseFirestore.instance.collection('Users').doc(user.email).get(),
           FirebaseFirestore.instance
-              .collection('Students')
-              .doc(user.email)
-              .get(),
-          FirebaseFirestore.instance
-              .collection('Students')
+              .collection('Users')
               .doc(user.email)
               .collection('Group Members')
               .get()

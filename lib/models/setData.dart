@@ -12,7 +12,7 @@ class SetData {
 
   Future sendInvite(context, receiverEmail) async {
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(receiverEmail)
         .collection('Invites')
         .doc(user.email)
@@ -31,7 +31,7 @@ class SetData {
       @required receiverRegNo,
       @required receiverPhotoURL}) async {
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(user.email)
         .collection('Group Members')
         .doc(receiverEmail)
@@ -42,7 +42,7 @@ class SetData {
     });
 
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(receiverEmail)
         .collection('Group Members')
         .doc(user.email)
@@ -53,7 +53,7 @@ class SetData {
     });
 
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(user.email)
         .collection('Invites')
         .doc(receiverEmail)
@@ -72,7 +72,7 @@ class SetData {
       @required department,
       @required batch}) async {
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(user.email)
         .collection('Group Members')
         .doc(receiverEmail)
@@ -83,7 +83,7 @@ class SetData {
     });
 
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(previousMemberEmail)
         .collection('Group Members')
         .doc(receiverEmail)
@@ -94,7 +94,7 @@ class SetData {
     });
 
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(receiverEmail)
         .collection('Group Members')
         .doc(previousMemberEmail)
@@ -105,7 +105,7 @@ class SetData {
     });
 
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(receiverEmail)
         .collection('Group Members')
         .doc(user.email)
@@ -138,14 +138,14 @@ class SetData {
         .doc(user.email)
         .delete();
 
-    await FirebaseFirestore.instance
-        .collection('Students')
+    return await FirebaseFirestore.instance
+        .collection('Users')
         .doc(user.email)
         .collection('Invites')
         .doc(receiverEmail)
         .delete()
         .then((value) => {
-              Navigator.maybePop(context),
+              Navigator.pop(context),
             });
   }
 
@@ -158,7 +158,7 @@ class SetData {
       @required department,
       @required batch}) async {
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(receiverEmail)
         .collection('Group Members')
         .doc(user.email)
@@ -168,7 +168,7 @@ class SetData {
       'PhotoURL': user.photoURL,
     });
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(user.email)
         .collection('Group Members')
         .doc(receiverEmail)
@@ -179,7 +179,7 @@ class SetData {
     });
 
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(user.email)
         .collection('Group Members')
         .doc(previousMemberEmail)
@@ -190,7 +190,7 @@ class SetData {
     });
 
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(previousMemberEmail)
         .collection('Group Members')
         .doc(user.email)
@@ -223,14 +223,14 @@ class SetData {
         .doc(user.email)
         .delete();
 
-    await FirebaseFirestore.instance
-        .collection('Students')
+    return await FirebaseFirestore.instance
+        .collection('Users')
         .doc(user.email)
         .collection('Invites')
         .doc(receiverEmail)
         .delete()
         .then((value) => {
-              Navigator.maybePop(context),
+              Navigator.pop(context),
             });
   }
 }

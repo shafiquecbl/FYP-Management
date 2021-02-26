@@ -24,7 +24,7 @@ class _InboxState extends State<Inbox> {
       appBar: customAppBar("Inbox"),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('Students')
+            .collection('Users')
             .doc(email)
             .collection('Contacts')
             .orderBy("Time", descending: true)
@@ -47,7 +47,7 @@ class _InboxState extends State<Inbox> {
             onRefresh: () async {
               setState(() {
                 FirebaseFirestore.instance
-                    .collection('Students')
+                    .collection('Users')
                     .doc(email)
                     .collection('Contacts')
                     .orderBy("Time", descending: true)

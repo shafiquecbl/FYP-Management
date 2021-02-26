@@ -24,8 +24,8 @@ class _SignFormState extends State<SignForm> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   String email;
   String password;
-  bool remember = false;
-  bool isLoading = false;
+  String department;
+  String batch;
   String role;
 
   final List<String> errors = [];
@@ -83,7 +83,7 @@ class _SignFormState extends State<SignForm> {
                 )
               : StreamBuilder(
                   stream: FirebaseFirestore.instance
-                      .collection('Role')
+                      .collection('Users')
                       .doc(email)
                       .snapshots(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -96,13 +96,24 @@ class _SignFormState extends State<SignForm> {
                           }
                         },
                       );
+                    role = snapshot.data['Role'];
+                    if (role != "Admin") {
+                      batch = snapshot.data['Batch'];
+                      department = snapshot.data['Department'];
+                    }
                     return DefaultButton(
                       text: "Continue",
                       press: () async {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
                           showLoadingDialog(context);
-                          signinUser(email, password, context);
+                          if (role == "Admin") {
+                            Navigator.pop(context);
+                            addError(error: "Admin cannot signin to this app");
+                          } else {
+                            addError(error: "Admin cannot signin to this app");
+                            signinUser(email, password, context);
+                          }
                         }
                       },
                     );

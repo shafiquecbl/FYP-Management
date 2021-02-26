@@ -56,7 +56,7 @@ class _GroupsState extends State<Groups> {
               tabs: [
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
-                      .collection('Students')
+                      .collection('Users')
                       .doc(user.email)
                       .collection('Group Members')
                       .snapshots(),
@@ -75,7 +75,7 @@ class _GroupsState extends State<Groups> {
                 ),
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
-                      .collection('Students')
+                      .collection('Users')
                       .doc(user.email)
                       .collection('Invites')
                       .snapshots(),
@@ -96,10 +96,8 @@ class _GroupsState extends State<Groups> {
 
   groupMembers() {
     return FutureBuilder(
-      future: FirebaseFirestore.instance
-          .collection('Students')
-          .doc(user.email)
-          .get(),
+      future:
+          FirebaseFirestore.instance.collection('Users').doc(user.email).get(),
       builder: (BuildContext context, AsyncSnapshot currentUser) {
         if (currentUser.connectionState == ConnectionState.waiting)
           return SpinKitCircle(
@@ -109,7 +107,7 @@ class _GroupsState extends State<Groups> {
         batch = currentUser.data['Batch'];
         return StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection('Students')
+              .collection('Users')
               .doc(user.email)
               .collection('Group Members')
               .snapshots(),
@@ -130,7 +128,7 @@ class _GroupsState extends State<Groups> {
                 onRefresh: () async {
                   setState(() {
                     FirebaseFirestore.instance
-                        .collection('Students')
+                        .collection('Users')
                         .doc(user.email)
                         .collection('Group Members')
                         .snapshots();
@@ -188,7 +186,7 @@ class _GroupsState extends State<Groups> {
   invites() {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection('Students')
+          .collection('Users')
           .doc(user.email)
           .collection('Invites')
           .snapshots(),
@@ -209,7 +207,7 @@ class _GroupsState extends State<Groups> {
             onRefresh: () async {
               setState(() {
                 FirebaseFirestore.instance
-                    .collection('Students')
+                    .collection('Users')
                     .doc(user.email)
                     .collection('Invites')
                     .snapshots();
@@ -227,7 +225,7 @@ class _GroupsState extends State<Groups> {
   invitesList(DocumentSnapshot snapshot) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection('Students')
+          .collection('Users')
           .doc(snapshot['Email'])
           .collection('Group Members')
           .snapshots(),
@@ -239,7 +237,7 @@ class _GroupsState extends State<Groups> {
         // if group is completed then delete all invites ////
         if (membersLength == 2) {
           FirebaseFirestore.instance
-              .collection('Students')
+              .collection('Users')
               .doc(user.email)
               .collection('Invites')
               .doc(snapshot['Email'])

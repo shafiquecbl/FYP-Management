@@ -43,7 +43,7 @@ class Messages {
   Future addContact(
       receiverEmail, receiverRegNo, receiverPhotoURl, message) async {
     await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(email)
         .collection('Contacts')
         .doc(receiverEmail)
@@ -57,7 +57,7 @@ class Messages {
     });
 
     return await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(receiverEmail)
         .collection('Contacts')
         .doc(email)
