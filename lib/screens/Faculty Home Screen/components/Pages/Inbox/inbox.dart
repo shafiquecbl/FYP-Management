@@ -77,7 +77,7 @@ class _FInboxState extends State<FInbox> {
                       receiverRegNo: snapshot['Registeration No'],
                       receiverPhotoURL: snapshot['PhotoURL'],
                     ))).then(
-            (value) => UpdateData().updateMessageStatus(snapshot['Email']))
+            (value) => UpdateData().updateTeacherSideStatus(snapshot['Email']))
       },
       child: Container(
         padding: EdgeInsets.symmetric(
