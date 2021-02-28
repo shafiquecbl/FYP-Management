@@ -183,7 +183,7 @@ class _GroupsState extends State<Groups> {
     );
   }
 
-  invites() {
+  StreamBuilder invites() {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('Users')
@@ -222,7 +222,7 @@ class _GroupsState extends State<Groups> {
     );
   }
 
-  invitesList(DocumentSnapshot snapshot) {
+  StreamBuilder invitesList(DocumentSnapshot snapshot) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('Users')
@@ -234,7 +234,7 @@ class _GroupsState extends State<Groups> {
           return SpinKitCircle(
             color: kPrimaryColor,
           );
-        // if group is completed then delete all invites ////
+        // if my group is completed then delete all invites ////
         if (membersLength == 2) {
           FirebaseFirestore.instance
               .collection('Users')
@@ -263,43 +263,45 @@ class _GroupsState extends State<Groups> {
           DeleteData().deleteInvite(context, snapshot['Email']);
         }
         /////////////////////////////////////////////////////////
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: ListTile(
-              leading: CircleAvatar(
-                  radius: 27,
-                  backgroundColor: kPrimaryColor.withOpacity(0.8),
-                  child: snapshot['PhotoURL'] == null ||
-                          snapshot['PhotoURL'] == ""
-                      ? Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image:
-                                      AssetImage("assets/images/nullUser.png")),
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(70)),
-                          width: 50,
-                          height: 50,
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(70),
-                          child: Image.network(
-                            snapshot['PhotoURL'],
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        )),
-              title: Text(snapshot['Registeration No'].toUpperCase()),
-              trailing: IconButton(
-                icon: Icon(Icons.more_vert),
-                onPressed: () {
-                  moreDialog(snapshot);
-                },
-              )),
-        );
+        return getInvites(snapshot);
       },
+    );
+  }
+
+  Padding getInvites(DocumentSnapshot snapshot) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: ListTile(
+          leading: CircleAvatar(
+              radius: 27,
+              backgroundColor: kPrimaryColor.withOpacity(0.8),
+              child: snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
+                  ? Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage("assets/images/nullUser.png")),
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(70)),
+                      width: 50,
+                      height: 50,
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(70),
+                      child: Image.network(
+                        snapshot['PhotoURL'],
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                    )),
+          title: Text(snapshot['Registeration No'].toUpperCase()),
+          trailing: IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: () {
+              moreDialog(snapshot);
+            },
+          )),
     );
   }
 

@@ -7,7 +7,7 @@ class UpdateData {
 
   Future updateMessageStatus(receiverEmail) async {
     return await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(email)
         .collection('Contacts')
         .doc(receiverEmail)
@@ -16,7 +16,7 @@ class UpdateData {
 
   Future updateTeacherMessageStatus(receiverEmail) async {
     return await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(email)
         .collection('Teacher Contacts')
         .doc(receiverEmail)
@@ -25,7 +25,7 @@ class UpdateData {
 
   Future updateTeacherSideStatus(receiverEmail) async {
     return await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(email)
         .collection('Contacts')
         .doc(receiverEmail)

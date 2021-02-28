@@ -295,8 +295,8 @@ class _InboxxState extends State<Inboxx> {
                       receiverEmail: snapshot['Email'],
                       receiverName: snapshot['Name'],
                       receiverPhotoURL: snapshot['PhotoURL'],
-                    ))).then(
-            (value) => UpdateData().updateMessageStatus(snapshot['Email']))
+                    ))).then((value) =>
+            UpdateData().updateTeacherMessageStatus(snapshot['Email']))
       },
       child: Container(
         padding: EdgeInsets.symmetric(

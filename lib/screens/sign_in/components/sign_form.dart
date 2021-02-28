@@ -88,6 +88,12 @@ class _SignFormState extends State<SignForm> {
                       .doc(email)
                       .snapshots(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasError) {
+                      addError(error: "Please enter valid email");
+                    }
+                    if (snapshot.error) {
+                      addError(error: "Please enter valid email");
+                    }
                     if (snapshot.connectionState == ConnectionState.waiting)
                       return DefaultButton(
                         text: "Continue",
@@ -120,7 +126,7 @@ class _SignFormState extends State<SignForm> {
                       },
                     );
                   },
-                ),
+                )
         ],
       ),
     );

@@ -21,14 +21,14 @@ class _DashboardState extends State<Dashboard> {
   String teacherDeparment;
   String batch;
   int indexLength;
-  String regNo;
-  String photoURL;
+  int groupMembers;
+  // String regNo;
+  // String photoURL;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar("Dashboard"),
       body: FutureBuilder(
-        initialData: [],
         future: Future.wait({
           FirebaseFirestore.instance.collection('Users').doc(user.email).get(),
           FirebaseFirestore.instance
@@ -40,98 +40,105 @@ class _DashboardState extends State<Dashboard> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return SpinKitCircle(color: kPrimaryColor);
+
           department = snapshot.data[0]['Department'];
           batch = snapshot.data[0]['Batch'];
-          regNo = snapshot.data[0]['Registeration No'];
-          photoURL = snapshot.data[0]['PhotoURL'];
+          // regNo = snapshot.data[0]['Registeration No'];
+          // photoURL = snapshot.data[0]['PhotoURL'];
           teacherDeparment = department == "SE" ? "CS" : department;
+          groupMembers = snapshot.data[1].docs.length;
 
           // if group is completed then show list of supervisor //
-          if (snapshot.data[1].docs.length == 2)
-            return StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('Teachers')
-                    .doc(teacherDeparment)
-                    .collection('Teachers')
-                    .snapshots(),
-                builder: (BuildContext context, AsyncSnapshot teacherSnap) {
-                  if (teacherSnap.connectionState == ConnectionState.waiting)
-                    return SpinKitCircle(color: kPrimaryColor);
-                  return Column(
-                    children: [
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 8),
-                          child: Text("Choose Supervisor",
-                              style: GoogleFonts.teko(
-                                color: kPrimaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              )),
-                        ),
-                      ),
-                      Expanded(
-                        child: SizedBox(
-                          child: ListView.builder(
-                              itemCount: teacherSnap.data.docs.length,
-                              physics: PageScrollPhysics(
-                                  parent: AlwaysScrollableScrollPhysics()),
-                              controller: PageController(viewportFraction: 1.0),
-                              itemBuilder: (context, index) {
-                                return supervisorList(
-                                    teacherSnap.data.docs[index]);
-                              }),
-                        ),
-                      ),
-                    ],
-                  );
-                });
-          ////////////////////////////////////////////////////
+          if (groupMembers == 2) return getSupervisor();
 
           // if group is not completed then show students list //
-          return StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('Students')
-                .doc(department)
-                .collection(batch)
-                .where('Email', isNotEqualTo: user.email)
-                .snapshots(),
-            builder: (BuildContext context, AsyncSnapshot snap) {
-              if (snap.connectionState == ConnectionState.waiting)
-                return SpinKitCircle(color: kPrimaryColor);
-              indexLength = snap.data.docs.length;
-              return Column(
-                children: [
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 8),
-                      child: Text("Invite Students",
-                          style: GoogleFonts.teko(
-                            color: kPrimaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          )),
-                    ),
-                  ),
-                  Expanded(
-                    child: SizedBox(
-                      child: ListView.builder(
-                          itemCount: indexLength,
-                          physics: PageScrollPhysics(
-                              parent: AlwaysScrollableScrollPhysics()),
-                          controller: PageController(viewportFraction: 1.0),
-                          itemBuilder: (context, index) {
-                            return studentList(snap.data.docs[index], index);
-                          }),
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
+          return getStudents();
           ////////////////////////////////////////////////////
         },
       ),
+    );
+  }
+
+  StreamBuilder getSupervisor() {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('Teachers')
+            .doc(teacherDeparment)
+            .collection('Teachers')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot teacherSnap) {
+          if (teacherSnap.connectionState == ConnectionState.waiting)
+            return SpinKitCircle(color: kPrimaryColor);
+          return Column(
+            children: [
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 8),
+                  child: Text("Choose Supervisor",
+                      style: GoogleFonts.teko(
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      )),
+                ),
+              ),
+              Expanded(
+                child: SizedBox(
+                  child: ListView.builder(
+                      itemCount: teacherSnap.data.docs.length,
+                      physics: PageScrollPhysics(
+                          parent: AlwaysScrollableScrollPhysics()),
+                      controller: PageController(viewportFraction: 1.0),
+                      itemBuilder: (context, index) {
+                        return supervisorList(teacherSnap.data.docs[index]);
+                      }),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  StreamBuilder getStudents() {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('Students')
+          .doc(department)
+          .collection(batch)
+          .where('Email', isNotEqualTo: user.email)
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot snap) {
+        if (snap.connectionState == ConnectionState.waiting)
+          return SpinKitCircle(color: kPrimaryColor);
+        indexLength = snap.data.docs.length;
+        return Column(
+          children: [
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 8),
+                child: Text("Invite Students",
+                    style: GoogleFonts.teko(
+                      color: kPrimaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    )),
+              ),
+            ),
+            Expanded(
+              child: SizedBox(
+                child: ListView.builder(
+                    itemCount: indexLength,
+                    physics: PageScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics()),
+                    controller: PageController(viewportFraction: 1.0),
+                    itemBuilder: (context, index) {
+                      return studentList(snap.data.docs[index], index);
+                    }),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
