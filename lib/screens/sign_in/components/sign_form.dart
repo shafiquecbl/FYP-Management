@@ -73,60 +73,36 @@ class _SignFormState extends State<SignForm> {
           ),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
-          email == null || email == ""
-              ? DefaultButton(
-                  text: "Continue",
-                  press: () async {
-                    if (_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
-                    }
-                  },
-                )
-              : StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('Users')
-                      .doc(email)
-                      .snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasError) {
-                      addError(error: "Please enter valid email");
-                    }
-                    if (snapshot.error) {
-                      addError(error: "Please enter valid email");
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting)
-                      return DefaultButton(
-                        text: "Continue",
-                        press: () async {
-                          if (_formKey.currentState.validate()) {
-                            _formKey.currentState.save();
-                          }
-                        },
-                      );
-                    role = snapshot.data['Role'];
-                    if (role == "Student") {
-                      batch = snapshot.data['Batch'];
-                      department = snapshot.data['Department'];
-                    }
-                    return DefaultButton(
-                      text: "Continue",
-                      press: () async {
-                        if (_formKey.currentState.validate()) {
-                          _formKey.currentState.save();
-                          showLoadingDialog(context);
-                          if (role == "Admin") {
-                            Navigator.pop(context);
-                            addError(error: "Admin cannot signin to this app");
-                          } else {
-                            removeError(
-                                error: "Admin cannot signin to this app");
-                            signinUser(email, password, context);
-                          }
-                        }
-                      },
-                    );
-                  },
-                )
+          // email == null || email == ""
+          //     ?
+          DefaultButton(
+            text: "Continue",
+            press: () async {
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
+                FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(email)
+                    .get()
+                    .then((value) => {
+                          role = value['Role'],
+                          showLoadingDialog(context),
+                          if (role == "Admin")
+                            {
+                              Navigator.pop(context),
+                              addError(
+                                  error: "Admin cannot signin to this app"),
+                            }
+                          else
+                            {
+                              removeError(
+                                  error: "Admin cannot signin to this app"),
+                              signinUser(email, password, context),
+                            }
+                        });
+              }
+            },
+          )
         ],
       ),
     );

@@ -7,7 +7,7 @@ showLoadingDialog(context) {
     content: Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        CircularProgressIndicator.adaptive(
+        CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
         ),
         Text("Please Wait...")
