@@ -90,7 +90,9 @@ class _SubmitProposalFormState extends State<SubmitProposalForm> {
 
   submit() async {
     showLoadingDialog(context);
-    final proposal = FirebaseStorage.instance.ref().child('Files/$fileName');
+    final proposal = FirebaseStorage.instance
+        .ref()
+        .child('Files/${FirebaseAuth.instance.currentUser.email}/$fileName');
     proposal.putFile(file);
     // ignore: unnecessary_cast
     url = await proposal.getDownloadURL() as String;

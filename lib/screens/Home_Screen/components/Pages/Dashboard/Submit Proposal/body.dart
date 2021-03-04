@@ -30,6 +30,9 @@ class _BodyyState extends State<Bodyy> {
                     fontSize: 18,
                   ),
                 ),
+                Text(
+                  "( Make Sure the file name is \n   same as your GroupID )",
+                ),
                 SizedBox(height: SizeConfig.screenHeight * 0.06),
                 SubmitProposalForm(
                   teacherEmail: widget.teacherEmail,

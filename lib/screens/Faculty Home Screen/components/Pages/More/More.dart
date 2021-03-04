@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp_management/screens/Faculty%20Home%20Screen/components/Pages/More/Invites/invites.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/More/components/profile_menu.dart';
 import 'package:fyp_management/screens/sign_in/sign_in_screen.dart';
 import 'package:fyp_management/size_config.dart';
@@ -78,6 +79,14 @@ class _FMoreState extends State<FMore> {
                   text: "My Profile",
                   icon: "assets/icons/User Icon.svg",
                   press: () => {},
+                ),
+                ProfileMenu(
+                  text: "Invites",
+                  icon: "assets/icons/Discover.svg",
+                  press: () => {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => Invites()))
+                  },
                 ),
                 ProfileMenu(
                   text: "Sign Out",

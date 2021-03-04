@@ -48,6 +48,28 @@ class _GroupsState extends State<Groups> {
               style: TextStyle(color: kPrimaryColor),
             ),
           ),
+          actions: [
+            StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('Users')
+                  .doc(FirebaseAuth.instance.currentUser.email)
+                  .snapshots(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                // if (snapshot.data == null) return Container();
+                if (snapshot.hasData)
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Center(
+                      child: Text("Group ID: ${snapshot.data['GroupID']}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black.withOpacity(0.7))),
+                    ),
+                  );
+                return Container();
+              },
+            ),
+          ],
           backgroundColor: hexColor,
           bottom: TabBar(
               labelColor: kPrimaryColor,

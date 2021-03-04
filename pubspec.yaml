@@ -24,6 +24,7 @@ dependencies:
   image_picker: ^0.6.6+5
   firebase_storage: ^6.0.0
   flutter_document_picker: ^4.0.1
+  url_launcher: ^5.7.10
 
 dev_dependencies:
   flutter_test:
