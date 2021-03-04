@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/models/setData.dart';
+import 'package:fyp_management/screens/Home_Screen/components/Pages/Dashboard/Submit%20Proposal/submit_proposal.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/chat_screen.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/teacher_Chat_Screen.dart';
 import 'package:fyp_management/widgets/alert_dialog.dart';
@@ -22,8 +23,6 @@ class _DashboardState extends State<Dashboard> {
   String batch;
   int indexLength;
   int groupMembers;
-  // String regNo;
-  // String photoURL;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,8 +42,6 @@ class _DashboardState extends State<Dashboard> {
 
           department = snapshot.data[0]['Department'];
           batch = snapshot.data[0]['Batch'];
-          // regNo = snapshot.data[0]['Registeration No'];
-          // photoURL = snapshot.data[0]['PhotoURL'];
           teacherDeparment = department == "SE" ? "CS" : department;
           groupMembers = snapshot.data[1].docs.length;
 
@@ -283,10 +280,12 @@ class _DashboardState extends State<Dashboard> {
     );
     Widget invite = FlatButton(
       onPressed: () {
-        Navigator.maybePop(context).then((value) => {
-              showLoadingDialog(context),
-              SetData().sendInvite(context, snapshot['Email'])
-            });
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (_) => SubmitProposal(
+                      teacherEmail: snapshot['Email'],
+                    )));
       },
       child: ListTile(
           leading: Icon(

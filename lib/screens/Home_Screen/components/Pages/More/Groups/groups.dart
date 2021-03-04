@@ -234,6 +234,7 @@ class _GroupsState extends State<Groups> {
           return SpinKitCircle(
             color: kPrimaryColor,
           );
+
         // if my group is completed then delete all invites ////
         if (membersLength == 2) {
           FirebaseFirestore.instance
@@ -255,6 +256,7 @@ class _GroupsState extends State<Groups> {
           checkLengthReceiverEmail = snap.data.docs[0]['Email'];
           checkLengthReceiverPhoto = snap.data.docs[0]['PhotoURL'];
         }
+
         //////////////////////////////////////////////////////////
 
         // if the user who sent invite completed his/her
@@ -262,6 +264,7 @@ class _GroupsState extends State<Groups> {
         if (checkLength == 2) {
           DeleteData().deleteInvite(context, snapshot['Email']);
         }
+
         /////////////////////////////////////////////////////////
         return getInvites(snapshot);
       },
@@ -324,19 +327,9 @@ class _GroupsState extends State<Groups> {
           ),
           title: Text("Message")),
     );
-    Widget viewProfile = FlatButton(
-      onPressed: () {},
-      child: ListTile(
-          leading: Icon(
-            Icons.supervised_user_circle_outlined,
-            color: kPrimaryColor,
-          ),
-          title: Text("View Profile")),
-    );
     SimpleDialog alert = SimpleDialog(
       children: [
         message,
-        viewProfile,
       ],
     );
 

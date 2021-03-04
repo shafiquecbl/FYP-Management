@@ -26,6 +26,36 @@ class SetData {
             });
   }
 
+  Future sendInviteToTeacher(context, teacherEmail, proposal) async {
+    String groupID;
+    String department;
+    String batch;
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user.email)
+        .get()
+        .then((value) => {
+              groupID = value['GroupID'],
+              batch = value['Batch'],
+              department = value['Department']
+            });
+
+    return await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(teacherEmail)
+        .collection('Invites')
+        .doc(groupID)
+        .set({
+      'GroupID': groupID,
+      'Batch': batch,
+      'Department': department,
+      'Proposal': proposal
+    }).then((value) => {
+              Navigator.maybePop(context).then((value) =>
+                  Snack_Bar.show(context, "Invite sent successfully!"))
+            });
+  }
+
   Future acceptInvite(context,
       {@required receiverEmail,
       @required receiverRegNo,
@@ -71,6 +101,59 @@ class SetData {
       @required previousMemberPhoto,
       @required department,
       @required batch}) async {
+    String groupID;
+    String dep;
+    String batch;
+
+    //getting and assigning groupID
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user.email)
+        .get()
+        .then((value) => {
+              dep = value['Department'],
+              batch = value['Batch'],
+              FirebaseFirestore.instance
+                  .collection('Groups')
+                  .doc(dep)
+                  .collection(batch)
+                  .get()
+                  .then((value) => {
+                        groupID = '$dep-${value.docs.length + 1}',
+                      })
+            });
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user.email)
+        .update({
+      'GroupID': groupID,
+    });
+
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(receiverEmail)
+        .update({
+      'GroupID': groupID,
+    });
+
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(previousMemberEmail)
+        .update({
+      'GroupID': groupID,
+    });
+
+    await FirebaseFirestore.instance
+        .collection('Groups')
+        .doc(dep)
+        .collection(batch)
+        .add({
+      'GroupID': groupID,
+      'Member 1': user.email,
+      'Member 2': receiverEmail,
+      'Member 3': previousMemberEmail
+    });
+    ///////////////////////////////////
     await FirebaseFirestore.instance
         .collection('Users')
         .doc(user.email)
@@ -157,6 +240,62 @@ class SetData {
       @required previousMemberPhoto,
       @required department,
       @required batch}) async {
+    String groupID;
+    String dep;
+    String batch;
+
+    //getting and assigning groupID
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user.email)
+        .get()
+        .then((value) => {
+              dep = value['Department'],
+              batch = value['Batch'],
+              FirebaseFirestore.instance
+                  .collection('Groups')
+                  .doc(dep)
+                  .collection(batch)
+                  .get()
+                  .then((value) => {
+                        groupID = '$dep-${value.docs.length + 1}',
+                        FirebaseFirestore.instance
+                            .collection('Groups')
+                            .doc(dep)
+                            .collection(batch)
+                            .doc(groupID)
+                            .set({
+                          'GroupID': groupID,
+                          'Member 1': user.email,
+                          'Member 2': receiverEmail,
+                          'Member 3': previousMemberEmail
+                        })
+                      })
+            });
+
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user.email)
+        .update({
+      'GroupID': groupID,
+    });
+
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(receiverEmail)
+        .update({
+      'GroupID': groupID,
+    });
+
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(previousMemberEmail)
+        .update({
+      'GroupID': groupID,
+    });
+
+    /////////////////////
+
     await FirebaseFirestore.instance
         .collection('Users')
         .doc(receiverEmail)

@@ -86,6 +86,7 @@ class _SignFormState extends State<SignForm> {
                     .get()
                     .then((value) => {
                           role = value['Role'],
+                          removeError(error: "Invalid Email"),
                           showLoadingDialog(context),
                           if (role == "Admin")
                             {
@@ -99,7 +100,10 @@ class _SignFormState extends State<SignForm> {
                                   error: "Admin cannot signin to this app"),
                               signinUser(email, password, context),
                             }
-                        });
+                        })
+                    .catchError((e) {
+                  addError(error: "Invalid Email");
+                });
               }
             },
           )
