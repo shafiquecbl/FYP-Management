@@ -131,6 +131,13 @@ class SetData {
 
     await FirebaseFirestore.instance
         .collection('Users')
+        .doc(user.email)
+        .update({
+      'GroupID': groupID,
+    });
+
+    await FirebaseFirestore.instance
+        .collection('Users')
         .doc(receiverEmail)
         .update({
       'GroupID': groupID,
@@ -259,19 +266,14 @@ class SetData {
                   .get()
                   .then((value) => {
                         groupID = '$dep-${value.docs.length + 1}',
-                        FirebaseFirestore.instance
-                            .collection('Groups')
-                            .doc(dep)
-                            .collection(batch)
-                            .doc(groupID)
-                            .set({
-                          'GroupID': groupID,
-                          'Member 1': user.email,
-                          'Member 2': receiverEmail,
-                          'Member 3': previousMemberEmail
-                        })
                       })
             });
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user.email)
+        .update({
+      'GroupID': groupID,
+    });
 
     await FirebaseFirestore.instance
         .collection('Users')
@@ -294,7 +296,17 @@ class SetData {
       'GroupID': groupID,
     });
 
-    /////////////////////
+    await FirebaseFirestore.instance
+        .collection('Groups')
+        .doc(dep)
+        .collection(batch)
+        .add({
+      'GroupID': groupID,
+      'Member 1': user.email,
+      'Member 2': receiverEmail,
+      'Member 3': previousMemberEmail
+    });
+    ///////////////////////////////////
 
     await FirebaseFirestore.instance
         .collection('Users')

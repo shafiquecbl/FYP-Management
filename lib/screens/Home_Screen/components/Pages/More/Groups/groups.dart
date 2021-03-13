@@ -17,6 +17,7 @@ class Groups extends StatefulWidget {
 class _GroupsState extends State<Groups> {
   User user = FirebaseAuth.instance.currentUser;
   //
+  String groupID;
   int checkLength;
   String checkLengthEmail;
   String checkLengthPhoto;
@@ -55,18 +56,16 @@ class _GroupsState extends State<Groups> {
                   .doc(FirebaseAuth.instance.currentUser.email)
                   .snapshots(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                // if (snapshot.data == null) return Container();
-                if (snapshot.hasData)
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Center(
-                      child: Text("Group ID: ${snapshot.data['GroupID']}",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black.withOpacity(0.7))),
-                    ),
-                  );
-                return Container();
+                if (snapshot.data == null) return Container();
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Center(
+                    child: Text("Group ID: ${snapshot.data['GroupID']}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black.withOpacity(0.7))),
+                  ),
+                );
               },
             ),
           ],
@@ -257,6 +256,14 @@ class _GroupsState extends State<Groups> {
             color: kPrimaryColor,
           );
 
+        // if the user who sent invite completed his/her
+        // group then delete his/her invite
+        if (checkLength == 2) {
+          DeleteData().deleteInvite(context, snapshot['Email']);
+        }
+
+        /////////////////////////////////////////////////////////
+
         // if my group is completed then delete all invites ////
         if (membersLength == 2) {
           FirebaseFirestore.instance
@@ -280,14 +287,6 @@ class _GroupsState extends State<Groups> {
         }
 
         //////////////////////////////////////////////////////////
-
-        // if the user who sent invite completed his/her
-        // group then delete his/her invite
-        if (checkLength == 2) {
-          DeleteData().deleteInvite(context, snapshot['Email']);
-        }
-
-        /////////////////////////////////////////////////////////
         return getInvites(snapshot);
       },
     );

@@ -45,6 +45,7 @@ class _InvitesState extends State<Invites> {
 
   invitesList(AsyncSnapshot snapshot) {
     return DataTable(
+        showBottomBorder: false,
         columns: [
           DataColumn(label: Text('Group ID')),
           DataColumn(label: Text('Batch')),
