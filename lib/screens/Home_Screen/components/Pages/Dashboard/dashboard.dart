@@ -12,6 +12,7 @@ import 'package:fyp_management/widgets/customAppBar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Dashboard extends StatefulWidget {
+  static String routeName = "/sDashboard";
   @override
   _DashboardState createState() => _DashboardState();
 }

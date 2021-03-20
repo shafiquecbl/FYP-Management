@@ -10,6 +10,7 @@ import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/time_ago.dart';
 
 class Inboxx extends StatefulWidget {
+  static String routeName = "/sinbox";
   @override
   _InboxxState createState() => _InboxxState();
 }

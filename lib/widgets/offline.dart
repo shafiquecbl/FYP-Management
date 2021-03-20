@@ -1,70 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_management/constants.dart';
+import 'package:fyp_management/size_config.dart';
 
-String get whoops => "Whoops!";
-String get noInternet => "No internet connection";
+String get whoops => "Oops!";
+String get noInternet =>
+    'There is no Internet connection\nPlease check your Internet connection.';
 String get tryAgain => "Try Again";
 
-class Offline extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
-      child: Container(
-          decoration: BoxDecoration(color: hexColor),
-          child: Scaffold(
-            body: Column(
-              children: <Widget>[
-                Container(
-                  height: 200,
-                ),
-                Expanded(
-                    child: new Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                      Container(
-                          width: 100.0,
-                          height: 100.0,
-                          child: Image.asset(
-                            "assets/images/wifi.png",
-                            color: Colors.black26,
-                            fit: BoxFit.contain,
-                          )),
-                      SizedBox(height: 40),
-                      Text(
-                        whoops,
-                        style: TextStyle(
-                            color: Colors.black45,
-                            fontSize: 40.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        noInternet,
-                        style: TextStyle(color: Colors.black87, fontSize: 15.0),
-                      ),
-                      SizedBox(height: 5),
-                      SizedBox(height: 60),
-                      RaisedButton(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                          color: kPrimaryColor,
-                          child: Text(
-                            tryAgain,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          // width: 250,
-                          onPressed: () {}),
-                    ])),
-              ],
+Widget offline = WillPopScope(
+  onWillPop: () async => false,
+  child: Scaffold(
+    body: Container(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/wifi.png',
+              color: kPrimaryColor,
             ),
-          )),
-    ));
-  }
-}
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              whoops,
+              textAlign: TextAlign.center,
+              textScaleFactor: 3,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              noInternet,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 80,
+            ),
+            Container(
+              width: getProportionateScreenWidth(170),
+              height: getProportionateScreenHeight(54),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(50)),
+                border: Border.all(width: 1.5, color: Colors.grey[300]),
+              ),
+              child: FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                onPressed: () {},
+                child: Text(
+                  tryAgain,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: getProportionateScreenWidth(16),
+                    color: Colors.black.withOpacity(0.7),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  ),
+);

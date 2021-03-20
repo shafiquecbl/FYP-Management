@@ -8,6 +8,7 @@ import 'package:fyp_management/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Invites extends StatefulWidget {
+  static String routeName = "/tinvites";
   @override
   _InvitesState createState() => _InvitesState();
 }

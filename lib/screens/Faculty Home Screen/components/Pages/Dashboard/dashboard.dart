@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fyp_management/constants.dart';
 
 class FDashboard extends StatefulWidget {
+  static String routeName = "/tDashboard";
   @override
   _FDashboardState createState() => _FDashboardState();
 }

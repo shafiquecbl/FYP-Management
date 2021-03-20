@@ -1,9 +1,11 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp_management/constants.dart';
-import 'Pages/Inbox/inbox.dart';
-import 'Pages/More/More.dart';
-import 'Pages/Dashboard/dashboard.dart';
+import 'package:fyp_management/screens/sign_in/sign_in_screen.dart';
+import 'package:fyp_management/widgets/snack_bar.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'Pages/griddashboard.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -11,76 +13,99 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  int pageIndex = 0;
-
-  final FInbox _inboxPage = FInbox();
-  final FDashboard _dashboard = FDashboard();
-  final FMore _morePage = FMore();
-
-  Widget _showPage = new FDashboard();
-
-  Widget _pageChooser(int page) {
-    switch (page) {
-      case 0:
-        return _dashboard;
-        break;
-
-      case 1:
-        return _inboxPage;
-        break;
-
-      case 2:
-        return _morePage;
-        break;
-
-      default:
-        return Container(
-            child: Center(
-                child: Text(
-          'No Page Found',
-          style: TextStyle(fontSize: 30),
-        )));
-        break;
-    }
-  }
-
+  User user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CurvedNavigationBar(
-        color: hexColor,
-        backgroundColor: Colors.white,
-        height: 60,
-        index: pageIndex,
-        items: <Widget>[
-          Icon(
-            Icons.dashboard,
-            color: kPrimaryColor,
+      body: Column(
+        children: <Widget>[
+          SizedBox(
+            height: 80,
           ),
-          Icon(
-            Icons.message_outlined,
-            color: kPrimaryColor,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      FirebaseAuth.instance.currentUser.email
+                          .split('@')
+                          .first
+                          .toUpperCase(),
+                      style: GoogleFonts.teko(
+                          fontWeight: FontWeight.bold, fontSize: 22),
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      "Teacher",
+                      style: GoogleFonts.teko(
+                          color: Color(0xffa29aac),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  alignment: Alignment.topCenter,
+                  icon: Icon(
+                    Icons.logout,
+                  ),
+                  onPressed: () {
+                    confirmSignout(context);
+                  },
+                )
+              ],
+            ),
           ),
-          Icon(
-            Icons.more_horiz_outlined,
-            color: kPrimaryColor,
+          SizedBox(
+            height: 40,
           ),
+          FGridDashboard()
         ],
-        animationDuration: Duration(
-          milliseconds: 550,
-        ),
-        onTap: (int tappedindex) {
-          setState(() {
-            _showPage = _pageChooser(tappedindex);
-          });
-        },
-      ),
-      body: Container(
-        color: Colors.white,
-        child: Center(
-          child: _showPage,
-        ),
       ),
     );
   }
+}
+
+confirmSignout(BuildContext context) {
+  // set up the button
+  Widget yes = CupertinoDialogAction(
+    child: Text("Yes"),
+    onPressed: () {
+      FirebaseAuth.instance.signOut().whenComplete(() {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => SignInScreen()),
+            (route) => false);
+      }).catchError((e) {
+        Snack_Bar.show(context, e.message);
+      });
+    },
+  );
+
+  Widget no = CupertinoDialogAction(
+    child: Text("No"),
+    onPressed: () {
+      Navigator.maybePop(context);
+    },
+  );
+
+  // set up the AlertDialog
+  CupertinoAlertDialog alert = CupertinoAlertDialog(
+    title: Text("Signout"),
+    content: Text("Do you want to signout?"),
+    actions: [yes, no],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

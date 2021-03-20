@@ -10,6 +10,7 @@ import 'package:fyp_management/widgets/time_ago.dart';
 import 'chat_screen.dart';
 
 class FInbox extends StatefulWidget {
+  static String routeName = "/tInbox";
   @override
   _FInboxState createState() => _FInboxState();
 }

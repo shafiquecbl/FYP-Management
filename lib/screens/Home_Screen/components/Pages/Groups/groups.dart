@@ -10,6 +10,7 @@ import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/alert_dialog.dart';
 
 class Groups extends StatefulWidget {
+  static String routeName = "/sgroups";
   @override
   _GroupsState createState() => _GroupsState();
 }
@@ -56,7 +57,8 @@ class _GroupsState extends State<Groups> {
                   .doc(FirebaseAuth.instance.currentUser.email)
                   .snapshots(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.data == null) return Container();
+                if (snapshot.data == null || snapshot.hasError)
+                  return Container();
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Center(
@@ -67,7 +69,7 @@ class _GroupsState extends State<Groups> {
                   ),
                 );
               },
-            ),
+            )
           ],
           backgroundColor: hexColor,
           bottom: TabBar(
