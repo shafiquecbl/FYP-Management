@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp_management/size_config.dart';
 import 'components/body.dart';
@@ -12,8 +15,22 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  User user = FirebaseAuth.instance.currentUser;
+  String token;
+  FirebaseMessaging messaging = FirebaseMessaging();
+
+  void getToken() async {
+    token = await messaging.getToken();
+    print("TOKENNN: $token");
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user.email)
+        .update({'token': token});
+  }
+
   @override
   Widget build(BuildContext context) {
+    getToken();
     SizeConfig().init(context);
     return WillPopScope(
         onWillPop: () async => false,

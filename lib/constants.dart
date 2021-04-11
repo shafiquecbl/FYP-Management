@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_management/size_config.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-const kPrimaryColor = Color(0xFFFF7643);
-const kPrimaryLightColor = Color(0xFFFFECDF);
+const kPrimaryColor = Color(0xFF492E7D);
 const kGreenColor = Color(0xFF388E3C);
 const kWhiteColor = Colors.white;
 const hexColor = Color(0xFFf5f4f4);
-const kOfferColor = Color(0xFFE3E9F5);
-const kOfferBackColor = Color(0xFFF5F9FC);
-const kProfileColor = Color(0xFF2B2B2B);
-const kPrimaryGradientColor = LinearGradient(
-  begin: Alignment.topLeft,
-  end: Alignment.bottomRight,
-  colors: [Color(0xFFFFA53E), Color(0xFFFF7643)],
-);
 const kSecondaryColor = Color(0xFF979797);
 const kTextColor = Color(0xFF757575);
-
-const kAnimationDuration = Duration(milliseconds: 200);
 
 final headingStyle = TextStyle(
   fontSize: getProportionateScreenWidth(28),
@@ -31,6 +21,9 @@ final otp = TextStyle(
   color: kPrimaryColor,
   height: 1.5,
 );
+
+final stylee = GoogleFonts.teko(
+    color: kTextColor, fontSize: 18, fontWeight: FontWeight.bold);
 
 // Form Error
 final RegExp emailValidatorRegExp =

@@ -7,6 +7,7 @@ import 'package:fyp_management/models/setData.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/chat_screen.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/alert_dialog.dart';
+import 'package:fyp_management/widgets/navigator.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Groups extends StatefulWidget {
@@ -109,6 +110,8 @@ class _GroupsState extends State<Groups> {
     );
   }
 
+  ////////////////////////////////////////////////////////////////////////////
+
   groupMembers() {
     return FutureBuilder(
       future:
@@ -204,15 +207,23 @@ class _GroupsState extends State<Groups> {
           ),
         ),
         title: Text(snapshot['Registeration No'].toUpperCase()),
-        trailing: IconButton(
-          icon: Icon(Icons.more_vert),
+        trailing: RaisedButton.icon(
+          label: Text('Chat'),
+          icon: Icon(Icons.message),
           onPressed: () {
-            membersDialog(snapshot);
+            navigator(
+                context,
+                ChatScreen(
+                  receiverEmail: snapshot['Email'],
+                  receiverRegNo: snapshot['Registeration No'],
+                ));
           },
         ),
       ),
     );
   }
+
+  ////////////////////////////////////////////////////////////////////////////
 
   StreamBuilder invites() {
     return StreamBuilder(
@@ -266,14 +277,6 @@ class _GroupsState extends State<Groups> {
         if (snap.connectionState == ConnectionState.waiting)
           return Center(child: CircularProgressIndicator());
 
-        // if the user who sent invite completed his/her
-        // group then delete his/her invite
-        if (checkLength == 2) {
-          DeleteData().deleteInvite(context, snapshot['Email']);
-        }
-
-        /////////////////////////////////////////////////////////
-
         // if my group is completed then delete all invites ////
         if (membersLength == 2) {
           FirebaseFirestore.instance
@@ -282,6 +285,14 @@ class _GroupsState extends State<Groups> {
               .collection('Invites')
               .doc(snapshot['Email'])
               .delete();
+        }
+
+        ////////////////////////////////////////////////////
+
+        // if the user who sent invite completed his/her
+        // group then delete his/her invite
+        if (checkLength == 2) {
+          DeleteData().deleteInvite(context, snapshot['Email']);
         }
         ////////////////////////////////////////////////////
 
@@ -350,38 +361,6 @@ class _GroupsState extends State<Groups> {
               moreDialog(snapshot);
             },
           )),
-    );
-  }
-
-  membersDialog(DocumentSnapshot snapshot) {
-    Widget message = FlatButton(
-      onPressed: () {
-        Navigator.maybePop(context).then((value) => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (builder) => ChatScreen(
-                      receiverEmail: snapshot['Email'],
-                      receiverRegNo: snapshot['Registeration No'],
-                    ))));
-      },
-      child: ListTile(
-          leading: Icon(
-            Icons.message_outlined,
-            color: kPrimaryColor,
-          ),
-          title: Text("Message")),
-    );
-    SimpleDialog alert = SimpleDialog(
-      children: [
-        message,
-      ],
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
     );
   }
 

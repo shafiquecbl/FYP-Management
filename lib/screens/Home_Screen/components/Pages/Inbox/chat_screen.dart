@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/models/Messages.dart';
 import 'package:fyp_management/models/getData.dart';
+import 'package:fyp_management/models/notifications.dart';
 import 'package:fyp_management/screens/Home_Screen/components/pages/Inbox/modal_tile.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/outline_input_border.dart';
@@ -57,7 +58,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       widget.receiverRegNo.split('-').last,
                       style: GoogleFonts.teko(
                         color: kPrimaryColor,
-                        fontSize: 30,
+                        fontSize: 28,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -185,6 +186,19 @@ class _ChatScreenState extends State<ChatScreen> {
           .addMessage(widget.receiverEmail, user.displayName, text)
           .then((value) {
         Messages().addContact(widget.receiverEmail, widget.receiverRegNo, text);
+      });
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(widget.receiverEmail)
+          .get()
+          .then((snapshot) {
+        if (snapshot['token'] != '' || snapshot['token'] != null) {
+          sendAndRetrieveMessage(
+              token: snapshot['token'],
+              title: 'New Message',
+              body:
+                  'You received a new message from ${user.email.split('@').first}');
+        }
       });
       setState(() {
         isWriting = false;

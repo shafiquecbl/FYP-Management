@@ -9,9 +9,10 @@ class SetData {
   String uid = FirebaseAuth.instance.currentUser.uid.toString();
   static DateTime now = DateTime.now();
   String dateTime = DateFormat("dd-MM-yyyy h:mma").format(now);
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future sendInvite(context, receiverEmail) async {
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(receiverEmail)
         .collection('Invites')
@@ -29,17 +30,13 @@ class SetData {
     String groupID;
     String department;
     String batch;
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(user.email)
-        .get()
-        .then((value) => {
-              groupID = value['GroupID'],
-              batch = value['Batch'],
-              department = value['Department']
-            });
+    await firestore.collection('Users').doc(user.email).get().then((value) => {
+          groupID = value['GroupID'],
+          batch = value['Batch'],
+          department = value['Department']
+        });
 
-    return await FirebaseFirestore.instance
+    return await firestore
         .collection('Users')
         .doc(teacherEmail)
         .collection('Invites')
@@ -60,7 +57,7 @@ class SetData {
     @required receiverEmail,
     @required receiverRegNo,
   }) async {
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(user.email)
         .collection('Group Members')
@@ -70,7 +67,7 @@ class SetData {
       'Email': receiverEmail,
     });
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(receiverEmail)
         .collection('Group Members')
@@ -80,7 +77,7 @@ class SetData {
       'Email': user.email,
     });
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(user.email)
         .collection('Invites')
@@ -100,64 +97,45 @@ class SetData {
     String groupID;
     String dep;
     String batch;
+    int step = 2;
 
     //getting and assigning groupID
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(user.email)
-        .get()
-        .then((value) => {
-              dep = value['Department'],
-              batch = value['Batch'],
-              FirebaseFirestore.instance
-                  .collection('Groups')
-                  .doc(dep)
-                  .collection(batch)
-                  .get()
-                  .then((value) => {
-                        groupID = '$dep-${value.docs.length + 1}',
-                      })
-            });
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(user.email)
-        .update({
+    await firestore.collection('Users').doc(user.email).get().then((value) => {
+          dep = value['Department'],
+          batch = value['Batch'],
+          firestore
+              .collection('Groups')
+              .doc(dep)
+              .collection(batch)
+              .get()
+              .then((value) => {
+                    groupID = '$dep-${value.docs.length + 1}',
+                  })
+        });
+    await firestore.collection('Users').doc(user.email).update({
       'GroupID': groupID,
     });
 
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(user.email)
-        .update({
+    await firestore.collection('Users').doc(user.email).update({
       'GroupID': groupID,
     });
 
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(receiverEmail)
-        .update({
+    await firestore.collection('Users').doc(receiverEmail).update({
       'GroupID': groupID,
     });
 
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(previousMemberEmail)
-        .update({
+    await firestore.collection('Users').doc(previousMemberEmail).update({
       'GroupID': groupID,
     });
 
-    await FirebaseFirestore.instance
-        .collection('Groups')
-        .doc(dep)
-        .collection(batch)
-        .add({
+    await firestore.collection('Groups').doc(dep).collection(batch).add({
       'GroupID': groupID,
       'Member 1': user.email,
       'Member 2': receiverEmail,
       'Member 3': previousMemberEmail
     });
     ///////////////////////////////////
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(user.email)
         .collection('Group Members')
@@ -167,7 +145,7 @@ class SetData {
       'Email': receiverEmail,
     });
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(previousMemberEmail)
         .collection('Group Members')
@@ -177,7 +155,7 @@ class SetData {
       'Email': receiverEmail,
     });
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(receiverEmail)
         .collection('Group Members')
@@ -187,7 +165,7 @@ class SetData {
       'Email': previousMemberEmail,
     });
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(receiverEmail)
         .collection('Group Members')
@@ -199,34 +177,47 @@ class SetData {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Students')
         .doc(department)
         .collection(batch)
         .doc(receiverEmail)
         .delete();
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Students')
         .doc(department)
         .collection(batch)
         .doc(previousMemberEmail)
         .delete();
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Students')
         .doc(department)
         .collection(batch)
         .doc(user.email)
         .delete();
 
-    return await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(user.email)
         .collection('Invites')
         .doc(receiverEmail)
-        .delete()
-        .then((value) => {
+        .delete();
+
+    //////////////////////////////////////
+    await firestore
+        .collection('Users')
+        .doc(user.email)
+        .update({'Current Step': step});
+    await firestore
+        .collection('Users')
+        .doc(receiverEmail)
+        .update({'Current Step': step});
+    return await firestore
+        .collection('Users')
+        .doc(previousMemberEmail)
+        .update({'Current Step': step}).then((value) => {
               Navigator.pop(context),
             });
   }
@@ -242,55 +233,35 @@ class SetData {
     String batch;
 
     //getting and assigning groupID
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(user.email)
-        .get()
-        .then((value) => {
-              dep = value['Department'],
-              batch = value['Batch'],
-              FirebaseFirestore.instance
-                  .collection('Groups')
-                  .doc(dep)
-                  .collection(batch)
-                  .get()
-                  .then((value) => {
-                        groupID = '$dep-${value.docs.length + 1}',
-                      })
-            });
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(user.email)
-        .update({
+    await firestore.collection('Users').doc(user.email).get().then((value) => {
+          dep = value['Department'],
+          batch = value['Batch'],
+          firestore
+              .collection('Groups')
+              .doc(dep)
+              .collection(batch)
+              .get()
+              .then((value) => {
+                    groupID = '$dep-${value.docs.length + 1}',
+                  })
+        });
+    await firestore.collection('Users').doc(user.email).update({
       'GroupID': groupID,
     });
 
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(user.email)
-        .update({
+    await firestore.collection('Users').doc(user.email).update({
       'GroupID': groupID,
     });
 
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(receiverEmail)
-        .update({
+    await firestore.collection('Users').doc(receiverEmail).update({
       'GroupID': groupID,
     });
 
-    await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(previousMemberEmail)
-        .update({
+    await firestore.collection('Users').doc(previousMemberEmail).update({
       'GroupID': groupID,
     });
 
-    await FirebaseFirestore.instance
-        .collection('Groups')
-        .doc(dep)
-        .collection(batch)
-        .add({
+    await firestore.collection('Groups').doc(dep).collection(batch).add({
       'GroupID': groupID,
       'Member 1': user.email,
       'Member 2': receiverEmail,
@@ -298,7 +269,7 @@ class SetData {
     });
     ///////////////////////////////////
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(receiverEmail)
         .collection('Group Members')
@@ -307,7 +278,7 @@ class SetData {
       'Registeration No': user.email.substring(0, 12),
       'Email': user.email,
     });
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(user.email)
         .collection('Group Members')
@@ -317,7 +288,7 @@ class SetData {
       'Email': receiverEmail,
     });
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(user.email)
         .collection('Group Members')
@@ -327,7 +298,7 @@ class SetData {
       'Email': previousMemberEmail,
     });
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Users')
         .doc(previousMemberEmail)
         .collection('Group Members')
@@ -339,28 +310,28 @@ class SetData {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Students')
         .doc(department)
         .collection(batch)
         .doc(receiverEmail)
         .delete();
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Students')
         .doc(department)
         .collection(batch)
         .doc(previousMemberEmail)
         .delete();
 
-    await FirebaseFirestore.instance
+    await firestore
         .collection('Students')
         .doc(department)
         .collection(batch)
         .doc(user.email)
         .delete();
 
-    return await FirebaseFirestore.instance
+    return await firestore
         .collection('Users')
         .doc(user.email)
         .collection('Invites')

@@ -94,8 +94,7 @@ class _InboxxState extends State<Inboxx> {
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
               child: Text(
                 'No Messages',
-                style: TextStyle(
-                    color: kPrimaryColor, fontWeight: FontWeight.bold),
+                style: stylee,
               ),
             ),
           );
@@ -258,8 +257,7 @@ class _InboxxState extends State<Inboxx> {
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
               child: Text(
                 'No Messages',
-                style: TextStyle(
-                    color: kPrimaryColor, fontWeight: FontWeight.bold),
+                style: stylee,
               ),
             ),
           );
