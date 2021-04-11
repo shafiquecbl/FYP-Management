@@ -1,20 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/models/Messages.dart';
 import 'package:fyp_management/models/getData.dart';
 import 'package:fyp_management/screens/Home_Screen/components/pages/Inbox/modal_tile.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/outline_input_border.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverRegNo;
-  final String receiverPhotoURL;
   final String receiverEmail;
 
-  ChatScreen({this.receiverRegNo, this.receiverPhotoURL, this.receiverEmail});
+  ChatScreen({this.receiverRegNo, this.receiverEmail});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -39,31 +38,38 @@ class _ChatScreenState extends State<ChatScreen> {
           backgroundColor: hexColor,
           centerTitle: true,
           title: ListTile(
-            onTap: () {},
-            leading: CircleAvatar(
-                backgroundColor: Colors.grey[100],
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(70),
-                  child: widget.receiverPhotoURL == null ||
-                          widget.receiverPhotoURL == ""
-                      ? Image.asset(
-                          "assets/images/nullUser.png",
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.network(
-                          widget.receiverPhotoURL,
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        ),
-                )),
+            leading: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: SizedBox(
+                width: 50,
+                child: Container(
+                  padding: EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade100,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 50,
+                    minHeight: 50,
+                  ),
+                  child: Center(
+                    child: Text(
+                      widget.receiverRegNo.split('-').last,
+                      style: GoogleFonts.teko(
+                        color: kPrimaryColor,
+                        fontSize: 30,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             title: Text(widget.receiverRegNo.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                )),
+                style: GoogleFonts.teko(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: kTextColor)),
           )),
       body: Column(
         children: <Widget>[
@@ -85,7 +91,8 @@ class _ChatScreenState extends State<ChatScreen> {
           .orderBy("timestamp", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.data == null) return SpinKitCircle(color: kPrimaryColor);
+        if (snapshot.data == null)
+          return Center(child: CircularProgressIndicator());
         return ListView.builder(
             reverse: true,
             padding: EdgeInsets.all(20),
@@ -165,63 +172,6 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  addMediaModal(context) {
-    showModalBottomSheet(
-        context: context,
-        elevation: 0,
-        backgroundColor: UniversalVariables.blackColor,
-        builder: (context) {
-          return Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 15),
-                child: Row(
-                  children: <Widget>[
-                    FlatButton(
-                      child: Icon(
-                        Icons.close,
-                      ),
-                      onPressed: () => Navigator.maybePop(context),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Content and tools",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Flexible(
-                child: ListView(
-                  children: <Widget>[
-                    ModalTile(
-                      title: "Media",
-                      subtitle: "Share Photos and Video",
-                      icon: Icons.image,
-                    ),
-                    ModalTile(
-                        title: "File",
-                        subtitle: "Share files",
-                        icon: Icons.tab),
-                    ModalTile(
-                        title: "Location",
-                        subtitle: "Share a location",
-                        icon: Icons.add_location),
-                  ],
-                ),
-              ),
-            ],
-          );
-        });
-  }
-
   _sendMessageArea() {
     setWritingTo(bool val) {
       setState(() {
@@ -232,11 +182,9 @@ class _ChatScreenState extends State<ChatScreen> {
     sendMessage() {
       var text = textFieldController.text;
       Messages()
-          .addMessage(
-              widget.receiverEmail, user.displayName, user.photoURL, text)
+          .addMessage(widget.receiverEmail, user.displayName, text)
           .then((value) {
-        Messages().addContact(widget.receiverEmail, widget.receiverRegNo,
-            widget.receiverPhotoURL, text);
+        Messages().addContact(widget.receiverEmail, widget.receiverRegNo, text);
       });
       setState(() {
         isWriting = false;
@@ -249,20 +197,6 @@ class _ChatScreenState extends State<ChatScreen> {
       padding: EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 5),
-            child: GestureDetector(
-              onTap: () => addMediaModal(context),
-              child: Container(
-                padding: EdgeInsets.all(7),
-                decoration: BoxDecoration(
-                  gradient: UniversalVariables.fabGradient,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.add),
-              ),
-            ),
-          ),
           SizedBox(
             width: 10,
           ),
@@ -270,7 +204,7 @@ class _ChatScreenState extends State<ChatScreen> {
             child: TextField(
               controller: textFieldController,
               style: TextStyle(
-                color: UniversalVariables.greyColor,
+                color: greyColor,
               ),
               onChanged: (val) {
                 (val.length > 0 && val.trim() != "")
@@ -280,7 +214,7 @@ class _ChatScreenState extends State<ChatScreen> {
               decoration: InputDecoration(
                 hintText: "Type a message",
                 hintStyle: TextStyle(
-                  color: UniversalVariables.greyColor,
+                  color: greyColor,
                 ),
                 border: outlineBorder,
                 contentPadding:
@@ -333,19 +267,19 @@ class ModalTile extends StatelessWidget {
           margin: EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: UniversalVariables.receiverColor,
+            color: receiverColor,
           ),
           padding: EdgeInsets.all(10),
           child: Icon(
             icon,
-            color: UniversalVariables.greyColor,
+            color: greyColor,
             size: 38,
           ),
         ),
         subtitle: Text(
           subtitle,
           style: TextStyle(
-            color: UniversalVariables.greyColor,
+            color: greyColor,
             fontSize: 14,
           ),
         ),

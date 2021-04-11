@@ -78,6 +78,7 @@ class _SignFormState extends State<SignForm> {
             press: () async {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
+                showLoadingDialog(context);
                 FirebaseFirestore.instance
                     .collection('Users')
                     .doc(email)
@@ -85,7 +86,6 @@ class _SignFormState extends State<SignForm> {
                     .then((value) => {
                           role = value['Role'],
                           removeError(error: "Invalid Email"),
-                          showLoadingDialog(context),
                           if (role == "Admin")
                             {
                               Navigator.pop(context),
@@ -100,6 +100,7 @@ class _SignFormState extends State<SignForm> {
                             }
                         })
                     .catchError((e) {
+                  showLoadingDialog(context);
                   addError(error: "Invalid Email");
                 });
               }
@@ -113,7 +114,7 @@ class _SignFormState extends State<SignForm> {
   TextFormField buildPasswordFormField() {
     return TextFormField(
       obscureText: true,
-      onSaved: (newValue) => password = newValue,
+      onSaved: (newValue) => password = newValue.toLowerCase(),
       onChanged: (value) {
         setState(() {
           if (value.isNotEmpty) {
@@ -121,7 +122,7 @@ class _SignFormState extends State<SignForm> {
           } else if (value.length >= 8) {
             removeError(error: kShortPassError);
           }
-          password = value;
+          password = value.toLowerCase();
         });
       },
       validator: (value) {
@@ -149,12 +150,12 @@ class _SignFormState extends State<SignForm> {
   TextFormField buildEmailFormField() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
-      onSaved: (newValue) => email = newValue,
+      onSaved: (newValue) => email = newValue.toLowerCase(),
       onChanged: (value) {
         if (value.isNotEmpty) {
           removeError(error: kEmailNullError);
         }
-        email = value;
+        email = value.toLowerCase();
         return null;
       },
       validator: (value) {

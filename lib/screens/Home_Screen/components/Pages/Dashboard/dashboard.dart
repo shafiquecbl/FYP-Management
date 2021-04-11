@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/models/setData.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Dashboard/Submit%20Proposal/submit_proposal.dart';
@@ -39,7 +38,7 @@ class _DashboardState extends State<Dashboard> {
         }),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return SpinKitCircle(color: kPrimaryColor);
+            return Center(child: CircularProgressIndicator());
 
           department = snapshot.data[0]['Department'];
           batch = snapshot.data[0]['Batch'];
@@ -66,7 +65,7 @@ class _DashboardState extends State<Dashboard> {
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot teacherSnap) {
           if (teacherSnap.connectionState == ConnectionState.waiting)
-            return SpinKitCircle(color: kPrimaryColor);
+            return Center(child: CircularProgressIndicator());
           return Column(
             children: [
               Container(
@@ -107,7 +106,7 @@ class _DashboardState extends State<Dashboard> {
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot snap) {
         if (snap.connectionState == ConnectionState.waiting)
-          return SpinKitCircle(color: kPrimaryColor);
+          return Center(child: CircularProgressIndicator());
         indexLength = snap.data.docs.length;
         return Column(
           children: [
@@ -142,29 +141,45 @@ class _DashboardState extends State<Dashboard> {
 
   studentList(QueryDocumentSnapshot snapshot, index) {
     return ListTile(
-      leading: CircleAvatar(
-          radius: 27,
-          backgroundColor: kPrimaryColor.withOpacity(0.8),
-          child: snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
-              ? Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage("assets/images/nullUser.png")),
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(70)),
-                  width: 50,
-                  height: 50,
-                )
-              : ClipRRect(
-                  borderRadius: BorderRadius.circular(70),
-                  child: Image.network(
-                    snapshot['PhotoURL'],
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  ),
-                )),
+      leading: Container(
+        width: 55,
+        padding: EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(100)),
+          border: Border.all(
+            width: 2,
+            color: Theme.of(context).primaryColor,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: Container(
+          padding: EdgeInsets.all(1),
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(100),
+          ),
+          constraints: BoxConstraints(
+            minWidth: 55,
+            minHeight: 55,
+          ),
+          child: Center(
+            child: Text(
+              snapshot['Registeration No'].split('-').last,
+              style: GoogleFonts.teko(
+                color: kPrimaryColor,
+                fontSize: 30,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ),
       title: Text(snapshot['Registeration No'].toUpperCase()),
       subtitle: Text("${snapshot['Department']} - ${snapshot['Batch']}"),
       trailing: IconButton(
@@ -178,29 +193,45 @@ class _DashboardState extends State<Dashboard> {
 
   supervisorList(DocumentSnapshot snapshot) {
     return ListTile(
-      leading: CircleAvatar(
-          radius: 27,
-          backgroundColor: kPrimaryColor.withOpacity(0.8),
-          child: snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
-              ? Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage("assets/images/nullUser.png")),
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(70)),
-                  width: 50,
-                  height: 50,
-                )
-              : ClipRRect(
-                  borderRadius: BorderRadius.circular(70),
-                  child: Image.network(
-                    snapshot['PhotoURL'],
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  ),
-                )),
+      leading: Container(
+        width: 55,
+        padding: EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(100)),
+          border: Border.all(
+            width: 2,
+            color: Theme.of(context).primaryColor,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: Container(
+          padding: EdgeInsets.all(1),
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(100),
+          ),
+          constraints: BoxConstraints(
+            minWidth: 55,
+            minHeight: 55,
+          ),
+          child: Center(
+            child: Text(
+              '${(snapshot['Name'].split(' ').first).split('').first}${(snapshot['Name'].split(' ').last).split('').first}',
+              style: GoogleFonts.teko(
+                color: kPrimaryColor,
+                fontSize: 30,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ),
       title: Text(snapshot['Name'].toUpperCase()),
       subtitle: Text("${snapshot['Department']}"),
       trailing: IconButton(
@@ -221,7 +252,6 @@ class _DashboardState extends State<Dashboard> {
                 builder: (builder) => ChatScreen(
                       receiverEmail: snapshot['Email'],
                       receiverRegNo: snapshot['Registeration No'],
-                      receiverPhotoURL: snapshot['PhotoURL'],
                     ))));
       },
       child: ListTile(
@@ -269,7 +299,6 @@ class _DashboardState extends State<Dashboard> {
                 builder: (builder) => TeacherChatScreen(
                       receiverEmail: snapshot['Email'],
                       receiverName: snapshot['Name'],
-                      receiverPhotoURL: snapshot['PhotoURL'],
                     ))));
       },
       child: ListTile(

@@ -19,7 +19,6 @@ class SetData {
         .set({
       'Registeration No': user.email.substring(0, 12),
       'Email': user.email,
-      'PhotoURL': user.photoURL,
     }).then((value) => {
               Navigator.maybePop(context),
               Snack_Bar.show(context, "Invite sent successfully!"),
@@ -56,10 +55,11 @@ class SetData {
             });
   }
 
-  Future acceptInvite(context,
-      {@required receiverEmail,
-      @required receiverRegNo,
-      @required receiverPhotoURL}) async {
+  Future acceptInvite(
+    context, {
+    @required receiverEmail,
+    @required receiverRegNo,
+  }) async {
     await FirebaseFirestore.instance
         .collection('Users')
         .doc(user.email)
@@ -68,7 +68,6 @@ class SetData {
         .set({
       'Registeration No': receiverRegNo,
       'Email': receiverEmail,
-      'PhotoURL': receiverPhotoURL,
     });
 
     await FirebaseFirestore.instance
@@ -79,7 +78,6 @@ class SetData {
         .set({
       'Registeration No': user.email.substring(0, 12),
       'Email': user.email,
-      'PhotoURL': user.photoURL,
     });
 
     await FirebaseFirestore.instance
@@ -96,9 +94,7 @@ class SetData {
   Future accept2ndInvite(context,
       {@required receiverEmail,
       @required receiverRegNo,
-      @required receiverPhotoURL,
       @required previousMemberEmail,
-      @required previousMemberPhoto,
       @required department,
       @required batch}) async {
     String groupID;
@@ -169,7 +165,6 @@ class SetData {
         .set({
       'Registeration No': receiverRegNo,
       'Email': receiverEmail,
-      'PhotoURL': receiverPhotoURL,
     });
 
     await FirebaseFirestore.instance
@@ -180,7 +175,6 @@ class SetData {
         .set({
       'Registeration No': receiverRegNo,
       'Email': receiverEmail,
-      'PhotoURL': receiverPhotoURL,
     });
 
     await FirebaseFirestore.instance
@@ -191,7 +185,6 @@ class SetData {
         .set({
       'Registeration No': previousMemberEmail.substring(0, 12),
       'Email': previousMemberEmail,
-      'PhotoURL': user.photoURL,
     });
 
     await FirebaseFirestore.instance
@@ -202,7 +195,6 @@ class SetData {
         .set({
       'Registeration No': user.email.substring(0, 12),
       'Email': user.email,
-      'PhotoURL': user.photoURL,
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -242,9 +234,7 @@ class SetData {
   Future accept3rdInvite(context,
       {@required receiverEmail,
       @required receiverRegNo,
-      @required receiverPhotoURL,
       @required previousMemberEmail,
-      @required previousMemberPhoto,
       @required department,
       @required batch}) async {
     String groupID;
@@ -316,7 +306,6 @@ class SetData {
         .set({
       'Registeration No': user.email.substring(0, 12),
       'Email': user.email,
-      'PhotoURL': user.photoURL,
     });
     await FirebaseFirestore.instance
         .collection('Users')
@@ -326,7 +315,6 @@ class SetData {
         .set({
       'Registeration No': receiverRegNo,
       'Email': receiverEmail,
-      'PhotoURL': receiverPhotoURL,
     });
 
     await FirebaseFirestore.instance
@@ -337,7 +325,6 @@ class SetData {
         .set({
       'Registeration No': previousMemberEmail.substring(0, 12),
       'Email': previousMemberEmail,
-      'PhotoURL': previousMemberPhoto,
     });
 
     await FirebaseFirestore.instance
@@ -348,7 +335,6 @@ class SetData {
         .set({
       'Registeration No': user.email.substring(0, 12),
       'Email': user.email,
-      'PhotoURL': user.photoURL,
     });
 
     ///////////////////////////////////////////////////////////////////////////

@@ -1,20 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/models/Messages.dart';
 import 'package:fyp_management/models/getData.dart';
 import 'package:fyp_management/screens/Home_Screen/components/pages/Inbox/modal_tile.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/outline_input_border.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FChatScreen extends StatefulWidget {
   final String receiverRegNo;
-  final String receiverPhotoURL;
   final String receiverEmail;
 
-  FChatScreen({this.receiverRegNo, this.receiverPhotoURL, this.receiverEmail});
+  FChatScreen({this.receiverRegNo, this.receiverEmail});
 
   @override
   _FChatScreenState createState() => _FChatScreenState();
@@ -39,26 +38,33 @@ class _FChatScreenState extends State<FChatScreen> {
           backgroundColor: hexColor,
           centerTitle: true,
           title: ListTile(
-            onTap: () {},
-            leading: CircleAvatar(
-                backgroundColor: Colors.grey[100],
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(70),
-                  child: widget.receiverPhotoURL == null ||
-                          widget.receiverPhotoURL == ""
-                      ? Image.asset(
-                          "assets/images/nullUser.png",
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.network(
-                          widget.receiverPhotoURL,
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        ),
-                )),
+            leading: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: SizedBox(
+                width: 50,
+                child: Container(
+                  padding: EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade100,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 50,
+                    minHeight: 50,
+                  ),
+                  child: Center(
+                    child: Text(
+                      widget.receiverRegNo.split('-').last,
+                      style: GoogleFonts.teko(
+                        color: kPrimaryColor,
+                        fontSize: 30,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             title: Text(widget.receiverRegNo.toUpperCase(),
                 style: TextStyle(
                   fontSize: 16,
@@ -85,7 +91,8 @@ class _FChatScreenState extends State<FChatScreen> {
           .orderBy("timestamp", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.data == null) return SpinKitCircle(color: kPrimaryColor);
+        if (snapshot.data == null)
+          return Center(child: CircularProgressIndicator());
         return ListView.builder(
             reverse: true,
             padding: EdgeInsets.all(20),
@@ -169,7 +176,7 @@ class _FChatScreenState extends State<FChatScreen> {
     showModalBottomSheet(
         context: context,
         elevation: 0,
-        backgroundColor: UniversalVariables.blackColor,
+        backgroundColor: blackColor,
         builder: (context) {
           return Column(
             children: <Widget>[
@@ -232,15 +239,11 @@ class _FChatScreenState extends State<FChatScreen> {
     sendMessage() {
       var text = textFieldController.text;
       Messages()
-          .messageByTeacher(
-              receiverEmail: widget.receiverEmail,
-              receiverPhotoURL: widget.receiverPhotoURL,
-              message: text)
+          .messageByTeacher(receiverEmail: widget.receiverEmail, message: text)
           .then((value) {
         Messages().contactByTeacher(
             receiverEmail: widget.receiverEmail,
             receiverRegNo: widget.receiverRegNo,
-            receiverPhotoURl: widget.receiverPhotoURL,
             message: text);
       });
       setState(() {
@@ -261,7 +264,7 @@ class _FChatScreenState extends State<FChatScreen> {
               child: Container(
                 padding: EdgeInsets.all(7),
                 decoration: BoxDecoration(
-                  gradient: UniversalVariables.fabGradient,
+                  gradient: fabGradient,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.add),
@@ -275,7 +278,7 @@ class _FChatScreenState extends State<FChatScreen> {
             child: TextField(
               controller: textFieldController,
               style: TextStyle(
-                color: UniversalVariables.greyColor,
+                color: greyColor,
               ),
               onChanged: (val) {
                 (val.length > 0 && val.trim() != "")
@@ -285,7 +288,7 @@ class _FChatScreenState extends State<FChatScreen> {
               decoration: InputDecoration(
                 hintText: "Type a message",
                 hintStyle: TextStyle(
-                  color: UniversalVariables.greyColor,
+                  color: greyColor,
                 ),
                 border: outlineBorder,
                 contentPadding:
@@ -338,19 +341,19 @@ class ModalTile extends StatelessWidget {
           margin: EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: UniversalVariables.receiverColor,
+            color: receiverColor,
           ),
           padding: EdgeInsets.all(10),
           child: Icon(
             icon,
-            color: UniversalVariables.greyColor,
+            color: greyColor,
             size: 38,
           ),
         ),
         subtitle: Text(
           subtitle,
           style: TextStyle(
-            color: UniversalVariables.greyColor,
+            color: greyColor,
             fontSize: 14,
           ),
         ),

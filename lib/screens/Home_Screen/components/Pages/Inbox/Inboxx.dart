@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/models/updateData.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/chat_screen.dart';
@@ -8,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/time_ago.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Inboxx extends StatefulWidget {
   static String routeName = "/sinbox";
@@ -26,20 +26,20 @@ class _InboxxState extends State<Inboxx> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 2,
-          shadowColor: kPrimaryColor,
           centerTitle: false,
           title: Padding(
             padding: const EdgeInsets.only(left: 0),
             child: Text(
               'Inbox',
-              style: TextStyle(color: kPrimaryColor),
+              style:
+                  GoogleFonts.teko(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           backgroundColor: hexColor,
           bottom: TabBar(
-              labelColor: kPrimaryColor,
+              labelColor: blueColor,
               unselectedLabelColor: Colors.grey,
-              indicatorColor: kPrimaryColor,
+              indicatorColor: blueColor,
               tabs: [
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
@@ -85,7 +85,8 @@ class _InboxxState extends State<Inboxx> {
           .orderBy("Time", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.data == null) return SpinKitCircle(color: kPrimaryColor);
+        if (snapshot.data == null)
+          return Center(child: CircularProgressIndicator());
         if (snapshot.data.docs.length == 0)
           return Center(
             child: Padding(
@@ -129,7 +130,6 @@ class _InboxxState extends State<Inboxx> {
                 builder: (builder) => ChatScreen(
                       receiverEmail: snapshot['Email'],
                       receiverRegNo: snapshot['RegNo'],
-                      receiverPhotoURL: snapshot['PhotoURL'],
                     ))).then(
             (value) => UpdateData().updateMessageStatus(snapshot['Email']))
       },
@@ -156,29 +156,27 @@ class _InboxxState extends State<Inboxx> {
                   ),
                 ],
               ),
-              child: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.grey[100],
-                  child:
-                      snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(70),
-                              child: Image.asset(
-                                "assets/images/nullUser.png",
-                                width: 60,
-                                height: 60,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(70),
-                              child: Image.network(
-                                snapshot['PhotoURL'],
-                                width: 60,
-                                height: 60,
-                                fit: BoxFit.cover,
-                              ),
-                            )),
+              child: Container(
+                padding: EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                constraints: BoxConstraints(
+                  minWidth: 55,
+                  minHeight: 55,
+                ),
+                child: Center(
+                  child: Text(
+                    snapshot['RegNo'].split('-').last,
+                    style: GoogleFonts.teko(
+                      color: kPrimaryColor,
+                      fontSize: 30,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             ),
             Container(
               width: MediaQuery.of(context).size.width * 0.7,
@@ -198,8 +196,7 @@ class _InboxxState extends State<Inboxx> {
                         ),
                       ),
                       snapshot['Status'] == "unread"
-                          ? Icon(Icons.mark_email_unread,
-                              color: UniversalVariables.blueColor)
+                          ? Icon(Icons.mark_email_unread, color: blueColor)
                           : Container()
                     ],
                   ),
@@ -216,9 +213,11 @@ class _InboxxState extends State<Inboxx> {
                         child: Text(
                           snapshot['Last Message'],
                           style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.black54,
-                          ),
+                              fontSize: 13,
+                              color: Colors.black54,
+                              fontWeight: snapshot['Status'] == 'unread'
+                                  ? FontWeight.bold
+                                  : FontWeight.normal),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
@@ -228,7 +227,6 @@ class _InboxxState extends State<Inboxx> {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w300,
-                          color: kPrimaryColor,
                         ),
                       ),
                     ],
@@ -251,7 +249,8 @@ class _InboxxState extends State<Inboxx> {
           .orderBy("Time", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.data == null) return SpinKitCircle(color: kPrimaryColor);
+        if (snapshot.data == null)
+          return Center(child: CircularProgressIndicator());
         if (snapshot.data.docs.length == 0)
           return Center(
             child: Padding(
@@ -295,7 +294,6 @@ class _InboxxState extends State<Inboxx> {
                 builder: (builder) => TeacherChatScreen(
                       receiverEmail: snapshot['Email'],
                       receiverName: snapshot['Name'],
-                      receiverPhotoURL: snapshot['PhotoURL'],
                     ))).then((value) =>
             UpdateData().updateTeacherMessageStatus(snapshot['Email']))
       },
@@ -322,29 +320,27 @@ class _InboxxState extends State<Inboxx> {
                   ),
                 ],
               ),
-              child: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.grey[100],
-                  child:
-                      snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(70),
-                              child: Image.asset(
-                                "assets/images/nullUser.png",
-                                width: 60,
-                                height: 60,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(70),
-                              child: Image.network(
-                                snapshot['PhotoURL'],
-                                width: 60,
-                                height: 60,
-                                fit: BoxFit.cover,
-                              ),
-                            )),
+              child: Container(
+                padding: EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                constraints: BoxConstraints(
+                  minWidth: 55,
+                  minHeight: 55,
+                ),
+                child: Center(
+                  child: Text(
+                    '${(snapshot['Name'].split(' ').first).split('').first}${(snapshot['Name'].split(' ').last).split('').first}',
+                    style: GoogleFonts.teko(
+                      color: kPrimaryColor,
+                      fontSize: 30,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             ),
             Container(
               width: MediaQuery.of(context).size.width * 0.7,
@@ -364,8 +360,7 @@ class _InboxxState extends State<Inboxx> {
                         ),
                       ),
                       snapshot['Status'] == "unread"
-                          ? Icon(Icons.mark_email_unread,
-                              color: UniversalVariables.blueColor)
+                          ? Icon(Icons.mark_email_unread, color: blueColor)
                           : Container()
                     ],
                   ),
@@ -382,9 +377,11 @@ class _InboxxState extends State<Inboxx> {
                         child: Text(
                           snapshot['Last Message'],
                           style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.black54,
-                          ),
+                              fontSize: 13,
+                              color: Colors.black54,
+                              fontWeight: snapshot['Status'] == 'unread'
+                                  ? FontWeight.bold
+                                  : FontWeight.normal),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
@@ -394,7 +391,6 @@ class _InboxxState extends State<Inboxx> {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w300,
-                          color: kPrimaryColor,
                         ),
                       ),
                     ],

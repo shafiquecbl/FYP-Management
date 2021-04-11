@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/widgets/customAppBar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fyp_management/constants.dart';
@@ -26,9 +25,7 @@ class _InvitesState extends State<Invites> {
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return SpinKitCircle(
-              color: kPrimaryColor,
-            );
+            return Center(child: CircularProgressIndicator());
           if (snapshot.data.docs.length == 0)
             return Center(
               child: Text("No Invites",

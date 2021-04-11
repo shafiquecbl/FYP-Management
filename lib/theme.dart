@@ -35,9 +35,9 @@ AppBarTheme appBarTheme() {
     color: hexColor,
     elevation: 2,
     brightness: Brightness.light,
-    iconTheme: IconThemeData(color: kPrimaryColor),
+    iconTheme: IconThemeData(color: kTextColor),
     textTheme: TextTheme(
-      headline6: TextStyle(color: kPrimaryColor, fontSize: 16),
+      headline6: TextStyle(color: kTextColor, fontSize: 18),
     ),
   );
 }

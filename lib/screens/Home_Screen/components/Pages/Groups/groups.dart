@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/models/deleteData.dart';
 import 'package:fyp_management/models/setData.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/chat_screen.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/alert_dialog.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Groups extends StatefulWidget {
   static String routeName = "/sgroups";
@@ -21,13 +21,10 @@ class _GroupsState extends State<Groups> {
   String groupID;
   int checkLength;
   String checkLengthEmail;
-  String checkLengthPhoto;
   String checkLengthReceiverEmail;
-  String checkLengthReceiverPhoto;
   //
   int membersLength;
   String previousEmail;
-  String previousPhoto;
   String batch;
   String department;
 
@@ -40,15 +37,11 @@ class _GroupsState extends State<Groups> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          elevation: 2,
-          shadowColor: kPrimaryColor,
           centerTitle: false,
-          title: Padding(
-            padding: const EdgeInsets.only(left: 0),
-            child: Text(
-              'Manage Group',
-              style: TextStyle(color: kPrimaryColor),
-            ),
+          title: Text(
+            'Manage Group',
+            style: GoogleFonts.teko(
+                color: kTextColor, fontSize: 20, fontWeight: FontWeight.bold),
           ),
           actions: [
             StreamBuilder(
@@ -73,9 +66,9 @@ class _GroupsState extends State<Groups> {
           ],
           backgroundColor: hexColor,
           bottom: TabBar(
-              labelColor: kPrimaryColor,
+              labelColor: blueColor,
               unselectedLabelColor: Colors.grey,
-              indicatorColor: kPrimaryColor,
+              indicatorColor: blueColor,
               tabs: [
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
@@ -89,7 +82,6 @@ class _GroupsState extends State<Groups> {
                     membersLength = snapshot.data.docs.length;
                     if (membersLength == 1) {
                       previousEmail = snapshot.data.docs[0]['Email'];
-                      previousPhoto = snapshot.data.docs[0]['PhotoURL'];
                     }
 
                     return Tab(
@@ -123,9 +115,7 @@ class _GroupsState extends State<Groups> {
           FirebaseFirestore.instance.collection('Users').doc(user.email).get(),
       builder: (BuildContext context, AsyncSnapshot currentUser) {
         if (currentUser.connectionState == ConnectionState.waiting)
-          return SpinKitCircle(
-            color: kPrimaryColor,
-          );
+          return Center(child: CircularProgressIndicator());
         department = currentUser.data['Department'];
         batch = currentUser.data['Batch'];
         return StreamBuilder(
@@ -136,14 +126,16 @@ class _GroupsState extends State<Groups> {
               .snapshots(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(child: SpinKitCircle(color: kPrimaryColor));
+              return Center(child: Center(child: CircularProgressIndicator()));
             if (snapshot.data.docs.length == 0)
               return SizedBox(
                 child: Center(
                   child: Text(
                     "No Members Yet",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: kPrimaryColor),
+                    style: GoogleFonts.teko(
+                        fontWeight: FontWeight.bold,
+                        color: kTextColor,
+                        fontSize: 18),
                   ),
                 ),
               );
@@ -172,29 +164,45 @@ class _GroupsState extends State<Groups> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
-        leading: CircleAvatar(
-            radius: 27,
-            backgroundColor: kPrimaryColor.withOpacity(0.8),
-            child: snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
-                ? Container(
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/nullUser.png")),
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(70)),
-                    width: 50,
-                    height: 50,
-                  )
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(70),
-                    child: Image.network(
-                      snapshot['PhotoURL'],
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
-                    ),
-                  )),
+        leading: Container(
+          width: 55,
+          padding: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(40)),
+            border: Border.all(
+              width: 2,
+              color: Theme.of(context).primaryColor,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 5,
+              ),
+            ],
+          ),
+          child: Container(
+            padding: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(50),
+            ),
+            constraints: BoxConstraints(
+              minWidth: 55,
+              minHeight: 55,
+            ),
+            child: Center(
+              child: Text(
+                snapshot['Registeration No'].split('-').last,
+                style: GoogleFonts.teko(
+                  color: kPrimaryColor,
+                  fontSize: 30,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
         title: Text(snapshot['Registeration No'].toUpperCase()),
         trailing: IconButton(
           icon: Icon(Icons.more_vert),
@@ -221,8 +229,10 @@ class _GroupsState extends State<Groups> {
             child: Center(
               child: Text(
                 "No Invites",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: kPrimaryColor),
+                style: GoogleFonts.teko(
+                    fontWeight: FontWeight.bold,
+                    color: kTextColor,
+                    fontSize: 18),
               ),
             ),
           );
@@ -254,9 +264,7 @@ class _GroupsState extends State<Groups> {
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot snap) {
         if (snap.connectionState == ConnectionState.waiting)
-          return SpinKitCircle(
-            color: kPrimaryColor,
-          );
+          return Center(child: CircularProgressIndicator());
 
         // if the user who sent invite completed his/her
         // group then delete his/her invite
@@ -279,13 +287,11 @@ class _GroupsState extends State<Groups> {
 
         checkLength = snap.data.docs.length;
         checkLengthEmail = snapshot['Email'];
-        checkLengthPhoto = snapshot['PhotoURL'];
 
         // if the user who send invite has already 1 member
         // in group then get that member detail
         if (checkLength == 1) {
           checkLengthReceiverEmail = snap.data.docs[0]['Email'];
-          checkLengthReceiverPhoto = snap.data.docs[0]['PhotoURL'];
         }
 
         //////////////////////////////////////////////////////////
@@ -298,29 +304,45 @@ class _GroupsState extends State<Groups> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
-          leading: CircleAvatar(
-              radius: 27,
-              backgroundColor: kPrimaryColor.withOpacity(0.8),
-              child: snapshot['PhotoURL'] == null || snapshot['PhotoURL'] == ""
-                  ? Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage("assets/images/nullUser.png")),
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(70)),
-                      width: 50,
-                      height: 50,
-                    )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(70),
-                      child: Image.network(
-                        snapshot['PhotoURL'],
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    )),
+          leading: Container(
+            width: 55,
+            padding: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(40)),
+              border: Border.all(
+                width: 2,
+                color: Theme.of(context).primaryColor,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+            child: Container(
+              padding: EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(50),
+              ),
+              constraints: BoxConstraints(
+                minWidth: 55,
+                minHeight: 55,
+              ),
+              child: Center(
+                child: Text(
+                  snapshot['Registeration No'].split('-').last,
+                  style: GoogleFonts.teko(
+                    color: kPrimaryColor,
+                    fontSize: 30,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
           title: Text(snapshot['Registeration No'].toUpperCase()),
           trailing: IconButton(
             icon: Icon(Icons.more_vert),
@@ -340,7 +362,6 @@ class _GroupsState extends State<Groups> {
                 builder: (builder) => ChatScreen(
                       receiverEmail: snapshot['Email'],
                       receiverRegNo: snapshot['Registeration No'],
-                      receiverPhotoURL: snapshot['PhotoURL'],
                     ))));
       },
       child: ListTile(
@@ -373,7 +394,6 @@ class _GroupsState extends State<Groups> {
                 builder: (builder) => ChatScreen(
                       receiverEmail: snapshot['Email'],
                       receiverRegNo: snapshot['Registeration No'],
-                      receiverPhotoURL: snapshot['PhotoURL'],
                     ))));
       },
       child: ListTile(
@@ -394,7 +414,6 @@ class _GroupsState extends State<Groups> {
                   context,
                   receiverEmail: snapshot['Email'],
                   receiverRegNo: snapshot['Registeration No'],
-                  receiverPhotoURL: snapshot['PhotoURL'],
                 );
               }
               if (membersLength == 1) {
@@ -402,9 +421,7 @@ class _GroupsState extends State<Groups> {
                   context,
                   receiverEmail: snapshot['Email'],
                   receiverRegNo: snapshot['Registeration No'],
-                  receiverPhotoURL: snapshot['PhotoURL'],
                   previousMemberEmail: previousEmail,
-                  previousMemberPhoto: previousPhoto,
                   department: department,
                   batch: batch,
                 );
@@ -416,9 +433,7 @@ class _GroupsState extends State<Groups> {
                 setData.accept3rdInvite(context,
                     receiverEmail: checkLengthEmail,
                     receiverRegNo: checkLengthEmail.substring(0, 12),
-                    receiverPhotoURL: checkLengthPhoto,
                     previousMemberEmail: checkLengthReceiverEmail,
-                    previousMemberPhoto: checkLengthReceiverPhoto,
                     department: department,
                     batch: batch);
               }

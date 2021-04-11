@@ -10,8 +10,7 @@ class Messages {
   String name = FirebaseAuth.instance.currentUser.displayName;
   String dateTime = DateFormat("dd-MM-yyyy h:mma").format(DateTime.now());
 
-  Future addMessage(
-      receiverEmail, receiverRegNo, senderPhotoURL, message) async {
+  Future addMessage(receiverEmail, receiverRegNo, message) async {
     await FirebaseFirestore.instance
         .collection('Messages')
         .doc(email)
@@ -19,7 +18,6 @@ class Messages {
         .add({
       'Registeration No': receiverRegNo,
       'Email': email,
-      'PhotoURL': senderPhotoURL,
       'Time': dateTime,
       'Message': message,
       'timestamp': FieldValue.serverTimestamp(),
@@ -32,15 +30,13 @@ class Messages {
         .add({
       'Registeration No': user.email.substring(0, 12),
       'Email': email,
-      'PhotoURL': senderPhotoURL,
       'Time': dateTime,
       'Message': message,
       'timestamp': FieldValue.serverTimestamp(),
     });
   }
 
-  Future addContact(
-      receiverEmail, receiverRegNo, receiverPhotoURl, message) async {
+  Future addContact(receiverEmail, receiverRegNo, message) async {
     await FirebaseFirestore.instance
         .collection('Users')
         .doc(email)
@@ -49,7 +45,6 @@ class Messages {
         .set({
       'RegNo': receiverRegNo,
       'Email': receiverEmail,
-      'PhotoURL': receiverPhotoURl,
       'Last Message': message,
       'Time': dateTime,
       'Status': "read"
@@ -63,7 +58,6 @@ class Messages {
         .set({
       'RegNo': user.email.substring(0, 12),
       'Email': email,
-      'PhotoURL': user.photoURL,
       'Last Message': message,
       'Time': dateTime,
       'Status': "unread"
@@ -73,7 +67,6 @@ class Messages {
   Future addTeacherMessage(
       {@required receiverEmail,
       @required receiverName,
-      @required senderPhotoURL,
       @required message}) async {
     await FirebaseFirestore.instance
         .collection('Messages')
@@ -82,7 +75,6 @@ class Messages {
         .add({
       'Name': receiverName,
       'Email': email,
-      'PhotoURL': senderPhotoURL,
       'Time': dateTime,
       'Message': message,
       'timestamp': FieldValue.serverTimestamp(),
@@ -95,7 +87,6 @@ class Messages {
         .add({
       'Registeration No': user.email.substring(0, 12),
       'Email': email,
-      'PhotoURL': senderPhotoURL,
       'Time': dateTime,
       'Message': message,
       'timestamp': FieldValue.serverTimestamp(),
@@ -105,7 +96,6 @@ class Messages {
   Future addTeacherContact(
       {@required receiverEmail,
       @required receiverName,
-      @required receiverPhotoURl,
       @required message}) async {
     await FirebaseFirestore.instance
         .collection('Users')
@@ -115,7 +105,6 @@ class Messages {
         .set({
       'Name': receiverName,
       'Email': receiverEmail,
-      'PhotoURL': receiverPhotoURl,
       'Last Message': message,
       'Time': dateTime,
       'Status': "read"
@@ -129,17 +118,13 @@ class Messages {
         .set({
       'Registeration No': user.email.substring(0, 12),
       'Email': email,
-      'PhotoURL': user.photoURL,
       'Last Message': message,
       'Time': dateTime,
       'Status': "unread"
     });
   }
 
-  Future messageByTeacher(
-      {@required receiverEmail,
-      @required receiverPhotoURL,
-      @required message}) async {
+  Future messageByTeacher({@required receiverEmail, @required message}) async {
     await FirebaseFirestore.instance
         .collection('Messages')
         .doc(email)
@@ -147,7 +132,6 @@ class Messages {
         .add({
       'Registeration No': email.substring(0, 12).toUpperCase(),
       'Email': email,
-      'PhotoURL': receiverPhotoURL,
       'Time': dateTime,
       'Message': message,
       'timestamp': FieldValue.serverTimestamp(),
@@ -160,7 +144,6 @@ class Messages {
         .add({
       'Name': user.displayName,
       'Email': email,
-      'PhotoURL': user.photoURL,
       'Time': dateTime,
       'Message': message,
       'timestamp': FieldValue.serverTimestamp(),
@@ -170,7 +153,6 @@ class Messages {
   Future contactByTeacher(
       {@required receiverEmail,
       @required receiverRegNo,
-      @required receiverPhotoURl,
       @required message}) async {
     await FirebaseFirestore.instance
         .collection('Users')
@@ -180,7 +162,6 @@ class Messages {
         .set({
       'Registeration No': receiverRegNo,
       'Email': receiverEmail,
-      'PhotoURL': receiverPhotoURl,
       'Last Message': message,
       'Time': dateTime,
       'Status': "read"
@@ -194,7 +175,6 @@ class Messages {
         .set({
       'Name': user.displayName,
       'Email': email,
-      'PhotoURL': user.photoURL,
       'Last Message': message,
       'Time': dateTime,
       'Status': "unread"

@@ -1,21 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/models/Messages.dart';
 import 'package:fyp_management/models/getData.dart';
 import 'package:fyp_management/screens/Home_Screen/components/pages/Inbox/modal_tile.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/outline_input_border.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TeacherChatScreen extends StatefulWidget {
   final String receiverName;
-  final String receiverPhotoURL;
   final String receiverEmail;
 
-  TeacherChatScreen(
-      {this.receiverName, this.receiverPhotoURL, this.receiverEmail});
+  TeacherChatScreen({this.receiverName, this.receiverEmail});
 
   @override
   _TeacherChatScreenState createState() => _TeacherChatScreenState();
@@ -40,31 +38,38 @@ class _TeacherChatScreenState extends State<TeacherChatScreen> {
           backgroundColor: hexColor,
           centerTitle: true,
           title: ListTile(
-            onTap: () {},
-            leading: CircleAvatar(
-                backgroundColor: Colors.grey[100],
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(70),
-                  child: widget.receiverPhotoURL == null ||
-                          widget.receiverPhotoURL == ""
-                      ? Image.asset(
-                          "assets/images/nullUser.png",
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.network(
-                          widget.receiverPhotoURL,
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        ),
-                )),
+            leading: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: SizedBox(
+                width: 50,
+                child: Container(
+                  padding: EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade100,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 55,
+                    minHeight: 55,
+                  ),
+                  child: Center(
+                    child: Text(
+                      '${(widget.receiverName.split(' ').first).split('').first}${(widget.receiverName.split(' ').last).split('').first}',
+                      style: GoogleFonts.teko(
+                        color: kPrimaryColor,
+                        fontSize: 30,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             title: Text(widget.receiverName,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                )),
+                style: GoogleFonts.teko(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: kTextColor)),
           )),
       body: Column(
         children: <Widget>[
@@ -86,7 +91,8 @@ class _TeacherChatScreenState extends State<TeacherChatScreen> {
           .orderBy("timestamp", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.data == null) return SpinKitCircle(color: kPrimaryColor);
+        if (snapshot.data == null)
+          return Center(child: CircularProgressIndicator());
         return ListView.builder(
             reverse: true,
             padding: EdgeInsets.all(20),
@@ -166,63 +172,6 @@ class _TeacherChatScreenState extends State<TeacherChatScreen> {
     );
   }
 
-  addMediaModal(context) {
-    showModalBottomSheet(
-        context: context,
-        elevation: 0,
-        backgroundColor: UniversalVariables.blackColor,
-        builder: (context) {
-          return Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 15),
-                child: Row(
-                  children: <Widget>[
-                    FlatButton(
-                      child: Icon(
-                        Icons.close,
-                      ),
-                      onPressed: () => Navigator.maybePop(context),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Content and tools",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Flexible(
-                child: ListView(
-                  children: <Widget>[
-                    ModalTile(
-                      title: "Media",
-                      subtitle: "Share Photos and Video",
-                      icon: Icons.image,
-                    ),
-                    ModalTile(
-                        title: "File",
-                        subtitle: "Share files",
-                        icon: Icons.tab),
-                    ModalTile(
-                        title: "Location",
-                        subtitle: "Share a location",
-                        icon: Icons.add_location),
-                  ],
-                ),
-              ),
-            ],
-          );
-        });
-  }
-
   _sendMessageArea() {
     setWritingTo(bool val) {
       setState(() {
@@ -236,13 +185,11 @@ class _TeacherChatScreenState extends State<TeacherChatScreen> {
           .addTeacherMessage(
               receiverEmail: widget.receiverEmail,
               receiverName: widget.receiverName,
-              senderPhotoURL: user.photoURL,
               message: text)
           .then((value) {
         Messages().addTeacherContact(
             receiverEmail: widget.receiverEmail,
             receiverName: widget.receiverName,
-            receiverPhotoURl: widget.receiverPhotoURL,
             message: text);
       });
       setState(() {
@@ -256,20 +203,6 @@ class _TeacherChatScreenState extends State<TeacherChatScreen> {
       padding: EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 5),
-            child: GestureDetector(
-              onTap: () => addMediaModal(context),
-              child: Container(
-                padding: EdgeInsets.all(7),
-                decoration: BoxDecoration(
-                  gradient: UniversalVariables.fabGradient,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.add),
-              ),
-            ),
-          ),
           SizedBox(
             width: 10,
           ),
@@ -277,7 +210,7 @@ class _TeacherChatScreenState extends State<TeacherChatScreen> {
             child: TextField(
               controller: textFieldController,
               style: TextStyle(
-                color: UniversalVariables.greyColor,
+                color: greyColor,
               ),
               onChanged: (val) {
                 (val.length > 0 && val.trim() != "")
@@ -287,7 +220,7 @@ class _TeacherChatScreenState extends State<TeacherChatScreen> {
               decoration: InputDecoration(
                 hintText: "Type a message",
                 hintStyle: TextStyle(
-                  color: UniversalVariables.greyColor,
+                  color: greyColor,
                 ),
                 border: outlineBorder,
                 contentPadding:
@@ -340,19 +273,19 @@ class ModalTile extends StatelessWidget {
           margin: EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: UniversalVariables.receiverColor,
+            color: receiverColor,
           ),
           padding: EdgeInsets.all(10),
           child: Icon(
             icon,
-            color: UniversalVariables.greyColor,
+            color: greyColor,
             size: 38,
           ),
         ),
         subtitle: Text(
           subtitle,
           style: TextStyle(
-            color: UniversalVariables.greyColor,
+            color: greyColor,
             fontSize: 14,
           ),
         ),
