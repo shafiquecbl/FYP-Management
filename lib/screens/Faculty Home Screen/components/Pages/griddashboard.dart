@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/screens/Faculty%20Home%20Screen/components/Pages/Invites/invites.dart';
@@ -132,12 +134,50 @@ class FGridDashboard extends StatelessWidget {
             SizedBox(
               height: 14,
             ),
-            Text(
-              "Inbox",
-              textAlign: TextAlign.center,
-              style:
-                  GoogleFonts.teko(fontWeight: FontWeight.w600, fontSize: 18),
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Inbox",
+                  style: GoogleFonts.teko(
+                      fontWeight: FontWeight.w600, fontSize: 18),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('Users')
+                      .doc(FirebaseAuth.instance.currentUser.email)
+                      .collection('Contacts')
+                      .where('Status', isEqualTo: 'unread')
+                      .snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting)
+                      return Container();
+                    return Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: new BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 25,
+                        minHeight: 12,
+                      ),
+                      child: new Text(
+                        '${snapshot.data.docs.length}',
+                        style: new TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            )
           ],
         ),
       ),
