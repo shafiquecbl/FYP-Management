@@ -224,7 +224,7 @@ class Messages {
               role == 'Student' ? 'Student Contacts' : 'Teacher Contacts')
           .doc(email)
           .set({
-        'RegNo': email.split('@').first,
+        'RegNo': role == 'Student' ? email.split('@').first : user.displayName,
         'Email': email,
         'Last Message': message,
         'Time': dateTime,
