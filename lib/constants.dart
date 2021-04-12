@@ -15,13 +15,6 @@ final headingStyle = TextStyle(
   color: Colors.black,
   height: 1.5,
 );
-final otp = TextStyle(
-  fontSize: getProportionateScreenWidth(28),
-  fontWeight: FontWeight.bold,
-  color: kPrimaryColor,
-  height: 1.5,
-);
-
 final stylee = GoogleFonts.teko(
     color: kTextColor, fontSize: 18, fontWeight: FontWeight.bold);
 

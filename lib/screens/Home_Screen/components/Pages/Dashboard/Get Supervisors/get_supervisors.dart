@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Dashboard/Submit%20Proposal/submit_proposal.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/teacher_Chat_Screen.dart';
+import 'package:fyp_management/widgets/navigator.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GetSupervisors extends StatefulWidget {
@@ -65,28 +66,28 @@ class _GetSupervisorsState extends State<GetSupervisors> {
           ],
         ),
         child: Container(
-          padding: EdgeInsets.all(1),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(100),
-          ),
-          constraints: BoxConstraints(
-            minWidth: 55,
-            minHeight: 55,
-          ),
-          child: Center(
-            child: Text(
-              '${(snapshot['Name'].split(' ').first).split('').first}${(snapshot['Name'].split(' ').last).split('').first}',
-              style: GoogleFonts.teko(
-                color: kPrimaryColor,
-                fontSize: 30,
-              ),
-              textAlign: TextAlign.center,
+            padding: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(100),
             ),
-          ),
-        ),
+            constraints: BoxConstraints(
+              minWidth: 55,
+              minHeight: 55,
+            ),
+            child: Center(
+              child: Text(
+                '${(snapshot['Name'].trim().split(' ').first)[0]}${(snapshot['Name'].trim().trimLeft().split(' ').last)[0]}',
+                style: GoogleFonts.teko(
+                  color: kPrimaryColor,
+                  fontSize: 30,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            )),
       ),
-      title: Text(snapshot['Name'].toUpperCase()),
+      title: Text(snapshot['Name'].toUpperCase(),
+          style: TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text("${snapshot['Department']}"),
       trailing: IconButton(
         icon: Icon(Icons.more_vert),
@@ -100,13 +101,12 @@ class _GetSupervisorsState extends State<GetSupervisors> {
   teacherMoreDialog(DocumentSnapshot snapshot) {
     Widget message = FlatButton(
       onPressed: () {
-        Navigator.maybePop(context).then((value) => Navigator.push(
+        Navigator.maybePop(context).then((value) => navigator(
             context,
-            MaterialPageRoute(
-                builder: (builder) => TeacherChatScreen(
-                      receiverEmail: snapshot['Email'],
-                      receiverName: snapshot['Name'],
-                    ))));
+            TeacherChatScreen(
+              receiverEmail: snapshot['Email'],
+              receiverName: snapshot['Name'],
+            )));
       },
       child: ListTile(
           leading: Icon(

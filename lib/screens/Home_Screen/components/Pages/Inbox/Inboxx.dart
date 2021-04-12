@@ -330,7 +330,7 @@ class _InboxxState extends State<Inboxx> {
                 ),
                 child: Center(
                   child: Text(
-                    '${(snapshot['Name'].split(' ').first).split('').first}${(snapshot['Name'].split(' ').last).split('').first}',
+                    '${(snapshot['Name'].trim().split(' ').first)[0]}${(snapshot['Name'].trim().trimLeft().split(' ').last)[0]}',
                     style: GoogleFonts.teko(
                       color: kPrimaryColor,
                       fontSize: 30,

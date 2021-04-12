@@ -180,4 +180,102 @@ class Messages {
       'Status': "unread"
     });
   }
+
+  ////////////////////////////////////////////
+
+  Future addStudentContactUsMessage(message) async {
+    await FirebaseFirestore.instance
+        .collection('Messages')
+        .doc(email)
+        .collection('shafiquecbl@gmail.com')
+        .add({
+      'Email': user.email,
+      'RegNo': user.email.split('@').first,
+      'Time': dateTime,
+      'Message': message,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+
+    return await FirebaseFirestore.instance
+        .collection('Messages')
+        .doc('shafiquecbl@gmail.com')
+        .collection(email)
+        .add({
+      'RegNo': user.email.split('@').first,
+      'Email': email,
+      'Time': dateTime,
+      'Message': message,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future addStudentContactToAdmin(message) async {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(email)
+        .collection('Contact US')
+        .doc('shafiquecbl@gmail.com')
+        .set({'Time': dateTime, 'Status': "read"});
+
+    return await FirebaseFirestore.instance
+        .collection('Users')
+        .doc('shafiquecbl@gmail.com')
+        .collection('Student Contacts')
+        .doc(email)
+        .set({
+      'RegNo': email.split('@').first,
+      'Email': email,
+      'Last Message': message,
+      'Time': dateTime,
+      'Status': "unread"
+    });
+  }
+
+  Future addTeacherContactUsMessage(message) async {
+    await FirebaseFirestore.instance
+        .collection('Messages')
+        .doc(email)
+        .collection('shafiquecbl@gmail.com')
+        .add({
+      'Email': user.email,
+      'Name': user.displayName,
+      'Time': dateTime,
+      'Message': message,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+
+    return await FirebaseFirestore.instance
+        .collection('Messages')
+        .doc('shafiquecbl@gmail.com')
+        .collection(email)
+        .add({
+      'Name': user.displayName,
+      'Email': email,
+      'Time': dateTime,
+      'Message': message,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future addTeacherContactToAdmin(message) async {
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(email)
+        .collection('Contact US')
+        .doc('shafiquecbl@gmail.com')
+        .set({'Time': dateTime, 'Status': "read"});
+
+    return await FirebaseFirestore.instance
+        .collection('Users')
+        .doc('shafiquecbl@gmail.com')
+        .collection('Teacher Contacts')
+        .doc(email)
+        .set({
+      'Name': user.displayName,
+      'Email': email,
+      'Last Message': message,
+      'Time': dateTime,
+      'Status': "unread"
+    });
+  }
 }

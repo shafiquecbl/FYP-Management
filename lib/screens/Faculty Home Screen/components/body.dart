@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp_management/screens/sign_in/sign_in_screen.dart';
+import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/snack_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,8 +17,11 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   User user = FirebaseAuth.instance.currentUser;
+  String token;
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    getToken();
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -31,10 +37,7 @@ class _BodyState extends State<Body> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      FirebaseAuth.instance.currentUser.email
-                          .split('@')
-                          .first
-                          .toUpperCase(),
+                      FirebaseAuth.instance.currentUser.displayName,
                       style: GoogleFonts.teko(
                           fontWeight: FontWeight.bold, fontSize: 22),
                     ),
@@ -69,6 +72,15 @@ class _BodyState extends State<Body> {
         ],
       ),
     );
+  }
+
+  void getToken() async {
+    token = await FirebaseMessaging().getToken();
+    print("TOKENNNNNNNNNNN: $token");
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user.email)
+        .update({'token': token});
   }
 }
 

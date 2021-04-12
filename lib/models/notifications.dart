@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 final String serverToken =
-    'AAAAYLRccmc:APA91bFJPMSX1e0j-D2yf3Cc9UJvmiBINew3hOo4wsybG4hHdlJ_GFdnpxomcixSYh64_C1_-K0AQFu-QSlhzpDMb4UZpbntyej-F9SfPfOS4aqEwO7-6Ytvl_B9EsYJvFjZkhXB8xv-';
+    'AAAAQV7ydXs:APA91bGJooXA6qvus5X-Xred2Ner61pqd9aeSJVvLFML5J4FldDEzsNk5swqzG4dJ1lqLoE0kAkLE-dc1c_XbBMRXN-CEfgkAbE-j45pwrdFS1T1d63XLAXWWUXnJsw8cVuWRIWBEG5Y';
 
 sendAndRetrieveMessage(
     {@required String token,

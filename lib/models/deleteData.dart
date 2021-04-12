@@ -6,7 +6,7 @@ class DeleteData {
 
   Future deleteInvite(context, receiverEmail) async {
     return await FirebaseFirestore.instance
-        .collection('Students')
+        .collection('Users')
         .doc(user.email)
         .collection('Invites')
         .doc(receiverEmail)

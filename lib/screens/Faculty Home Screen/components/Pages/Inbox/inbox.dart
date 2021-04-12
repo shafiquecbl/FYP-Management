@@ -115,10 +115,10 @@ class _FInboxState extends State<FInbox> {
                 ),
                 child: Center(
                   child: Text(
-                    '${(snapshot['Name'].split(' ').first).split('').first}${(snapshot['Name'].split(' ').last).split('').first}',
+                    '${(snapshot['Email'].split('@').first).split('-').last}',
                     style: GoogleFonts.teko(
                       color: kPrimaryColor,
-                      fontSize: 30,
+                      fontSize: 28,
                     ),
                     textAlign: TextAlign.center,
                   ),

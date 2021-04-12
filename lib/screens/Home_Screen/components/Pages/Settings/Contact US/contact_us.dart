@@ -3,30 +3,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/models/Messages.dart';
-import 'package:fyp_management/models/getData.dart';
 import 'package:fyp_management/models/notifications.dart';
-import 'package:fyp_management/screens/Home_Screen/components/pages/Inbox/modal_tile.dart';
+import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/modal_tile.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/outline_input_border.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class TeacherChatScreen extends StatefulWidget {
-  final String receiverName;
-  final String receiverEmail;
-
-  TeacherChatScreen({this.receiverName, this.receiverEmail});
-
+class ContactUs extends StatefulWidget {
   @override
-  _TeacherChatScreenState createState() => _TeacherChatScreenState();
+  _ContactUsState createState() => _ContactUsState();
 }
 
-class _TeacherChatScreenState extends State<TeacherChatScreen> {
+class _ContactUsState extends State<ContactUs> {
   User user = FirebaseAuth.instance.currentUser;
-  final email = FirebaseAuth.instance.currentUser.email;
+  int state = 0;
   TextEditingController textFieldController = TextEditingController();
   bool isWriting = false;
-
-  GetData getData = GetData();
+  final String admin = 'shafiquecbl@gmail.com';
+  final String initText1 =
+      "Hi ${FirebaseAuth.instance.currentUser.email.split('@').first.toUpperCase()}. This is Rana Zulkaif from CUI. I'll be accompanying you in this chat, feel free ask anything.";
 
   @override
   Widget build(BuildContext context) {
@@ -35,42 +30,15 @@ class _TeacherChatScreenState extends State<TeacherChatScreen> {
       backgroundColor: Color(0xFFF6F6F6),
       appBar: AppBar(
           elevation: 2,
-          shadowColor: kPrimaryColor,
           backgroundColor: hexColor,
           centerTitle: true,
-          title: ListTile(
-            leading: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3),
-              child: SizedBox(
-                width: 50,
-                child: Container(
-                  padding: EdgeInsets.all(1),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade100,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  constraints: BoxConstraints(
-                    minWidth: 55,
-                    minHeight: 55,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${(widget.receiverName.trim().split(' ').first)[0]}${(widget.receiverName.trim().trimLeft().split(' ').last)[0]}',
-                      style: GoogleFonts.teko(
-                        color: kPrimaryColor,
-                        fontSize: 30,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
+          title: Text(
+            'CUI Admin',
+            style: GoogleFonts.teko(
+              color: kPrimaryColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
             ),
-            title: Text(widget.receiverName,
-                style: GoogleFonts.teko(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: kTextColor)),
           )),
       body: Column(
         children: <Widget>[
@@ -87,13 +55,52 @@ class _TeacherChatScreenState extends State<TeacherChatScreen> {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('Messages')
-          .doc(email)
-          .collection(widget.receiverEmail)
+          .doc(user.email)
+          .collection(admin)
           .orderBy("timestamp", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.data == null)
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        if (snapshot.data.docs.length == 0)
+          return ListView.builder(
+              padding: EdgeInsets.all(20),
+              itemCount: 1,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  margin: EdgeInsets.symmetric(vertical: 15),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.80,
+                      ),
+                      padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.symmetric(vertical: 0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        initText1,
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              });
         return ListView.builder(
             reverse: true,
             padding: EdgeInsets.all(20),
@@ -173,6 +180,63 @@ class _TeacherChatScreenState extends State<TeacherChatScreen> {
     );
   }
 
+  addMediaModal(context) {
+    showModalBottomSheet(
+        context: context,
+        elevation: 0,
+        backgroundColor: blackColor,
+        builder: (context) {
+          return Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                child: Row(
+                  children: <Widget>[
+                    FlatButton(
+                      child: Icon(
+                        Icons.close,
+                      ),
+                      onPressed: () => Navigator.maybePop(context),
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Content and tools",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Flexible(
+                child: ListView(
+                  children: <Widget>[
+                    ModalTile(
+                      title: "Media",
+                      subtitle: "Share Photos and Video",
+                      icon: Icons.image,
+                    ),
+                    ModalTile(
+                        title: "File",
+                        subtitle: "Share files",
+                        icon: Icons.tab),
+                    ModalTile(
+                        title: "Location",
+                        subtitle: "Share a location",
+                        icon: Icons.add_location),
+                  ],
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
   _sendMessageArea() {
     setWritingTo(bool val) {
       setState(() {
@@ -182,30 +246,19 @@ class _TeacherChatScreenState extends State<TeacherChatScreen> {
 
     sendMessage() {
       var text = textFieldController.text;
-      Messages()
-          .addTeacherMessage(
-              receiverEmail: widget.receiverEmail,
-              receiverName: widget.receiverName,
-              message: text)
-          .then((value) {
-        Messages().addTeacherContact(
-            receiverEmail: widget.receiverEmail,
-            receiverName: widget.receiverName,
-            message: text);
+      Messages().addStudentContactUsMessage(text).then((value) {
+        Messages().addStudentContactToAdmin(text);
       });
-
       FirebaseFirestore.instance
           .collection('Users')
-          .doc(widget.receiverEmail)
+          .doc('shafiquecbl@gmail.com')
           .get()
           .then((snapshot) {
-        if (snapshot['token'] != '' || snapshot['token'] != null) {
-          sendAndRetrieveMessage(
-              token: snapshot['token'],
-              title: 'New Message',
-              body:
-                  'You received a new message from ${user.email.split('@').first}');
-        }
+        sendAndRetrieveMessage(
+            token: snapshot['token'],
+            title: 'New Message',
+            body:
+                'You received a new message from ${user.email.split('@').first}');
       });
       setState(() {
         isWriting = false;
@@ -263,8 +316,6 @@ class _TeacherChatScreenState extends State<TeacherChatScreen> {
       ),
     );
   }
-
-  /////////////////////////////////////////////////////////////////////
 }
 
 class ModalTile extends StatelessWidget {
