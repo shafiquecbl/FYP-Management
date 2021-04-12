@@ -5,7 +5,6 @@ import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/models/Messages.dart';
 import 'package:fyp_management/models/getData.dart';
 import 'package:fyp_management/models/notifications.dart';
-import 'package:fyp_management/screens/Home_Screen/components/pages/Inbox/modal_tile.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/outline_input_border.dart';
 import 'package:google_fonts/google_fonts.dart';

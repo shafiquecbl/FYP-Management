@@ -210,25 +210,34 @@ class Messages {
   }
 
   Future addStudentContactToAdmin(message) async {
+    String role;
     await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user.email)
+        .get()
+        .then((value) async {
+      role = value['Role'];
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc('shafiquecbl@gmail.com')
+          .collection(
+              role == 'Student' ? 'Student Contacts' : 'Teacher Contacts')
+          .doc(email)
+          .set({
+        'RegNo': email.split('@').first,
+        'Email': email,
+        'Last Message': message,
+        'Time': dateTime,
+        'Status': "unread"
+      });
+    });
+
+    return await FirebaseFirestore.instance
         .collection('Users')
         .doc(email)
         .collection('Contact US')
         .doc('shafiquecbl@gmail.com')
         .set({'Time': dateTime, 'Status': "read"});
-
-    return await FirebaseFirestore.instance
-        .collection('Users')
-        .doc('shafiquecbl@gmail.com')
-        .collection('Student Contacts')
-        .doc(email)
-        .set({
-      'RegNo': email.split('@').first,
-      'Email': email,
-      'Last Message': message,
-      'Time': dateTime,
-      'Status': "unread"
-    });
   }
 
   Future addTeacherContactUsMessage(message) async {

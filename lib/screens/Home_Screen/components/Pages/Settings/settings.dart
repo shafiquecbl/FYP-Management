@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp_management/screens/sign_in/sign_in_screen.dart';
 import 'package:fyp_management/size_config.dart';
-import 'package:fyp_management/widgets/alert_dialog.dart';
 import 'package:fyp_management/widgets/customAppBar.dart';
 import 'package:fyp_management/widgets/navigator.dart';
 import 'package:fyp_management/widgets/snack_bar.dart';
