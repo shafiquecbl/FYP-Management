@@ -61,23 +61,21 @@ class _BodyState extends State<Body> {
                         navigator(context, Setting());
                       },
                     ),
-                    Positioned(
-                      top: 2,
-                      right: 10,
-                      child: StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection('Users')
-                            .doc(user.email)
-                            .collection('Contact US')
-                            .where('Status', isEqualTo: 'unread')
-                            .snapshots(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) return Container();
-                          if (snapshot.data.docs.length == 0)
-                            return Container();
-                          return Container(
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('Users')
+                          .doc(user.email)
+                          .collection('Contact US')
+                          .where('Status', isEqualTo: 'unread')
+                          .snapshots(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return Container();
+                        if (snapshot.data.docs.length == 0) return Container();
+                        return Positioned(
+                          top: 2,
+                          right: 10,
+                          child: Container(
                             padding: EdgeInsets.all(1),
                             decoration: new BoxDecoration(
                               color: Colors.red,
@@ -95,10 +93,10 @@ class _BodyState extends State<Body> {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                          );
-                        },
-                      ),
-                    )
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 )
               ],

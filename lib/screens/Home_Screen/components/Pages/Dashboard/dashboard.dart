@@ -62,6 +62,7 @@ class _DashboardState extends State<Dashboard> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 15),
                 child: Container(
+                  width: MediaQuery.of(context).size.width,
                   color: hexColor,
                   child: Padding(
                     padding: const EdgeInsets.only(
