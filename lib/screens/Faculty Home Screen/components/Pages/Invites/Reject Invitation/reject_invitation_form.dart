@@ -13,7 +13,13 @@ import 'package:fyp_management/widgets/snack_bar.dart';
 class RejectInvitationForm extends StatefulWidget {
   final String docID;
   final String studentEmail;
-  RejectInvitationForm({@required this.docID, @required this.studentEmail});
+  final String member1;
+  final String member2;
+  RejectInvitationForm(
+      {@required this.docID,
+      @required this.studentEmail,
+      @required this.member1,
+      @required this.member2});
   @override
   _RejectInvitationFormState createState() => _RejectInvitationFormState();
 }
@@ -24,6 +30,7 @@ class _RejectInvitationFormState extends State<RejectInvitationForm> {
   User user = FirebaseAuth.instance.currentUser;
 
   String reason;
+  String mainReason;
 
   void addError({String error}) {
     if (!errors.contains(error))
@@ -53,6 +60,9 @@ class _RejectInvitationFormState extends State<RejectInvitationForm> {
               press: () async {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
+                  reason = mainReason +
+                      '\nInvitation was send by: ${widget.studentEmail.split('@').first.toUpperCase()}';
+                  print(reason);
                   showLoadingDialog(context);
                   rejectProposal();
                 }
@@ -64,11 +74,11 @@ class _RejectInvitationFormState extends State<RejectInvitationForm> {
 
   TextFormField getBatchFormField() {
     return TextFormField(
-      onSaved: (newValue) => reason = newValue,
+      onSaved: (newValue) => mainReason = newValue,
       onChanged: (value) {
         if (value.isNotEmpty) {
           removeError(error: "Please enter reason");
-          reason = value;
+          mainReason = value;
         } else {}
       },
       validator: (value) {
@@ -96,6 +106,7 @@ class _RejectInvitationFormState extends State<RejectInvitationForm> {
         .doc(widget.docID)
         .delete()
         .then((value) {
+      //// Notification to Student ////
       FirebaseFirestore.instance
           .collection('Users')
           .doc(widget.studentEmail)
@@ -109,12 +120,57 @@ class _RejectInvitationFormState extends State<RejectInvitationForm> {
                   'You invitation is rejected by ${user.email.split('@').first}');
         }
       });
+      //// Notification to Member1 ////
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(widget.member1)
+          .get()
+          .then((snapshot) {
+        if (snapshot['token'] != '' || snapshot['token'] != null) {
+          sendAndRetrieveMessage(
+              token: snapshot['token'],
+              title: 'New Message',
+              body:
+                  'You invitation is rejected by ${user.email.split('@').first}');
+        }
+      });
+      //// Notification to Member2 ////
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(widget.member2)
+          .get()
+          .then((snapshot) {
+        if (snapshot['token'] != '' || snapshot['token'] != null) {
+          sendAndRetrieveMessage(
+              token: snapshot['token'],
+              title: 'New Message',
+              body:
+                  'You invitation is rejected by ${user.email.split('@').first}');
+        }
+      });
+      //// Message and Contact to Student ////
       Messages().contactByTeacher(
           receiverEmail: widget.studentEmail,
           receiverRegNo: widget.studentEmail.split('@').first,
           message: reason);
+      Messages().messageByTeacher(
+          receiverEmail: widget.studentEmail, message: reason);
+
+      //// Message and Contact to Member1 ////
+      Messages().contactByTeacher(
+          receiverEmail: widget.member1,
+          receiverRegNo: widget.member1.split('@').first,
+          message: reason);
       Messages()
-          .messageByTeacher(receiverEmail: widget.studentEmail, message: reason)
+          .messageByTeacher(receiverEmail: widget.member1, message: reason);
+
+      //// Message and Contact to Member2 ////
+      Messages().contactByTeacher(
+          receiverEmail: widget.member2,
+          receiverRegNo: widget.member2.split('@').first,
+          message: reason);
+      Messages()
+          .messageByTeacher(receiverEmail: widget.member2, message: reason)
           .then((value) {
         _formKey.currentState.reset();
         Navigator.pop(context);

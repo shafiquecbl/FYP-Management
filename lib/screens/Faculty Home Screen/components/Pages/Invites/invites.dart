@@ -95,7 +95,11 @@ class _InvitesState extends State<Invites> {
         pushReplacement(
             context,
             RejectInvitation(
-                docID: snapshot.id, studentEmail: snapshot['Email']));
+              docID: snapshot.id,
+              studentEmail: snapshot['Email'],
+              member1: snapshot['Member 1'],
+              member2: snapshot['Member 2'],
+            ));
       },
       child: ListTile(
           leading: Icon(

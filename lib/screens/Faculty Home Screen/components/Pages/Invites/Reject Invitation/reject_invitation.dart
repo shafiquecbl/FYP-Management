@@ -9,7 +9,13 @@ import 'reject_invitation_form.dart';
 class RejectInvitation extends StatefulWidget {
   final String docID;
   final String studentEmail;
-  RejectInvitation({@required this.docID, @required this.studentEmail});
+  final String member1;
+  final String member2;
+  RejectInvitation(
+      {@required this.docID,
+      @required this.studentEmail,
+      @required this.member1,
+      @required this.member2});
   @override
   _RejectInvitationState createState() => _RejectInvitationState();
 }
@@ -39,6 +45,8 @@ class _RejectInvitationState extends State<RejectInvitation> {
                   RejectInvitationForm(
                     docID: widget.docID,
                     studentEmail: widget.studentEmail,
+                    member1: widget.member1,
+                    member2: widget.member2,
                   )
                 ],
               ),
