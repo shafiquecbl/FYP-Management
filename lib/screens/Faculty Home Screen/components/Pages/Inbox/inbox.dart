@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/customAppBar.dart';
+import 'package:fyp_management/widgets/navigator.dart';
 import 'package:fyp_management/widgets/time_ago.dart';
 import 'chat_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -71,14 +72,14 @@ class _FInboxState extends State<FInbox> {
   Widget userList(DocumentSnapshot snapshot) {
     return GestureDetector(
       onTap: () => {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (builder) => FChatScreen(
-                      receiverEmail: snapshot['Email'],
-                      receiverRegNo: snapshot['Registeration No'],
-                    ))).then(
-            (value) => UpdateData().updateTeacherSideStatus(snapshot['Email']))
+        navigator(
+                context,
+                FChatScreen(
+                  receiverEmail: snapshot['Email'],
+                  receiverRegNo: snapshot['Registeration No'],
+                ))
+            .then((value) =>
+                UpdateData().updateTeacherSideStatus(snapshot['Email']))
       },
       child: Container(
         padding: EdgeInsets.symmetric(

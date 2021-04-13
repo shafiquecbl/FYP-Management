@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,8 @@ class _SubmitProposalFormState extends State<SubmitProposalForm> {
   File file;
   var url;
   String fileName = "No File Selected";
+  String member1;
+  String member2;
 
   final List<String> errors = [];
 
@@ -37,6 +40,14 @@ class _SubmitProposalFormState extends State<SubmitProposalForm> {
       setState(() {
         errors.remove(error);
       });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      getMembers();
+    });
   }
 
   @override
@@ -96,6 +107,26 @@ class _SubmitProposalFormState extends State<SubmitProposalForm> {
     proposal.putFile(file);
     // ignore: unnecessary_cast
     url = await proposal.getDownloadURL() as String;
-    SetData().sendInviteToTeacher(context, widget.teacherEmail, url);
+    await submitt(proposal);
+  }
+
+  submitt(Reference proposal) async {
+    SetData().sendInviteToTeacher(context,
+        teacherEmail: widget.teacherEmail,
+        proposal: url,
+        member1: member1,
+        member2: member2);
+  }
+
+  getMembers() {
+    Stream<QuerySnapshot> stream = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser.email)
+        .collection('Group Members')
+        .snapshots();
+    return stream.listen((event) {
+      member1 = event.docs[0]['Email'];
+      member2 = event.docs[1]['Email'];
+    });
   }
 }

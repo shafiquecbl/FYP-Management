@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Dashboard/Submit%20Proposal/submit_proposal.dart';
@@ -14,6 +15,15 @@ class GetSupervisors extends StatefulWidget {
 }
 
 class _GetSupervisorsState extends State<GetSupervisors> {
+  String myID;
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      getMyID();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -32,82 +42,144 @@ class _GetSupervisorsState extends State<GetSupervisors> {
               ),
             );
           return Expanded(
-            child: SizedBox(
-              child: ListView.builder(
-                  itemCount: snapshot.data.docs.length,
-                  physics: PageScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics()),
-                  controller: PageController(viewportFraction: 1.0),
-                  itemBuilder: (context, index) {
-                    return supervisorList(snapshot.data.docs[index]);
-                  }),
-            ),
+            child: ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                physics:
+                    PageScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                controller: PageController(viewportFraction: 1.0),
+                itemBuilder: (context, index) {
+                  return supervisorList(snapshot.data.docs[index]);
+                }),
           );
         });
   }
 
   supervisorList(DocumentSnapshot snapshot) {
-    return ListTile(
-      leading: Container(
-        width: 55,
-        padding: EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(100)),
-          border: Border.all(
-            width: 2,
-            color: Theme.of(context).primaryColor,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
+    return Card(
+      elevation: 4,
+      shadowColor: kPrimaryColor,
+      child: ExpansionTile(
+        onExpansionChanged: (value) => true,
+        tilePadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+        leading: Container(
+          width: 55,
+          padding: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(100)),
+            border: Border.all(
+              width: 2,
+              color: Theme.of(context).primaryColor,
             ),
-          ],
-        ),
-        child: Container(
-            padding: EdgeInsets.all(1),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(100),
-            ),
-            constraints: BoxConstraints(
-              minWidth: 55,
-              minHeight: 55,
-            ),
-            child: Center(
-              child: Text(
-                '${(snapshot['Name'].trim().split(' ').first)[0]}${(snapshot['Name'].trim().trimLeft().split(' ').last)[0]}',
-                style: GoogleFonts.teko(
-                  color: kPrimaryColor,
-                  fontSize: 30,
-                ),
-                textAlign: TextAlign.center,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 5,
               ),
-            )),
+            ],
+          ),
+          child: Container(
+              padding: EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(100),
+              ),
+              constraints: BoxConstraints(
+                minWidth: 55,
+                minHeight: 55,
+              ),
+              child: Center(
+                child: Text(
+                  '${(snapshot['Name'].trim().split(' ').first)[0]}${(snapshot['Name'].trim().trimLeft().split(' ').last)[0]}',
+                  style: GoogleFonts.teko(
+                    color: kPrimaryColor,
+                    fontSize: 30,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              )),
+        ),
+        title: Text(snapshot['Name'].toUpperCase(),
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        children: [
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              message(snapshot),
+              StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(snapshot['Email'])
+                    .collection('Invites')
+                    .where('GroupID', isEqualTo: myID)
+                    .snapshots(),
+                builder: (BuildContext context, AsyncSnapshot snap) {
+                  if (snap.connectionState == ConnectionState.waiting)
+                    return Center(child: CircularProgressIndicator());
+                  if (snap.data.docs.length == 0) return invite(snapshot);
+                  return alreadyInvited();
+                },
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+        ],
       ),
-      title: Text(snapshot['Name'].toUpperCase(),
-          style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text("${snapshot['Department']}"),
-      trailing: IconButton(
-        icon: Icon(Icons.more_vert),
+    );
+  }
+
+  message(DocumentSnapshot snapshot) {
+    return RaisedButton.icon(
+      onPressed: () {
+        navigator(
+            context,
+            TeacherChatScreen(
+              receiverEmail: snapshot['Email'],
+              receiverName: snapshot['Name'],
+            ));
+      },
+      icon: Icon(Icons.message),
+      label: Text("Message"),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+    );
+  }
+
+  invite(DocumentSnapshot snapshot) {
+    return SizedBox(
+      width: 140,
+      child: RaisedButton.icon(
         onPressed: () {
-          teacherMoreDialog(snapshot);
+          navigator(
+              context,
+              SubmitProposal(
+                teacherEmail: snapshot['Email'],
+              ));
         },
+        icon: Icon(Icons.insert_invitation_outlined),
+        label: Text("Invite"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
+    );
+  }
+
+  alreadyInvited() {
+    return RaisedButton.icon(
+      disabledColor: hexColor,
+      onPressed: null,
+      icon: Icon(Icons.done),
+      label: Text("Already Invited"),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     );
   }
 
   teacherMoreDialog(DocumentSnapshot snapshot) {
     Widget message = FlatButton(
-      onPressed: () {
-        Navigator.maybePop(context).then((value) => navigator(
-            context,
-            TeacherChatScreen(
-              receiverEmail: snapshot['Email'],
-              receiverName: snapshot['Name'],
-            )));
-      },
+      onPressed: () {},
       child: ListTile(
           leading: Icon(
             Icons.message_outlined,
@@ -134,7 +206,20 @@ class _GetSupervisorsState extends State<GetSupervisors> {
     SimpleDialog alert = SimpleDialog(
       children: [
         message,
-        invite,
+        StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('Users')
+              .doc(snapshot['Email'])
+              .collection('Invites')
+              .where('GroupID', isEqualTo: myID)
+              .snapshots(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return Container();
+            if (snapshot.data.docs.length == 0) return invite;
+            return Container();
+          },
+        ),
       ],
     );
 
@@ -144,5 +229,17 @@ class _GetSupervisorsState extends State<GetSupervisors> {
         return alert;
       },
     );
+  }
+
+  getMyID() {
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser.email)
+        .get()
+        .then((value) {
+      setState(() {
+        myID = value['GroupID'];
+      });
+    });
   }
 }

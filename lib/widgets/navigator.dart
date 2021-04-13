@@ -4,6 +4,11 @@ Future<Navigator> navigator(BuildContext context, Widget page) {
   return Navigator.push(context, MaterialPageRoute(builder: (_) => page));
 }
 
+Future<Navigator> pushReplacement(BuildContext context, Widget page) {
+  return Navigator.pushReplacement(
+      context, MaterialPageRoute(builder: (_) => page));
+}
+
 Future<Navigator> rootNavigator(BuildContext context, Widget page) {
   return Navigator.of(context, rootNavigator: true)
       .push(MaterialPageRoute(builder: (_) => page));

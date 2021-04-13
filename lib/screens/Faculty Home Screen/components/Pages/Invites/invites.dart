@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp_management/screens/Faculty%20Home%20Screen/components/Pages/Inbox/chat_screen.dart';
+import 'package:fyp_management/screens/Faculty%20Home%20Screen/components/Pages/Invites/Reject%20Invitation/reject_invitation.dart';
 import 'package:fyp_management/widgets/customAppBar.dart';
+import 'package:fyp_management/widgets/navigator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -64,14 +67,41 @@ class _InvitesState extends State<Invites> {
   }
 
   moreDialog(DocumentSnapshot snapshot) {
+    Widget message = FlatButton(
+      onPressed: () {
+        pushReplacement(
+            context,
+            FChatScreen(
+              receiverEmail: snapshot['Email'],
+              receiverRegNo: snapshot['Email'].split('@').first,
+            ));
+      },
+      child: ListTile(
+          leading: Icon(
+            Icons.message,
+          ),
+          title: Text("Message")),
+    );
     Widget accept = FlatButton(
       onPressed: () {},
       child: ListTile(
           leading: Icon(
             Icons.insert_invitation_outlined,
-            color: kPrimaryColor,
           ),
           title: Text("Accept")),
+    );
+    Widget reject = FlatButton(
+      onPressed: () {
+        pushReplacement(
+            context,
+            RejectInvitation(
+                docID: snapshot.id, studentEmail: snapshot['Email']));
+      },
+      child: ListTile(
+          leading: Icon(
+            Icons.error,
+          ),
+          title: Text("Reject")),
     );
     Widget dwonload = FlatButton(
       onPressed: () {
@@ -81,13 +111,14 @@ class _InvitesState extends State<Invites> {
       child: ListTile(
           leading: Icon(
             Icons.file_download,
-            color: kPrimaryColor,
           ),
           title: Text("Download Proposal")),
     );
     SimpleDialog alert = SimpleDialog(
       children: [
+        message,
         accept,
+        reject,
         dwonload,
       ],
     );

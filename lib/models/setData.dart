@@ -26,7 +26,11 @@ class SetData {
             });
   }
 
-  Future sendInviteToTeacher(context, teacherEmail, proposal) async {
+  Future sendInviteToTeacher(context,
+      {@required teacherEmail,
+      @required proposal,
+      @required member1,
+      @required member2}) async {
     String groupID;
     String department;
     String batch;
@@ -42,6 +46,9 @@ class SetData {
         .collection('Invites')
         .doc(groupID)
         .set({
+      'Email': user.email,
+      'Member 1': member1,
+      'Member 2': member2,
       'GroupID': groupID,
       'Batch': batch,
       'Department': department,
