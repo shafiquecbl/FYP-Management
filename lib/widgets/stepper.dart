@@ -15,7 +15,6 @@ class Steps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      // direction: Axis.horizontal,
       children: [
         Container(
           height: 25,
@@ -65,7 +64,6 @@ class LastStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      // direction: Axis.horizontal,
       children: [
         Container(
           height: 25,

@@ -9,6 +9,13 @@ import 'package:fyp_management/widgets/stepper.dart';
 import 'package:intl/intl.dart';
 
 class Dashboard extends StatefulWidget {
+  final String department;
+  final String batch;
+  final int currentStep;
+  Dashboard(
+      {@required this.department,
+      @required this.batch,
+      @required this.currentStep});
   static String routeName = "/sDashboard";
   @override
   _DashboardState createState() => _DashboardState();
@@ -16,13 +23,6 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   User user = FirebaseAuth.instance.currentUser;
-
-  String studentDepartment = 'CS';
-  String teacherDeparment = 'CS';
-  String batch = 'B';
-  int groupMembers = 0;
-  int currentStep = 1;
-
   int proposalDate;
   int srsDate;
   int sddDate;
@@ -31,15 +31,6 @@ class _DashboardState extends State<Dashboard> {
   int dateTime = int.parse(DateFormat("yyyy-MM-dd")
       .format(DateTime.now())
       .replaceAll(new RegExp(r'[^\w\s]+'), ''));
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      getUserProfile();
-      getGroupMembers();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,74 +62,80 @@ class _DashboardState extends State<Dashboard> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          dateTime <= proposalDate && currentStep == 1
+                          dateTime <= proposalDate && widget.currentStep < 2
                               ? Steps(
                                   step: 1,
-                                  iconColor: currentStep == 1
+                                  iconColor: widget.currentStep == 1
                                       ? kPrimaryColor
                                       : greyColor,
                                   text: 'Invite Students',
-                                  textColor: currentStep == 1
+                                  textColor: widget.currentStep == 1
                                       ? Colors.black
                                       : greyColor,
                                 )
                               : Container(),
-                          dateTime <= proposalDate && currentStep == 2
+                          dateTime <= proposalDate && widget.currentStep < 3
                               ? Steps(
                                   step: 2,
-                                  iconColor: currentStep == 2
+                                  iconColor: widget.currentStep == 2
                                       ? kPrimaryColor
                                       : greyColor,
                                   text: 'Invite Supervisor',
-                                  textColor: currentStep == 2
+                                  textColor: widget.currentStep == 2
                                       ? Colors.black
                                       : greyColor,
                                 )
                               : Container(),
-                          dateTime <= proposalDate
+                          dateTime <= proposalDate && widget.currentStep < 4
                               ? Steps(
                                   step: 3,
-                                  iconColor: currentStep == 3
+                                  iconColor: widget.currentStep == 3
                                       ? kPrimaryColor
                                       : greyColor,
                                   text: 'Submit Proposal',
-                                  textColor: currentStep == 3
+                                  textColor: widget.currentStep == 3
                                       ? Colors.black
                                       : greyColor,
                                 )
                               : Container(),
-                          proposalDate >= dateTime && dateTime <= srsDate
+                          proposalDate >= dateTime &&
+                                  dateTime <= srsDate &&
+                                  widget.currentStep < 5
                               ? Steps(
                                   step: 4,
-                                  iconColor: currentStep == 4
+                                  iconColor: widget.currentStep == 4
                                       ? kPrimaryColor
                                       : greyColor,
                                   text: 'Submit SRS',
-                                  textColor: currentStep == 4
+                                  textColor: widget.currentStep == 4
                                       ? Colors.black
                                       : greyColor,
                                 )
                               : Container(),
-                          srsDate >= dateTime && dateTime <= sddDate
+                          srsDate >= dateTime &&
+                                  dateTime <= sddDate &&
+                                  widget.currentStep < 6
                               ? Steps(
                                   step: 5,
-                                  iconColor: currentStep == 5
+                                  iconColor: widget.currentStep == 5
                                       ? kPrimaryColor
                                       : greyColor,
                                   text: 'Submit SDD',
-                                  textColor: currentStep == 5
+                                  textColor: widget.currentStep == 5
                                       ? Colors.black
                                       : greyColor,
                                 )
                               : Container(),
-                          sddDate >= dateTime && dateTime <= reportDate
+                          sddDate >= dateTime &&
+                                  dateTime <= reportDate &&
+                                  widget.currentStep < 7
                               ? LastStep(
                                   step: 6,
-                                  iconColor: currentStep == 6
+                                  iconColor: widget.currentStep == 6
                                       ? kPrimaryColor
                                       : greyColor,
                                   text: 'Submit Report',
-                                  textColor: currentStep == 6
+                                  textColor: widget.currentStep == 6
                                       ? Colors.black
                                       : greyColor,
                                 )
@@ -150,44 +147,19 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
               // if group is completed then show list of supervisor //
-              currentStep == 2
+              widget.currentStep == 2
                   ? GetSupervisors(
-                      department: teacherDeparment,
+                      department:
+                          widget.department == 'SE' ? 'CS' : widget.department,
                     )
                   :
                   // if group is not completed then show students list //
-                  GetStudents(department: studentDepartment, batch: batch)
+                  GetStudents(
+                      department: widget.department, batch: widget.batch)
             ],
           );
         },
       ),
     );
-  }
-
-  getUserProfile() async {
-    return await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(user.email)
-        .get()
-        .then((value) {
-      setState(() {
-        studentDepartment = value['Department'];
-        batch = value['Batch'];
-        currentStep = value['Current Step'];
-      });
-    });
-  }
-
-  getGroupMembers() {
-    Stream<QuerySnapshot> stream = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(user.email)
-        .collection('Group Members')
-        .snapshots();
-    return stream.listen((event) {
-      setState(() {
-        groupMembers = event.docs.length;
-      });
-    });
   }
 }

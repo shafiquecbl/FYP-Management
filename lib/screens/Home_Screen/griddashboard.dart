@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Dashboard/dashboard.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/Inboxx.dart';
+import 'package:fyp_management/widgets/alert_dialog.dart';
+import 'package:fyp_management/widgets/navigator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'components/Pages/Groups/groups.dart';
@@ -34,7 +36,7 @@ class GridDashboard extends StatelessWidget {
   dashboard(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, Dashboard.routeName);
+        getUserProfile(context);
       },
       splashColor: kPrimaryColor,
       child: Container(
@@ -196,5 +198,21 @@ class GridDashboard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  getUserProfile(BuildContext context) async {
+    showLoadingDialog(context);
+    return await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser.email)
+        .get()
+        .then((value) {
+      pushReplacement(
+          context,
+          Dashboard(
+              department: value['Department'],
+              batch: value['Batch'],
+              currentStep: value['Current Step']));
+    });
   }
 }

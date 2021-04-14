@@ -4,7 +4,6 @@ import 'package:fyp_management/screens/Faculty%20Home%20Screen/components/Pages/
 import 'package:fyp_management/screens/Faculty%20Home%20Screen/components/Pages/Inbox/inbox.dart';
 import 'package:fyp_management/screens/Faculty%20Home%20Screen/components/Pages/Invites/invites.dart';
 import 'package:fyp_management/screens/Faculty%20Home%20Screen/faculty_homeScreen.dart';
-import 'package:fyp_management/screens/Home_Screen/components/Pages/Dashboard/dashboard.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/Inboxx.dart';
 import 'package:fyp_management/screens/forgot_password/forgot_password_screen.dart';
 import 'package:fyp_management/screens/sign_in/sign_in_screen.dart';
@@ -18,7 +17,6 @@ final Map<String, WidgetBuilder> routes = {
   ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
   MainScreen.routeName: (context) => MainScreen(),
   FHomeScreen.routeName: (context) => FHomeScreen(),
-  Dashboard.routeName: (context) => Dashboard(),
   Groups.routeName: (context) => Groups(),
   Inboxx.routeName: (context) => Inboxx(),
   Home.routeName: (context) => Home(),

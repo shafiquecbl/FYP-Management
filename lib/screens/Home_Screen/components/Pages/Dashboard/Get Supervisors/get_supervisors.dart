@@ -59,7 +59,6 @@ class _GetSupervisorsState extends State<GetSupervisors> {
       elevation: 4,
       shadowColor: kPrimaryColor,
       child: ExpansionTile(
-        onExpansionChanged: (value) => true,
         tilePadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
         leading: Container(
           width: 55,

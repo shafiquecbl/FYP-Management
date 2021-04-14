@@ -5,6 +5,7 @@ import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/models/setData.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Inbox/chat_screen.dart';
 import 'package:fyp_management/widgets/alert_dialog.dart';
+import 'package:fyp_management/widgets/navigator.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GetStudents extends StatefulWidget {
@@ -52,101 +53,121 @@ class _GetStudentsState extends State<GetStudents> {
   }
 
   studentList(QueryDocumentSnapshot snapshot, index) {
-    return ListTile(
-      leading: Container(
-        width: 55,
-        padding: EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(100)),
-          border: Border.all(
-            width: 2,
-            color: Theme.of(context).primaryColor,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
-            ),
-          ],
-        ),
-        child: Container(
-          padding: EdgeInsets.all(1),
+    return Card(
+      elevation: 4,
+      shadowColor: kPrimaryColor,
+      child: ExpansionTile(
+        leading: Container(
+          width: 55,
+          padding: EdgeInsets.all(2),
           decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(100),
-          ),
-          constraints: BoxConstraints(
-            minWidth: 55,
-            minHeight: 55,
-          ),
-          child: Center(
-            child: Text(
-              snapshot['Registeration No'].split('-').last,
-              style: GoogleFonts.teko(
-                color: kPrimaryColor,
-                fontSize: 30,
+            borderRadius: BorderRadius.all(Radius.circular(100)),
+            border: Border.all(
+              width: 2,
+              color: Theme.of(context).primaryColor,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 5,
               ),
-              textAlign: TextAlign.center,
+            ],
+          ),
+          child: Container(
+            padding: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(100),
+            ),
+            constraints: BoxConstraints(
+              minWidth: 55,
+              minHeight: 55,
+            ),
+            child: Center(
+              child: Text(
+                snapshot['Registeration No'].split('-').last,
+                style: GoogleFonts.teko(
+                  color: kPrimaryColor,
+                  fontSize: 30,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ),
-      ),
-      title: Text(snapshot['Registeration No'].toUpperCase()),
-      subtitle: Text("${snapshot['Department']} - ${snapshot['Batch']}"),
-      trailing: IconButton(
-        icon: Icon(Icons.more_vert),
-        onPressed: () {
-          moreDialog(snapshot);
-        },
+        title: Text(snapshot['Registeration No'].toUpperCase(), style: stylee),
+        subtitle: Text("${snapshot['Department']} - ${snapshot['Batch']}"),
+        children: [
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              message(snapshot),
+              StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(snapshot['Email'])
+                    .collection('Invites')
+                    .where('Email', isEqualTo: user.email)
+                    .snapshots(),
+                builder: (BuildContext context, AsyncSnapshot snap) {
+                  if (snap.connectionState == ConnectionState.waiting)
+                    return Center(child: CircularProgressIndicator());
+                  if (snap.data.docs.length == 0) return invite(snapshot);
+                  return alreadyInvited();
+                },
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+        ],
       ),
     );
   }
 
-  moreDialog(DocumentSnapshot snapshot) {
-    Widget message = FlatButton(
+  message(DocumentSnapshot snapshot) {
+    return RaisedButton.icon(
       onPressed: () {
-        Navigator.maybePop(context).then((value) => Navigator.push(
+        navigator(
             context,
-            MaterialPageRoute(
-                builder: (builder) => ChatScreen(
-                      receiverEmail: snapshot['Email'],
-                      receiverRegNo: snapshot['Registeration No'],
-                    ))));
+            ChatScreen(
+              receiverEmail: snapshot['Email'],
+              receiverRegNo: snapshot['Registeration No'],
+            ));
       },
-      child: ListTile(
-          leading: Icon(
-            Icons.message_outlined,
-            color: kPrimaryColor,
-          ),
-          title: Text("Message")),
+      icon: Icon(Icons.message),
+      label: Text("Message"),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     );
-    Widget invite = FlatButton(
-      onPressed: () {
-        Navigator.maybePop(context).then((value) => {
-              showLoadingDialog(context),
-              SetData().sendInvite(context, snapshot['Email'])
-            });
-      },
-      child: ListTile(
-          leading: Icon(
-            Icons.insert_invitation_outlined,
-            color: kPrimaryColor,
-          ),
-          title: Text("Invite")),
-    );
-    SimpleDialog alert = SimpleDialog(
-      children: [
-        message,
-        invite,
-      ],
-    );
+  }
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
+  invite(DocumentSnapshot snapshot) {
+    return SizedBox(
+      width: 140,
+      child: RaisedButton.icon(
+        onPressed: () {
+          showLoadingDialog(context);
+          SetData().sendInvite(context, snapshot['Email']);
+        },
+        icon: Icon(Icons.insert_invitation_outlined),
+        label: Text("Invite"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      ),
+    );
+  }
+
+  alreadyInvited() {
+    return RaisedButton.icon(
+      disabledColor: hexColor,
+      onPressed: null,
+      icon: Icon(Icons.done),
+      label: Text("Already Invited"),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     );
   }
 }
