@@ -210,9 +210,12 @@ class GridDashboard extends StatelessWidget {
       pushReplacement(
           context,
           Dashboard(
-              department: value['Department'],
-              batch: value['Batch'],
-              currentStep: value['Current Step']));
+            department: value['Department'],
+            batch: value['Batch'],
+            currentStep: value['Current Step'],
+            supervisorName: value['Supervisor Name'],
+            supervisorEmail: value['Supervisor'],
+          ));
     });
   }
 }
