@@ -208,8 +208,11 @@ class _GroupsState extends State<Groups> {
         ),
         title: Text(snapshot['Registeration No'].toUpperCase()),
         trailing: RaisedButton.icon(
-          label: Text('Chat'),
-          icon: Icon(Icons.message),
+          color: Colors.blue,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          label: Text('Chat', style: TextStyle(color: hexColor)),
+          icon: Icon(Icons.message, color: hexColor),
           onPressed: () {
             navigator(
                 context,
