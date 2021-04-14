@@ -159,7 +159,7 @@ class _DashboardState extends State<Dashboard> {
                           ? SubmitSRS(
                               supervisorEmail: widget.supervisorEmail,
                               supervisorName: widget.supervisorName,
-                              srsDate: srsDate.toString(),
+                              srsDate: sddDate.toString(),
                             )
                           : Container(
                               child: Center(
