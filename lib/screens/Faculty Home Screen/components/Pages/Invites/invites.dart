@@ -280,7 +280,7 @@ class _InvitesState extends State<Invites> {
       'SDD': '',
       'SDD Status': '',
       'Report': '',
-      'Report Status': ''
+      'Report Status': '',
     }).then((value) {
       //// Notification to Member 1 ////
       firestore

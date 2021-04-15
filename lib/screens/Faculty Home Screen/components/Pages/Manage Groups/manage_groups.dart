@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp_management/screens/Faculty%20Home%20Screen/components/Pages/Manage%20Groups/open_group_details.dart';
+import 'package:fyp_management/widgets/alert_dialog.dart';
 import 'package:fyp_management/widgets/customAppBar.dart';
 import 'package:fyp_management/widgets/navigator.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -53,8 +54,18 @@ class _ManageGroupsState extends State<ManageGroups> {
 
   groupsList(DocumentSnapshot snapshot) {
     return GestureDetector(
-      onTap: () {
-        navigator(context, GroupDetails(groupID: snapshot['GroupID']));
+      onTap: () async {
+        showLoadingDialog(context);
+        return await FirebaseFirestore.instance
+            .collection('Dates')
+            .doc('dates')
+            .get()
+            .then((value) => pushReplacement(
+                context,
+                GroupDetails(
+                  groupID: snapshot['GroupID'],
+                  date: value,
+                )));
       },
       child: Card(
         elevation: 4,
