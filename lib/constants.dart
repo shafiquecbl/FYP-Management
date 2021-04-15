@@ -17,6 +17,8 @@ final headingStyle = TextStyle(
 );
 final stylee = GoogleFonts.teko(
     color: kTextColor, fontSize: 18, fontWeight: FontWeight.bold);
+final stylee1 = GoogleFonts.teko(
+    color: kPrimaryColor, fontSize: 18, fontWeight: FontWeight.bold);
 
 // Form Error
 final RegExp emailValidatorRegExp =

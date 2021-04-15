@@ -207,20 +207,23 @@ class _GroupsState extends State<Groups> {
           ),
         ),
         title: Text(snapshot['Registeration No'].toUpperCase()),
-        trailing: RaisedButton.icon(
-          color: Colors.blue,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          label: Text('Chat', style: TextStyle(color: hexColor)),
-          icon: Icon(Icons.message, color: hexColor),
-          onPressed: () {
-            navigator(
-                context,
-                ChatScreen(
-                  receiverEmail: snapshot['Email'],
-                  receiverRegNo: snapshot['Registeration No'],
-                ));
-          },
+        trailing: SizedBox(
+          width: 120,
+          child: RaisedButton.icon(
+            color: Colors.blue,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            label: Text('Chat', style: TextStyle(color: hexColor)),
+            icon: Icon(Icons.message, color: hexColor),
+            onPressed: () {
+              navigator(
+                  context,
+                  ChatScreen(
+                    receiverEmail: snapshot['Email'],
+                    receiverRegNo: snapshot['Registeration No'],
+                  ));
+            },
+          ),
         ),
       ),
     );

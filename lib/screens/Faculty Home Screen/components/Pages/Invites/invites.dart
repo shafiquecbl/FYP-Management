@@ -274,7 +274,13 @@ class _InvitesState extends State<Invites> {
       'GroupID': snapshot['GroupID'],
       'Department': snapshot['Department'],
       'Batch': snapshot['Batch'],
-      'Proposal': snapshot['Proposal']
+      'Proposal': snapshot['Proposal'],
+      'SRS': '',
+      'SRS Status': '',
+      'SDD': '',
+      'SDD Status': '',
+      'Report': '',
+      'Report Status': ''
     }).then((value) {
       //// Notification to Member 1 ////
       firestore

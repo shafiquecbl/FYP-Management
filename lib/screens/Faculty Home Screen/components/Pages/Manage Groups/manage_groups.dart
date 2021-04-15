@@ -2,12 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp_management/screens/Faculty%20Home%20Screen/components/Pages/Inbox/chat_screen.dart';
+import 'package:fyp_management/screens/Faculty%20Home%20Screen/components/Pages/Manage%20Groups/open_group_details.dart';
 import 'package:fyp_management/widgets/customAppBar.dart';
 import 'package:fyp_management/widgets/navigator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fyp_management/constants.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ManageGroups extends StatefulWidget {
   static String routeName = "/tManageGroups";
@@ -53,108 +52,58 @@ class _ManageGroupsState extends State<ManageGroups> {
   }
 
   groupsList(DocumentSnapshot snapshot) {
-    return Card(
-      elevation: 4,
-      shadowColor: kPrimaryColor,
-      child: ExpansionTile(
-        leading: Container(
-          width: 55,
-          padding: EdgeInsets.all(2),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(100)),
-            border: Border.all(
-              width: 2,
-              color: Theme.of(context).primaryColor,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-              ),
-            ],
-          ),
-          child: Container(
-            padding: EdgeInsets.all(1),
+    return GestureDetector(
+      onTap: () {
+        navigator(context, GroupDetails(groupID: snapshot['GroupID']));
+      },
+      child: Card(
+        elevation: 4,
+        shadowColor: kPrimaryColor,
+        child: ListTile(
+          leading: Container(
+            width: 55,
+            padding: EdgeInsets.all(2),
             decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(100),
-            ),
-            constraints: BoxConstraints(
-              minWidth: 55,
-              minHeight: 55,
-            ),
-            child: Center(
-              child: Text(
-                snapshot['GroupID'],
-                style: GoogleFonts.teko(
-                  color: kPrimaryColor,
-                  fontSize: 30,
+              borderRadius: BorderRadius.all(Radius.circular(100)),
+              border: Border.all(
+                width: 2,
+                color: Theme.of(context).primaryColor,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
                 ),
-                textAlign: TextAlign.center,
+              ],
+            ),
+            child: Container(
+              padding: EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(100),
+              ),
+              constraints: BoxConstraints(
+                minWidth: 55,
+                minHeight: 55,
+              ),
+              child: Center(
+                child: Text(
+                  snapshot['GroupID'],
+                  style: GoogleFonts.teko(
+                    color: kPrimaryColor,
+                    fontSize: 30,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ),
+          title: Text('GroupID:   ${snapshot['GroupID'].toUpperCase()}',
+              style: stylee),
+          subtitle: Text("${snapshot['Department']} - ${snapshot['Batch']}"),
+          trailing: Icon(Icons.arrow_forward_ios),
         ),
-        title: Text('GroupID:   ${snapshot['GroupID'].toUpperCase()}',
-            style: stylee),
-        subtitle: Text("${snapshot['Department']} - ${snapshot['Batch']}"),
-        children: [
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              message(snapshot),
-              download(snapshot),
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-        ],
-      ),
-    );
-  }
-
-  message(DocumentSnapshot snapshot) {
-    return SizedBox(
-      width: 140,
-      child: RaisedButton.icon(
-        color: Colors.blue,
-        onPressed: () {
-          navigator(
-              context,
-              FChatScreen(
-                receiverEmail: snapshot['Member 1'],
-                receiverRegNo: snapshot['Member 1'].split('@').first,
-              ));
-        },
-        icon: Icon(
-          Icons.message,
-          color: hexColor,
-        ),
-        label: Text("Message", style: TextStyle(color: hexColor)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      ),
-    );
-  }
-
-  download(DocumentSnapshot snapshot) {
-    return SizedBox(
-      width: 140,
-      child: RaisedButton.icon(
-        color: Colors.purple,
-        onPressed: () {
-          launch(snapshot['Proposal']);
-        },
-        icon: Icon(
-          Icons.file_download,
-          color: hexColor,
-        ),
-        label: Text("Proposal", style: TextStyle(color: hexColor)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
     );
   }
