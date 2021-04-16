@@ -107,7 +107,10 @@ class _GroupDetailsState extends State<GroupDetails> {
                           ),
                           snapshot.data['SRS By'] != ''
                               ? Text(
-                                  snapshot.data['SRS By'],
+                                  snapshot.data['SRS By']
+                                      .split('@')
+                                      .first
+                                      .toUpperCase(),
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 )
                               : Container()
@@ -130,7 +133,10 @@ class _GroupDetailsState extends State<GroupDetails> {
                           ),
                           snapshot.data['SDD By'] != ''
                               ? Text(
-                                  snapshot.data['SDD By'],
+                                  snapshot.data['SDD By']
+                                      .split('@')
+                                      .first
+                                      .toUpperCase(),
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 )
                               : Container()
@@ -152,7 +158,10 @@ class _GroupDetailsState extends State<GroupDetails> {
                         ),
                         snapshot.data['Report By'] != ''
                             ? Text(
-                                snapshot.data['Report By'].split('@').first,
+                                snapshot.data['Report By']
+                                    .split('@')
+                                    .first
+                                    .toUpperCase(),
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               )
                             : Container()
