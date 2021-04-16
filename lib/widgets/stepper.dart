@@ -91,6 +91,741 @@ class LastStep extends StatelessWidget {
   }
 }
 
+class Step1 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: kPrimaryColor,
+          ),
+          child: Center(
+              child: Text(
+            '1',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Invite Students',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Text(
+            '2',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Invite Supervisor',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Text(
+            '3',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit SRS',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Text(
+            '4',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit SDD',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Text(
+            '5',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit Report',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class Step2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        // Container(
+        //   height: 25,
+        //   width: 25,
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
+        //     color: kPrimaryColor,
+        //   ),
+        //   child: Center(
+        //       child: Text(
+        //     '1',
+        //     style: TextStyle(
+        //         fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+        //   )),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8),
+        //   child: Text(
+        //     'Invite Students',
+        //     style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+        //   ),
+        // ),
+        // Container(
+        //   color: greyColor,
+        //   height: 1,
+        //   width: 60,
+        // ),
+        // SizedBox(
+        //   width: 8,
+        // ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: kPrimaryColor,
+          ),
+          child: Center(
+              child: Text(
+            '2',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Invite Supervisor',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Text(
+            '3',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit SRS',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Text(
+            '4',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit SDD',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Text(
+            '5',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit Report',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class Step3 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        // Container(
+        //   height: 25,
+        //   width: 25,
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
+        //     color: kPrimaryColor,
+        //   ),
+        //   child: Center(
+        //       child: Text(
+        //     '1',
+        //     style: TextStyle(
+        //         fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+        //   )),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8),
+        //   child: Text(
+        //     'Invite Students',
+        //     style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+        //   ),
+        // ),
+        // Container(
+        //   color: greyColor,
+        //   height: 1,
+        //   width: 60,
+        // ),
+        // SizedBox(
+        //   width: 8,
+        // ),
+        // Container(
+        //   height: 25,
+        //   width: 25,
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
+        //     color: kPrimaryColor,
+        //   ),
+        //   child: Center(
+        //       child: Text(
+        //     '2',
+        //     style: TextStyle(
+        //         fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+        //   )),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8),
+        //   child: Text(
+        //     'Invite Supervisor',
+        //     style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+        //   ),
+        // ),
+        // Container(
+        //   color: greyColor,
+        //   height: 1,
+        //   width: 60,
+        // ),
+        // SizedBox(
+        //   width: 8,
+        // ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: kPrimaryColor,
+          ),
+          child: Center(
+              child: Text(
+            '3',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit SRS',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Text(
+            '4',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit SDD',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Text(
+            '5',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit Report',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class Step4 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        // Container(
+        //   height: 25,
+        //   width: 25,
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
+        //     color: kPrimaryColor,
+        //   ),
+        //   child: Center(
+        //       child: Text(
+        //     '1',
+        //     style: TextStyle(
+        //         fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+        //   )),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8),
+        //   child: Text(
+        //     'Invite Students',
+        //     style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+        //   ),
+        // ),
+        // Container(
+        //   color: greyColor,
+        //   height: 1,
+        //   width: 60,
+        // ),
+        // SizedBox(
+        //   width: 8,
+        // ),
+        // Container(
+        //   height: 25,
+        //   width: 25,
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
+        //     color: kPrimaryColor,
+        //   ),
+        //   child: Center(
+        //       child: Text(
+        //     '2',
+        //     style: TextStyle(
+        //         fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+        //   )),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8),
+        //   child: Text(
+        //     'Invite Supervisor',
+        //     style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+        //   ),
+        // ),
+        // Container(
+        //   color: greyColor,
+        //   height: 1,
+        //   width: 60,
+        // ),
+        // SizedBox(
+        //   width: 8,
+        // ),
+        // Container(
+        //   height: 25,
+        //   width: 25,
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
+        //     color: greyColor,
+        //   ),
+        //   child: Center(
+        //       child: Text(
+        //     '3',
+        //     style: TextStyle(
+        //         fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+        //   )),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8),
+        //   child: Text(
+        //     'Submit SRS',
+        //     style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+        //   ),
+        // ),
+        // Container(
+        //   color: greyColor,
+        //   height: 1,
+        //   width: 60,
+        // ),
+        // SizedBox(
+        //   width: 8,
+        // ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: kPrimaryColor,
+          ),
+          child: Center(
+              child: Text(
+            '4',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit SDD',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Text(
+            '5',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit Report',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class Step5 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        // Container(
+        //   height: 25,
+        //   width: 25,
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
+        //     color: kPrimaryColor,
+        //   ),
+        //   child: Center(
+        //       child: Text(
+        //     '1',
+        //     style: TextStyle(
+        //         fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+        //   )),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8),
+        //   child: Text(
+        //     'Invite Students',
+        //     style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+        //   ),
+        // ),
+        // Container(
+        //   color: greyColor,
+        //   height: 1,
+        //   width: 60,
+        // ),
+        // SizedBox(
+        //   width: 8,
+        // ),
+        // Container(
+        //   height: 25,
+        //   width: 25,
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
+        //     color: kPrimaryColor,
+        //   ),
+        //   child: Center(
+        //       child: Text(
+        //     '2',
+        //     style: TextStyle(
+        //         fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+        //   )),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8),
+        //   child: Text(
+        //     'Invite Supervisor',
+        //     style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+        //   ),
+        // ),
+        // Container(
+        //   color: greyColor,
+        //   height: 1,
+        //   width: 60,
+        // ),
+        // SizedBox(
+        //   width: 8,
+        // ),
+        // Container(
+        //   height: 25,
+        //   width: 25,
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
+        //     color: greyColor,
+        //   ),
+        //   child: Center(
+        //       child: Text(
+        //     '3',
+        //     style: TextStyle(
+        //         fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+        //   )),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8),
+        //   child: Text(
+        //     'Submit SRS',
+        //     style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+        //   ),
+        // ),
+        // Container(
+        //   color: greyColor,
+        //   height: 1,
+        //   width: 60,
+        // ),
+        // SizedBox(
+        //   width: 8,
+        // ),
+        // Container(
+        //   height: 25,
+        //   width: 25,
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
+        //     color: greyColor,
+        //   ),
+        //   child: Center(
+        //       child: Text(
+        //     '4',
+        //     style: TextStyle(
+        //         fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+        //   )),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8),
+        //   child: Text(
+        //     'Submit SDD',
+        //     style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+        //   ),
+        // ),
+        // Container(
+        //   color: greyColor,
+        //   height: 1,
+        //   width: 60,
+        // ),
+        // SizedBox(
+        //   width: 8,
+        // ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: kPrimaryColor,
+          ),
+          child: Center(
+              child: Text(
+            '5',
+            style: TextStyle(
+                fontSize: 8, fontWeight: FontWeight.bold, color: kWhiteColor),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit Report',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class Success extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -62,146 +62,84 @@ class _DashboardState extends State<Dashboard> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 15),
                 child: Container(
+                  padding:
+                      EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 15),
                   width: MediaQuery.of(context).size.width,
                   color: hexColor,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, top: 15, bottom: 15),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          dateTime <= widget.proposalDate && currentStep < 2
-                              ? Steps(
-                                  step: 1,
-                                  iconColor: currentStep == 1
-                                      ? kPrimaryColor
-                                      : greyColor,
-                                  text: 'Invite Students',
-                                  textColor: currentStep == 1
-                                      ? Colors.black
-                                      : greyColor,
-                                )
-                              : Container(),
-                          dateTime <= widget.proposalDate && currentStep < 3
-                              ? Steps(
-                                  step: 2,
-                                  iconColor: currentStep == 2
-                                      ? kPrimaryColor
-                                      : greyColor,
-                                  text: 'Invite Supervisor',
-                                  textColor: currentStep == 2
-                                      ? Colors.black
-                                      : greyColor,
-                                )
-                              : Container(),
-                          widget.proposalDate >= dateTime &&
-                                  dateTime <= widget.srsDate &&
-                                  currentStep < 4
-                              ? Steps(
-                                  step: 3,
-                                  iconColor: currentStep == 3
-                                      ? kPrimaryColor
-                                      : greyColor,
-                                  text: 'Submit SRS',
-                                  textColor: currentStep == 3
-                                      ? Colors.black
-                                      : greyColor,
-                                )
-                              : Container(),
-                          widget.srsDate >= dateTime &&
-                                  dateTime <= widget.sddDate &&
-                                  currentStep < 5
-                              ? Steps(
-                                  step: 4,
-                                  iconColor: currentStep == 4
-                                      ? kPrimaryColor
-                                      : greyColor,
-                                  text: 'Submit SDD',
-                                  textColor: currentStep == 4
-                                      ? Colors.black
-                                      : greyColor,
-                                )
-                              : Container(),
-                          widget.sddDate >= dateTime &&
-                                  dateTime <= widget.reportDate &&
-                                  currentStep < 6
-                              ? LastStep(
-                                  step: 5,
-                                  iconColor: currentStep == 5
-                                      ? kPrimaryColor
-                                      : greyColor,
-                                  text: 'Submit Report',
-                                  textColor: currentStep == 5
-                                      ? Colors.black
-                                      : greyColor,
-                                )
-                              : Success(),
-                        ],
-                      ),
-                    ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: currentStep == 1
+                        ? Step1()
+                        : currentStep == 2
+                            ? Step2()
+                            : currentStep == 3
+                                ? Step3()
+                                : currentStep == 4
+                                    ? Step4()
+                                    : currentStep == 5
+                                        ? Step5()
+                                        : Success(),
                   ),
                 ),
               ),
-              Expanded(
-                  child:
-                      // if group is not completed then show students list //
-                      currentStep == 1
-                          ? GetStudents(department: department, batch: batch)
-                          :
-                          // if group is completed then show list of supervisor //
-                          currentStep == 2
-                              ? GetSupervisors(
-                                  department:
-                                      department == 'SE' ? 'CS' : department,
-                                )
-                              // if group is confirmed then ask for SRS Submission //
-                              : currentStep == 3 &&
-                                      widget.proposalDate < dateTime &&
-                                      dateTime <= widget.srsDate
-                                  ? SubmitSRS(
-                                      supervisorEmail: supervisorEmail,
-                                      supervisorName: supervisorName,
-                                      srsDate: widget.sddDate.toString(),
-                                      groupID: groupID,
-                                    )
-                                  : currentStep == 4 &&
-                                          widget.srsDate < dateTime &&
-                                          dateTime <= widget.sddDate
-                                      ? SubmitSDD(
-                                          supervisorEmail: supervisorEmail,
-                                          sddDate: widget.srsDate.toString(),
-                                          groupID: groupID,
-                                        )
-                                      : currentStep == 5 &&
-                                              widget.sddDate < dateTime &&
-                                              dateTime <= widget.reportDate
-                                          ? SubmitReport(
-                                              supervisorEmail: supervisorEmail,
-                                              reportDate:
-                                                  widget.reportDate.toString(),
-                                              groupID: groupID,
-                                            )
-                                          : Padding(
+              Container(
+                child:
+                    // if group is not completed then show students list //
+                    currentStep == 1
+                        ? GetStudents(department: department, batch: batch)
+                        :
+                        // if group is completed then show list of supervisor //
+                        currentStep == 2
+                            ? GetSupervisors(
+                                department:
+                                    department == 'SE' ? 'CS' : department,
+                              )
+                            // if group is confirmed then ask for SRS Submission //
+                            : currentStep == 3 &&
+                                    widget.proposalDate < dateTime &&
+                                    dateTime <= widget.srsDate
+                                ? SubmitSRS(
+                                    supervisorEmail: supervisorEmail,
+                                    supervisorName: supervisorName,
+                                    srsDate: widget.sddDate.toString(),
+                                    groupID: groupID,
+                                  )
+                                : currentStep == 4 &&
+                                        widget.srsDate < dateTime &&
+                                        dateTime <= widget.sddDate
+                                    ? SubmitSDD(
+                                        supervisorEmail: supervisorEmail,
+                                        sddDate: widget.srsDate.toString(),
+                                        groupID: groupID,
+                                      )
+                                    : currentStep == 5 &&
+                                            widget.sddDate < dateTime &&
+                                            dateTime <= widget.reportDate
+                                        ? SubmitReport(
+                                            supervisorEmail: supervisorEmail,
+                                            reportDate:
+                                                widget.reportDate.toString(),
+                                            groupID: groupID,
+                                          )
+                                        : Center(
+                                            child: Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 20),
-                                              child: Container(
-                                                child: Center(
-                                                  child: Text(
-                                                    currentStep == 3
-                                                        ? 'Your invitation is accepted by:\n$supervisorName\n Wait until ${widget.srsDate.toString().substring(6, 8)}-${widget.srsDate.toString().substring(4, 6)}-${widget.srsDate.toString().substring(0, 4)} to Submit SRS'
-                                                        : currentStep == 4
-                                                            ? 'Your SRS is Submitted\n Wait until ${widget.srsDate.toString().substring(6, 8)}-${widget.srsDate.toString().substring(4, 6)}-${widget.srsDate.toString().substring(0, 4)} to Submit SDD'
-                                                            : currentStep == 5
-                                                                ? 'Your SDD is Submitted\n Wait until ${widget.sddDate.toString().substring(6, 8)}-${widget.sddDate.toString().substring(4, 6)}-${widget.sddDate.toString().substring(0, 4)} to Submit Report'
-                                                                : 'Congratulations! 🎉🎉🎉\nYou have Submitted all the Documents Successfully ✔',
-                                                    textAlign: TextAlign.center,
-                                                    style: stylee,
-                                                  ),
-                                                ),
+                                              child: Text(
+                                                currentStep == 3
+                                                    ? 'Your invitation is accepted by:\n$supervisorName\n Wait until ${widget.srsDate.toString().substring(6, 8)}-${widget.srsDate.toString().substring(4, 6)}-${widget.srsDate.toString().substring(0, 4)} to Submit SRS'
+                                                    : currentStep == 4
+                                                        ? 'Your SRS is Submitted\n Wait until ${widget.srsDate.toString().substring(6, 8)}-${widget.srsDate.toString().substring(4, 6)}-${widget.srsDate.toString().substring(0, 4)} to Submit SDD'
+                                                        : currentStep == 5
+                                                            ? 'Your SDD is Submitted\n Wait until ${widget.sddDate.toString().substring(6, 8)}-${widget.sddDate.toString().substring(4, 6)}-${widget.sddDate.toString().substring(0, 4)} to Submit Report'
+                                                            : 'Congratulations! 🎉🎉🎉\nYou have Submitted all the Documents Successfully ✔',
+                                                textAlign: TextAlign.center,
+                                                style: stylee,
                                               ),
-                                            ))
+                                            ),
+                                          ),
+              )
             ],
           );
         },
