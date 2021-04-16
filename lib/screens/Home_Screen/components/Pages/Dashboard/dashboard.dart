@@ -4,23 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Dashboard/Get%20Supervisors/get_supervisors.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Dashboard/Get_Students/get_students.dart';
+import 'package:fyp_management/screens/Home_Screen/components/Pages/Dashboard/Submit%20Report/Submit_Report.dart';
 import 'package:fyp_management/screens/Home_Screen/components/Pages/Dashboard/Submit%20SRS/submit_srs.dart';
+import 'package:fyp_management/screens/Home_Screen/components/Pages/Dashboard/Submit%20SDD/submit_SDD.dart';
 import 'package:fyp_management/widgets/customAppBar.dart';
 import 'package:fyp_management/widgets/stepper.dart';
 import 'package:intl/intl.dart';
 
 class Dashboard extends StatefulWidget {
-  final String department;
-  final String batch;
-  final int currentStep;
-  final String supervisorName;
-  final String supervisorEmail;
-  Dashboard(
-      {@required this.department,
-      @required this.batch,
-      @required this.currentStep,
-      @required this.supervisorName,
-      @required this.supervisorEmail});
+  final int proposalDate;
+  final int srsDate;
+  final int sddDate;
+  final int reportDate;
+  Dashboard({
+    @required this.proposalDate,
+    @required this.srsDate,
+    @required this.sddDate,
+    @required this.reportDate,
+  });
   static String routeName = "/sDashboard";
   @override
   _DashboardState createState() => _DashboardState();
@@ -28,11 +29,12 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   User user = FirebaseAuth.instance.currentUser;
-  int proposalDate;
-  int srsDate;
-  int sddDate;
-  int reportDate;
-
+  int currentStep;
+  String batch;
+  String groupID;
+  String supervisorEmail;
+  String supervisorName;
+  String department;
   int dateTime = int.parse(DateFormat("yyyy-MM-dd")
       .format(DateTime.now())
       .replaceAll(new RegExp(r'[^\w\s]+'), ''));
@@ -43,16 +45,18 @@ class _DashboardState extends State<Dashboard> {
       appBar: customAppBar("Dashboard"),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('Dates')
-            .doc('dates')
+            .collection('Users')
+            .doc(user.email)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressIndicator());
-          proposalDate = snapshot.data['proposal'];
-          srsDate = snapshot.data['srs'];
-          sddDate = snapshot.data['sdd'];
-          reportDate = snapshot.data['report'];
+          currentStep = snapshot.data['Current Step'];
+          department = snapshot.data['Department'];
+          groupID = snapshot.data['GroupID'];
+          batch = snapshot.data['Batch'];
+          supervisorEmail = snapshot.data['Supervisor'];
+          supervisorName = snapshot.data['Supervisor Name'];
           return Column(
             children: [
               Padding(
@@ -67,111 +71,137 @@ class _DashboardState extends State<Dashboard> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          dateTime <= proposalDate && widget.currentStep < 2
+                          dateTime <= widget.proposalDate && currentStep < 2
                               ? Steps(
                                   step: 1,
-                                  iconColor: widget.currentStep == 1
+                                  iconColor: currentStep == 1
                                       ? kPrimaryColor
                                       : greyColor,
                                   text: 'Invite Students',
-                                  textColor: widget.currentStep == 1
+                                  textColor: currentStep == 1
                                       ? Colors.black
                                       : greyColor,
                                 )
                               : Container(),
-                          dateTime <= proposalDate && widget.currentStep < 3
+                          dateTime <= widget.proposalDate && currentStep < 3
                               ? Steps(
                                   step: 2,
-                                  iconColor: widget.currentStep == 2
+                                  iconColor: currentStep == 2
                                       ? kPrimaryColor
                                       : greyColor,
                                   text: 'Invite Supervisor',
-                                  textColor: widget.currentStep == 2
+                                  textColor: currentStep == 2
                                       ? Colors.black
                                       : greyColor,
                                 )
                               : Container(),
-                          proposalDate >= dateTime &&
-                                  dateTime <= srsDate &&
-                                  widget.currentStep < 4
+                          widget.proposalDate >= dateTime &&
+                                  dateTime <= widget.srsDate &&
+                                  currentStep < 4
                               ? Steps(
                                   step: 3,
-                                  iconColor: widget.currentStep == 3
+                                  iconColor: currentStep == 3
                                       ? kPrimaryColor
                                       : greyColor,
                                   text: 'Submit SRS',
-                                  textColor: widget.currentStep == 3
+                                  textColor: currentStep == 3
                                       ? Colors.black
                                       : greyColor,
                                 )
                               : Container(),
-                          srsDate >= dateTime &&
-                                  dateTime <= sddDate &&
-                                  widget.currentStep < 5
+                          widget.srsDate >= dateTime &&
+                                  dateTime <= widget.sddDate &&
+                                  currentStep < 5
                               ? Steps(
                                   step: 4,
-                                  iconColor: widget.currentStep == 4
+                                  iconColor: currentStep == 4
                                       ? kPrimaryColor
                                       : greyColor,
                                   text: 'Submit SDD',
-                                  textColor: widget.currentStep == 4
+                                  textColor: currentStep == 4
                                       ? Colors.black
                                       : greyColor,
                                 )
                               : Container(),
-                          sddDate >= dateTime &&
-                                  dateTime <= reportDate &&
-                                  widget.currentStep < 6
+                          widget.sddDate >= dateTime &&
+                                  dateTime <= widget.reportDate &&
+                                  currentStep < 6
                               ? LastStep(
                                   step: 5,
-                                  iconColor: widget.currentStep == 5
+                                  iconColor: currentStep == 5
                                       ? kPrimaryColor
                                       : greyColor,
                                   text: 'Submit Report',
-                                  textColor: widget.currentStep == 5
+                                  textColor: currentStep == 5
                                       ? Colors.black
                                       : greyColor,
                                 )
-                              : Container(),
+                              : Success(),
                         ],
                       ),
                     ),
                   ),
                 ),
               ),
-
-              // if group is not completed then show students list //
-              widget.currentStep == 1
-                  ? GetStudents(
-                      department: widget.department, batch: widget.batch)
-                  :
-                  // if group is completed then show list of supervisor //
-                  widget.currentStep == 2
-                      ? GetSupervisors(
-                          department: widget.department == 'SE'
-                              ? 'CS'
-                              : widget.department,
-                        )
-                      // if group is confirmed then ask for SRS Submission //
-                      : widget.currentStep == 3 &&
-                              proposalDate < dateTime &&
-                              dateTime <= srsDate
-                          ? SubmitSRS(
-                              supervisorEmail: widget.supervisorEmail,
-                              supervisorName: widget.supervisorName,
-                              srsDate: sddDate.toString(),
-                            )
-                          : Container(
-                              child: Center(
-                                child: Text(
-                                  widget.currentStep == 3
-                                      ? 'Your invitation is accepted by:\n${widget.supervisorName}\n Wait until ${srsDate.toString().substring(6, 8)}-${srsDate.toString().substring(4, 6)}-${srsDate.toString().substring(0, 4)} to Submit SRS'
-                                      : '',
-                                  textAlign: TextAlign.center,
-                                  style: stylee,
-                                ),
-                              ),
-                            )
+              Expanded(
+                  child:
+                      // if group is not completed then show students list //
+                      currentStep == 1
+                          ? GetStudents(department: department, batch: batch)
+                          :
+                          // if group is completed then show list of supervisor //
+                          currentStep == 2
+                              ? GetSupervisors(
+                                  department:
+                                      department == 'SE' ? 'CS' : department,
+                                )
+                              // if group is confirmed then ask for SRS Submission //
+                              : currentStep == 3 &&
+                                      widget.proposalDate < dateTime &&
+                                      dateTime <= widget.srsDate
+                                  ? SubmitSRS(
+                                      supervisorEmail: supervisorEmail,
+                                      supervisorName: supervisorName,
+                                      srsDate: widget.sddDate.toString(),
+                                      groupID: groupID,
+                                    )
+                                  : currentStep == 4 &&
+                                          widget.srsDate < dateTime &&
+                                          dateTime <= widget.sddDate
+                                      ? SubmitSDD(
+                                          supervisorEmail: supervisorEmail,
+                                          sddDate: widget.srsDate.toString(),
+                                          groupID: groupID,
+                                        )
+                                      : currentStep == 5 &&
+                                              widget.sddDate < dateTime &&
+                                              dateTime <= widget.reportDate
+                                          ? SubmitReport(
+                                              supervisorEmail: supervisorEmail,
+                                              reportDate:
+                                                  widget.reportDate.toString(),
+                                              groupID: groupID,
+                                            )
+                                          : Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20),
+                                              child: Container(
+                                                child: Center(
+                                                  child: Text(
+                                                    currentStep == 3
+                                                        ? 'Your invitation is accepted by:\n$supervisorName\n Wait until ${widget.srsDate.toString().substring(6, 8)}-${widget.srsDate.toString().substring(4, 6)}-${widget.srsDate.toString().substring(0, 4)} to Submit SRS'
+                                                        : currentStep == 4
+                                                            ? 'Your SRS is Submitted\n Wait until ${widget.srsDate.toString().substring(6, 8)}-${widget.srsDate.toString().substring(4, 6)}-${widget.srsDate.toString().substring(0, 4)} to Submit SDD'
+                                                            : currentStep == 5
+                                                                ? 'Your SDD is Submitted\n Wait until ${widget.sddDate.toString().substring(6, 8)}-${widget.sddDate.toString().substring(4, 6)}-${widget.sddDate.toString().substring(0, 4)} to Submit Report'
+                                                                : 'Congratulations! 🎉🎉🎉\nYou have Submitted all the Documents Successfully ✔',
+                                                    textAlign: TextAlign.center,
+                                                    style: stylee,
+                                                  ),
+                                                ),
+                                              ),
+                                            ))
             ],
           );
         },

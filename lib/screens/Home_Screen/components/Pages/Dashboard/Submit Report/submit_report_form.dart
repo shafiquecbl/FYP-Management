@@ -12,15 +12,15 @@ import 'package:fyp_management/models/setData.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/alert_dialog.dart';
 
-class SubmitSRSForm extends StatefulWidget {
+class SubmitReportForm extends StatefulWidget {
   final String teacherEmail;
   final String groupID;
-  SubmitSRSForm({@required this.teacherEmail, @required this.groupID});
+  SubmitReportForm({@required this.teacherEmail, @required this.groupID});
   @override
-  _SubmitSRSFormState createState() => _SubmitSRSFormState();
+  _SubmitReportFormState createState() => _SubmitReportFormState();
 }
 
-class _SubmitSRSFormState extends State<SubmitSRSForm> {
+class _SubmitReportFormState extends State<SubmitReportForm> {
   final _formKey = GlobalKey<FormState>();
   User user = FirebaseAuth.instance.currentUser;
   String member1;
@@ -116,12 +116,12 @@ class _SubmitSRSFormState extends State<SubmitSRSForm> {
 
   submit() async {
     showLoadingDialog(context);
-    final srs = FirebaseStorage.instance
+    final report = FirebaseStorage.instance
         .ref()
-        .child('Files/${user.email}/SRS/$fileName');
-    srs.putFile(file).then((value) async {
+        .child('Files/${user.email}/Report/$fileName');
+    return report.putFile(file).then((value) async {
       // ignore: unnecessary_cast
-      url = await srs.getDownloadURL() as String;
+      url = await report.getDownloadURL() as String;
       if (url != null) {
         await submitt();
       }
@@ -131,10 +131,10 @@ class _SubmitSRSFormState extends State<SubmitSRSForm> {
   submitt() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     return SetData()
-        .submitSRS(context,
+        .submitReport(context,
             groupID: widget.groupID,
             teacherEmail: widget.teacherEmail,
-            srs: url)
+            report: url)
         .then((value) {
       //// Notification to Member 2 ////
       firestore.collection('Users').doc(member1).get().then((snapshot) {
@@ -142,7 +142,7 @@ class _SubmitSRSFormState extends State<SubmitSRSForm> {
           sendAndRetrieveMessage(
               token: snapshot['token'],
               title: 'New Message',
-              body: 'SRS is Submitted by ${user.email.split('@').first}');
+              body: 'Report is Submitted by ${user.email.split('@').first}');
         }
       });
       //// Notification to Member 3 ////
@@ -151,11 +151,11 @@ class _SubmitSRSFormState extends State<SubmitSRSForm> {
           sendAndRetrieveMessage(
               token: snapshot['token'],
               title: 'New Message',
-              body: 'SRS is Submitted by ${user.email.split('@').first}');
+              body: 'Report is Submitted by ${user.email.split('@').first}');
         }
       });
       message =
-          'Congratulations! Your group member ${user.email.split('@').first} submitted the SRS';
+          'Congratulations! Your group member ${user.email.split('@').first} submitted the Report';
 
       //// Message and Contact to Member 2 ////
       Messages().addMessage(
@@ -187,12 +187,12 @@ class _SubmitSRSFormState extends State<SubmitSRSForm> {
   }
 
   changeCurrentStep(FirebaseFirestore firestore) {
-    //// Change Current Step to 4 of Student ////
-    firestore.collection('Users').doc(user.email).update({'Current Step': 4});
-    //// Change Current Step to 4 of Member 1 ////
-    firestore.collection('Users').doc(member1).update({'Current Step': 4});
-    //// Change Current Step to 4 of Member 2 ////
-    firestore.collection('Users').doc(member2).update({'Current Step': 4});
+    //// Change Current Step to 6 of Student ////
+    firestore.collection('Users').doc(user.email).update({'Current Step': 6});
+    //// Change Current Step to 6 of Member 1 ////
+    firestore.collection('Users').doc(member1).update({'Current Step': 6});
+    //// Change Current Step to 6 of Member 2 ////
+    firestore.collection('Users').doc(member2).update({'Current Step': 6});
   }
 
   getMembers() {

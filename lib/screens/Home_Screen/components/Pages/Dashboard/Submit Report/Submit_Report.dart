@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/size_config.dart';
-// import 'package:google_fonts/google_fonts.dart';
-import 'submit_srs_form.dart';
 
-class SubmitSRS extends StatefulWidget {
+import 'submit_report_form.dart';
+// import 'package:google_fonts/google_fonts.dart';
+
+class SubmitReport extends StatefulWidget {
   final String supervisorEmail;
-  final String supervisorName;
-  final String srsDate;
+  final String reportDate;
   final String groupID;
-  SubmitSRS(
+  SubmitReport(
       {@required this.supervisorEmail,
-      @required this.supervisorName,
-      @required this.srsDate,
+      @required this.reportDate,
       @required this.groupID});
   @override
-  _SubmitSRSState createState() => _SubmitSRSState();
+  _SubmitReportState createState() => _SubmitReportState();
 }
 
-class _SubmitSRSState extends State<SubmitSRS> {
+class _SubmitReportState extends State<SubmitReport> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,7 +36,7 @@ class _SubmitSRSState extends State<SubmitSRS> {
                   children: [
                     SizedBox(height: SizeConfig.screenHeight * 0.04),
                     Text(
-                      "Your invitation is accepted by: \n${widget.supervisorName}. \nSubmit SRS before ${widget.srsDate.substring(6, 8)}-${widget.srsDate.substring(4, 6)}-${widget.srsDate.substring(0, 4)}",
+                      "Submit Report before ${widget.reportDate.substring(6, 8)}-${widget.reportDate.substring(4, 6)}-${widget.reportDate.substring(0, 4)}",
                       textAlign: TextAlign.center,
                       // style: GoogleFonts.teko(
                       //     fontWeight: FontWeight.bold,
@@ -45,7 +44,7 @@ class _SubmitSRSState extends State<SubmitSRS> {
                       //     color: kPrimaryColor.withOpacity(0.8)),
                     ),
                     SizedBox(height: SizeConfig.screenHeight * 0.06),
-                    SubmitSRSForm(
+                    SubmitReportForm(
                       teacherEmail: widget.supervisorEmail,
                       groupID: widget.groupID,
                     ),

@@ -203,18 +203,17 @@ class GridDashboard extends StatelessWidget {
   getUserProfile(BuildContext context) async {
     showLoadingDialog(context);
     return await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(FirebaseAuth.instance.currentUser.email)
+        .collection('Dates')
+        .doc('dates')
         .get()
         .then((value) {
       pushReplacement(
           context,
           Dashboard(
-            department: value['Department'],
-            batch: value['Batch'],
-            currentStep: value['Current Step'],
-            supervisorName: value['Supervisor Name'],
-            supervisorEmail: value['Supervisor'],
+            proposalDate: value['proposal'],
+            srsDate: value['srs'],
+            sddDate: value['sdd'],
+            reportDate: value['report'],
           ));
     });
   }

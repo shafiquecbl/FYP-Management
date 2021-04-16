@@ -101,7 +101,7 @@ class _RejectDocumentFormState extends State<RejectDocumentForm> {
         .doc(user.email)
         .collection('Groups')
         .doc(snapshot['GroupID'])
-        .update({'SRS Status': 'Rejected'});
+        .update({'SRS Status': 'Rejected', 'SRS By': ''});
 
     await FirebaseFirestore.instance
         .collection('Users')
@@ -193,7 +193,7 @@ class _RejectDocumentFormState extends State<RejectDocumentForm> {
         .doc(user.email)
         .collection('Groups')
         .doc(snapshot['GroupID'])
-        .update({'SDD Status': 'Rejected'});
+        .update({'SDD Status': 'Rejected', 'SDD By': ''});
 
     await FirebaseFirestore.instance
         .collection('Users')
@@ -285,7 +285,7 @@ class _RejectDocumentFormState extends State<RejectDocumentForm> {
         .doc(user.email)
         .collection('Groups')
         .doc(snapshot['GroupID'])
-        .update({'Report Status': 'Rejected'});
+        .update({'Report Status': 'Rejected', 'Report By': ''});
 
     await FirebaseFirestore.instance
         .collection('Users')

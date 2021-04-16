@@ -90,3 +90,145 @@ class LastStep extends StatelessWidget {
     );
   }
 }
+
+class Success extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Icon(
+            Icons.done,
+            size: 15,
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Invite Students',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Icon(
+            Icons.done,
+            size: 15,
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Invite Supervisor',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Icon(
+            Icons.done,
+            size: 15,
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit SRS',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Icon(
+            Icons.done,
+            size: 15,
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit SDD',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+        Container(
+          color: greyColor,
+          height: 1,
+          width: 60,
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        Container(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: greyColor,
+          ),
+          child: Center(
+              child: Icon(
+            Icons.done,
+            size: 15,
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'Submit Report',
+            style: TextStyle(fontWeight: FontWeight.bold, color: greyColor),
+          ),
+        ),
+      ],
+    );
+  }
+}

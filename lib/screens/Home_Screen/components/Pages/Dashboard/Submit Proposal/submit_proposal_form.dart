@@ -106,13 +106,14 @@ class _SubmitProposalFormState extends State<SubmitProposalForm> {
     showLoadingDialog(context);
     final proposal = FirebaseStorage.instance.ref().child(
         'Files/${FirebaseAuth.instance.currentUser.email}/Proposal/$fileName');
-    proposal.putFile(file);
-    // ignore: unnecessary_cast
-    url = await proposal.getDownloadURL() as String;
-    await submitt(proposal);
+    proposal.putFile(file).then((value) async {
+      // ignore: unnecessary_cast
+      url = await proposal.getDownloadURL() as String;
+      await submitt();
+    });
   }
 
-  submitt(Reference proposal) async {
+  submitt() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     SetData()
         .sendInviteToTeacher(context,

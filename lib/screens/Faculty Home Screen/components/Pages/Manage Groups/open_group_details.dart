@@ -152,7 +152,7 @@ class _GroupDetailsState extends State<GroupDetails> {
                         ),
                         snapshot.data['Report By'] != ''
                             ? Text(
-                                snapshot.data['Report By'],
+                                snapshot.data['Report By'].split('@').first,
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               )
                             : Container()

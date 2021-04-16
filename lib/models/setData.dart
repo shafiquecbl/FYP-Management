@@ -59,6 +59,52 @@ class SetData {
             });
   }
 
+  Future submitSRS(
+    context, {
+    @required groupID,
+    @required teacherEmail,
+    @required srs,
+  }) async {
+    return await firestore
+        .collection('Users')
+        .doc(teacherEmail)
+        .collection('Groups')
+        .doc(groupID)
+        .update({'SRS': srs, 'SRS Status': 'Submitted', 'SRS By': user.email});
+  }
+
+  Future submitSDD(
+    context, {
+    @required groupID,
+    @required teacherEmail,
+    @required sdd,
+  }) async {
+    return await firestore
+        .collection('Users')
+        .doc(teacherEmail)
+        .collection('Groups')
+        .doc(groupID)
+        .update({'SDD': sdd, 'SDD Status': 'Submitted', 'SDD By': user.email});
+  }
+
+  Future submitReport(
+    context, {
+    @required groupID,
+    @required teacherEmail,
+    @required report,
+  }) async {
+    return await firestore
+        .collection('Users')
+        .doc(teacherEmail)
+        .collection('Groups')
+        .doc(groupID)
+        .update({
+      'Report': report,
+      'Report Status': 'Submitted',
+      'Report By': user.email
+    });
+  }
+
   Future acceptInvite(
     context, {
     @required receiverEmail,
