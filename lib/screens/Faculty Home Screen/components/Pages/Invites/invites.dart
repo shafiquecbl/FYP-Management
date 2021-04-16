@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp_management/models/Messages.dart';
 import 'package:fyp_management/models/notifications.dart';
 import 'package:fyp_management/screens/Faculty%20Home%20Screen/components/Pages/Inbox/chat_screen.dart';
 import 'package:fyp_management/screens/Faculty%20Home%20Screen/components/Pages/Invites/Reject%20Invitation/reject_invitation.dart';
@@ -20,6 +21,7 @@ class Invites extends StatefulWidget {
 
 class _InvitesState extends State<Invites> {
   User user = FirebaseAuth.instance.currentUser;
+  String reason;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -281,6 +283,10 @@ class _InvitesState extends State<Invites> {
       'SDD Status': '',
       'Report': '',
       'Report Status': '',
+      'SRS By': '',
+      'SDD By': '',
+      'Report By': '',
+      'Proposal By': snapshot['Email']
     }).then((value) {
       //// Notification to Member 1 ////
       firestore
@@ -324,6 +330,32 @@ class _InvitesState extends State<Invites> {
                   'You invitation is accepted by ${user.email.split('@').first}');
         }
       });
+      reason =
+          'Congratulations! Your invitation has been accepted. Keep up the good work.\nInvitation was sent by ${snapshot['Email']}';
+      //// Message and Contact to Student ////
+      Messages().contactByTeacher(
+          receiverEmail: snapshot['Email'],
+          receiverRegNo: snapshot['Email'].split('@').first,
+          message: reason);
+      Messages()
+          .messageByTeacher(receiverEmail: snapshot['Email'], message: reason);
+
+      //// Message and Contact to Member1 ////
+      Messages().contactByTeacher(
+          receiverEmail: snapshot['Member 1'],
+          receiverRegNo: snapshot['Member 1'].split('@').first,
+          message: reason);
+      Messages().messageByTeacher(
+          receiverEmail: snapshot['Member 1'], message: reason);
+
+      //// Message and Contact to Member2 ////
+      Messages().contactByTeacher(
+          receiverEmail: snapshot['Member 2'],
+          receiverRegNo: snapshot['Member 2'].split('@').first,
+          message: reason);
+      Messages().messageByTeacher(
+          receiverEmail: snapshot['Member 2'], message: reason);
+
       //// Add Supervisor to Member 1 ////
       firestore.collection('Users').doc(snapshot['Email']).update(
           {'Supervisor': user.email, 'Supervisor Name': user.displayName});

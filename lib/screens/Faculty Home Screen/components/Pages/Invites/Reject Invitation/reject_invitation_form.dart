@@ -31,6 +31,8 @@ class _RejectInvitationFormState extends State<RejectInvitationForm> {
 
   String reason;
   String mainReason;
+  String reason1 =
+      'Your Invitation is rejected by due to the following reason:\n';
 
   void addError({String error}) {
     if (!errors.contains(error))
@@ -60,7 +62,8 @@ class _RejectInvitationFormState extends State<RejectInvitationForm> {
               press: () async {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
-                  reason = mainReason +
+                  reason = reason1 +
+                      mainReason +
                       '\nInvitation was send by: ${widget.studentEmail.split('@').first.toUpperCase()}';
                   print(reason);
                   showLoadingDialog(context);

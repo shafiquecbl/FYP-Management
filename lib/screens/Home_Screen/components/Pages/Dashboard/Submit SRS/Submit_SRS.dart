@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fyp_management/constants.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'submit_srs_form.dart';
 
 class SubmitSRS extends StatefulWidget {

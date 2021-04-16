@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_document_picker/flutter_document_picker.dart';
 import 'package:fyp_management/components/default_button.dart';
 import 'package:fyp_management/components/form_error.dart';
+import 'package:fyp_management/models/Messages.dart';
+import 'package:fyp_management/models/notifications.dart';
 import 'package:fyp_management/models/setData.dart';
 import 'package:fyp_management/size_config.dart';
 import 'package:fyp_management/widgets/alert_dialog.dart';
@@ -19,7 +21,8 @@ class SubmitProposalForm extends StatefulWidget {
 
 class _SubmitProposalFormState extends State<SubmitProposalForm> {
   final _formKey = GlobalKey<FormState>();
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  User user = FirebaseAuth.instance.currentUser;
+  String message;
   File file;
   var url;
   String fileName = "No File Selected";
@@ -110,17 +113,63 @@ class _SubmitProposalFormState extends State<SubmitProposalForm> {
   }
 
   submitt(Reference proposal) async {
-    SetData().sendInviteToTeacher(context,
-        teacherEmail: widget.teacherEmail,
-        proposal: url,
-        member1: member1,
-        member2: member2);
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    SetData()
+        .sendInviteToTeacher(context,
+            teacherEmail: widget.teacherEmail,
+            proposal: url,
+            member1: member1,
+            member2: member2)
+        .then((value) {
+      //// Notification to Member 2 ////
+      firestore.collection('Users').doc(member1).get().then((snapshot) {
+        if (snapshot['token'] != '' || snapshot['token'] != null) {
+          sendAndRetrieveMessage(
+              token: snapshot['token'],
+              title: 'New Message',
+              body: 'Proposal is Submitted by ${user.email.split('@').first}');
+        }
+      });
+      //// Notification to Member 3 ////
+      firestore.collection('Users').doc(member2).get().then((snapshot) {
+        if (snapshot['token'] != '' || snapshot['token'] != null) {
+          sendAndRetrieveMessage(
+              token: snapshot['token'],
+              title: 'New Message',
+              body: 'Proposal is Submitted by ${user.email.split('@').first}');
+        }
+      });
+      message =
+          'Congratulations! Your group member ${user.email} submitted the proposal';
+
+      //// Message and Contact to Member 2 ////
+      Messages().addMessage(
+          receiverEmail: member1,
+          receiverRegNo: member1.split('@').first,
+          message: message);
+      Messages().addContact(
+        receiverEmail: member1,
+        receiverRegNo: member1.split('@').first,
+        message: message,
+      );
+
+      //// Message and Contact to Member 3 ////
+      Messages().addMessage(
+          receiverEmail: member2,
+          receiverRegNo: member2.split('@').first,
+          message: message);
+      Messages().addContact(
+        receiverEmail: member2,
+        receiverRegNo: member2.split('@').first,
+        message: message,
+      );
+    });
   }
 
   getMembers() {
     Stream<QuerySnapshot> stream = FirebaseFirestore.instance
         .collection('Users')
-        .doc(auth.currentUser.email)
+        .doc(user.email)
         .collection('Group Members')
         .snapshots();
     return stream.listen((event) {

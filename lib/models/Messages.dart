@@ -10,7 +10,10 @@ class Messages {
   String name = FirebaseAuth.instance.currentUser.displayName;
   String dateTime = DateFormat("dd-MM-yyyy h:mma").format(DateTime.now());
 
-  Future addMessage(receiverEmail, receiverRegNo, message) async {
+  Future addMessage(
+      {@required receiverEmail,
+      @required receiverRegNo,
+      @required message}) async {
     await FirebaseFirestore.instance
         .collection('Messages')
         .doc(email)
@@ -36,7 +39,10 @@ class Messages {
     });
   }
 
-  Future addContact(receiverEmail, receiverRegNo, message) async {
+  Future addContact(
+      {@required receiverEmail,
+      @required receiverRegNo,
+      @required message}) async {
     await FirebaseFirestore.instance
         .collection('Users')
         .doc(email)

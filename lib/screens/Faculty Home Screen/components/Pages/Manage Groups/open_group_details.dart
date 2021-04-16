@@ -70,38 +70,72 @@ class _GroupDetailsState extends State<GroupDetails> {
                   member3(snapshot.data),
                   box,
                   Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    color: hexColor,
-                    child: Text(
-                      'Proposal:',
-                      style: stylee1,
-                    ),
-                  ),
+                      width: MediaQuery.of(context).size.width,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      color: hexColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Proposal:',
+                            style: stylee1,
+                          ),
+                          Text(
+                            snapshot.data['Proposal By']
+                                .split('@')
+                                .first
+                                .toUpperCase(),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )),
                   box,
                   proposal(snapshot.data),
                   box,
                   Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    color: hexColor,
-                    child: Text(
-                      'SRS:',
-                      style: stylee1,
-                    ),
-                  ),
+                      width: MediaQuery.of(context).size.width,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      color: hexColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'SRS:',
+                            style: stylee1,
+                          ),
+                          snapshot.data['SRS By'] != ''
+                              ? Text(
+                                  snapshot.data['SRS By'],
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                )
+                              : Container()
+                        ],
+                      )),
                   box,
                   srs(snapshot.data),
                   box,
                   Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    color: hexColor,
-                    child: Text(
-                      'SDD:',
-                      style: stylee1,
-                    ),
-                  ),
+                      width: MediaQuery.of(context).size.width,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      color: hexColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'SDD:',
+                            style: stylee1,
+                          ),
+                          snapshot.data['SDD By'] != ''
+                              ? Text(
+                                  snapshot.data['SDD By'],
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                )
+                              : Container()
+                        ],
+                      )),
                   box,
                   sdd(snapshot.data),
                   box,
@@ -109,13 +143,25 @@ class _GroupDetailsState extends State<GroupDetails> {
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     color: hexColor,
-                    child: Text(
-                      'Report:',
-                      style: stylee1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Report:',
+                          style: stylee1,
+                        ),
+                        snapshot.data['Report By'] != ''
+                            ? Text(
+                                snapshot.data['Report By'],
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )
+                            : Container()
+                      ],
                     ),
                   ),
                   box,
-                  report(snapshot.data)
+                  report(snapshot.data),
+                  box,
                 ],
               );
             },

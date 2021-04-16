@@ -183,9 +183,15 @@ class _ChatScreenState extends State<ChatScreen> {
     sendMessage() {
       var text = textFieldController.text;
       Messages()
-          .addMessage(widget.receiverEmail, user.displayName, text)
+          .addMessage(
+              receiverEmail: widget.receiverEmail,
+              receiverRegNo: widget.receiverRegNo,
+              message: text)
           .then((value) {
-        Messages().addContact(widget.receiverEmail, widget.receiverRegNo, text);
+        Messages().addContact(
+            receiverEmail: widget.receiverEmail,
+            receiverRegNo: widget.receiverRegNo,
+            message: text);
       });
       FirebaseFirestore.instance
           .collection('Users')
