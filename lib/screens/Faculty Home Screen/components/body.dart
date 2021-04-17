@@ -20,8 +20,7 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: hexColor,
-    ));
+        statusBarColor: hexColor, statusBarBrightness: Brightness.dark));
     SizeConfig().init(context);
     return Scaffold(
       body: Container(
