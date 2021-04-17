@@ -150,7 +150,6 @@ class SetData {
     String groupID;
     String dep;
     String batch;
-    int step = 2;
 
     //getting and assigning groupID
     await firestore.collection('Users').doc(user.email).get().then((value) => {
@@ -262,15 +261,15 @@ class SetData {
     await firestore
         .collection('Users')
         .doc(user.email)
-        .update({'Current Step': step});
+        .update({'Current Step': 2});
     await firestore
         .collection('Users')
         .doc(receiverEmail)
-        .update({'Current Step': step});
+        .update({'Current Step': 2});
     return await firestore
         .collection('Users')
         .doc(previousMemberEmail)
-        .update({'Current Step': step}).then((value) => {
+        .update({'Current Step': 2}).then((value) => {
               Navigator.pop(context),
             });
   }
@@ -384,13 +383,26 @@ class SetData {
         .doc(user.email)
         .delete();
 
-    return await firestore
+    await firestore
         .collection('Users')
         .doc(user.email)
         .collection('Invites')
         .doc(receiverEmail)
-        .delete()
-        .then((value) => {
+        .delete();
+
+    //////////////////////////////////////
+    await firestore
+        .collection('Users')
+        .doc(user.email)
+        .update({'Current Step': 2});
+    await firestore
+        .collection('Users')
+        .doc(receiverEmail)
+        .update({'Current Step': 2});
+    return await firestore
+        .collection('Users')
+        .doc(previousMemberEmail)
+        .update({'Current Step': 2}).then((value) => {
               Navigator.pop(context),
             });
   }
