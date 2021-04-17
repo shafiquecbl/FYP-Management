@@ -44,22 +44,22 @@ class GridDashboard extends StatelessWidget {
       onTap: () {
         getDates(context);
       },
-      splashColor: kPrimaryColor,
+      splashColor: Color(0xFF8D4DE9),
       child: Container(
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
-            color: kPrimaryColor.withOpacity(0.3),
+            color: Color(0xFF8D4DE9),
             spreadRadius: 0,
             blurRadius: 2,
             offset: Offset(1, 0),
           )
-        ], color: Colors.grey[50], borderRadius: BorderRadius.circular(10)),
+        ], color: Color(0xFF8D4DE9), borderRadius: BorderRadius.circular(10)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
               Icons.dashboard,
-              color: kPrimaryColor,
+              color: kWhiteColor,
               size: 42,
             ),
             SizedBox(
@@ -68,8 +68,10 @@ class GridDashboard extends StatelessWidget {
             Text(
               "Dashboard",
               textAlign: TextAlign.center,
-              style:
-                  GoogleFonts.teko(fontWeight: FontWeight.w600, fontSize: 18),
+              style: GoogleFonts.teko(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: kWhiteColor),
             ),
           ],
         ),
@@ -82,22 +84,22 @@ class GridDashboard extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(context, Inboxx.routeName);
       },
-      splashColor: kPrimaryColor,
+      splashColor: Color(0xFF54C1F1),
       child: Container(
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
-            color: kPrimaryColor.withOpacity(0.3),
+            color: Color(0xFF54C1F1),
             spreadRadius: 0,
             blurRadius: 2,
             offset: Offset(1, 0),
           )
-        ], color: Colors.grey[50], borderRadius: BorderRadius.circular(10)),
+        ], color: Color(0xFF54C1F1), borderRadius: BorderRadius.circular(10)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
               Icons.inbox,
-              color: kPrimaryColor,
+              color: kWhiteColor,
               size: 42,
             ),
             SizedBox(
@@ -109,7 +111,9 @@ class GridDashboard extends StatelessWidget {
                 Text(
                   "Inbox",
                   style: GoogleFonts.teko(
-                      fontWeight: FontWeight.w600, fontSize: 18),
+                      color: kWhiteColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18),
                 ),
                 SizedBox(
                   width: 5,
@@ -173,22 +177,22 @@ class GridDashboard extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(context, Groups.routeName);
       },
-      splashColor: kPrimaryColor,
+      splashColor: Color(0xFFF31E60),
       child: Container(
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
-            color: kPrimaryColor.withOpacity(0.3),
+            color: Color(0xFFF31E60),
             spreadRadius: 0,
             blurRadius: 2,
             offset: Offset(1, 0),
           )
-        ], color: Colors.grey[50], borderRadius: BorderRadius.circular(10)),
+        ], color: Color(0xFFF31E60), borderRadius: BorderRadius.circular(10)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
               Icons.group,
-              color: kPrimaryColor,
+              color: kWhiteColor,
               size: 42,
             ),
             SizedBox(
@@ -197,8 +201,10 @@ class GridDashboard extends StatelessWidget {
             Text(
               "Manage Group",
               textAlign: TextAlign.center,
-              style:
-                  GoogleFonts.teko(fontWeight: FontWeight.w600, fontSize: 18),
+              style: GoogleFonts.teko(
+                  color: kWhiteColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18),
             ),
           ],
         ),

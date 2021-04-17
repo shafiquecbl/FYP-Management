@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:background="#FC9A1E"
-            android:src="@mipmap/ic_launcher1" />
+            android:background="#492E7D"
+            android:src="@mipmap/cuilogo" />
     </item>
 </layer-list>

@@ -39,9 +39,8 @@ class _InvitesState extends State<Invites> {
               return Center(child: CircularProgressIndicator());
             if (snapshot.data.docs.length == 0)
               return Center(
-                child: Text("No Invites",
+                child: Text("No Invites Yet",
                     style: GoogleFonts.teko(
-                      color: kPrimaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     )),
