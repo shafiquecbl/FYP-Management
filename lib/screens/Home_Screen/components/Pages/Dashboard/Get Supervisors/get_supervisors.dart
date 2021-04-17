@@ -104,25 +104,38 @@ class _GetSupervisorsState extends State<GetSupervisors> {
           SizedBox(
             height: 10,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              message(snapshot),
-              StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('Users')
-                    .doc(snapshot['Email'])
-                    .collection('Invites')
-                    .where('GroupID', isEqualTo: myID)
-                    .snapshots(),
-                builder: (BuildContext context, AsyncSnapshot snap) {
-                  if (snap.connectionState == ConnectionState.waiting)
-                    return Center(child: CircularProgressIndicator());
-                  if (snap.data.docs.length == 0) return invite(snapshot);
-                  return alreadyInvited();
-                },
-              ),
-            ],
+          StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('Users')
+                .doc(snapshot['Email'])
+                .collection('Invites')
+                .snapshots(),
+            builder: (BuildContext context, AsyncSnapshot snapp) {
+              if (snapp.connectionState == ConnectionState.waiting)
+                return Center(child: CircularProgressIndicator());
+              if (snapp.data.docs.length < 5)
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    message(snapshot),
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('Users')
+                          .doc(snapshot['Email'])
+                          .collection('Invites')
+                          .where('GroupID', isEqualTo: myID)
+                          .snapshots(),
+                      builder: (BuildContext context, AsyncSnapshot snap) {
+                        if (snap.connectionState == ConnectionState.waiting)
+                          return Center(child: CircularProgressIndicator());
+                        if (snap.data.docs.length == 0) return invite(snapshot);
+                        return alreadyInvited();
+                      },
+                    ),
+                  ],
+                );
+              return groupLimitReached();
+            },
           ),
           SizedBox(
             height: 10,
@@ -172,6 +185,16 @@ class _GetSupervisorsState extends State<GetSupervisors> {
       onPressed: null,
       icon: Icon(Icons.done),
       label: Text("Already Invited"),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+    );
+  }
+
+  groupLimitReached() {
+    return RaisedButton.icon(
+      disabledColor: hexColor,
+      onPressed: null,
+      icon: Icon(Icons.done),
+      label: Text("Group Limit Reached"),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     );
   }

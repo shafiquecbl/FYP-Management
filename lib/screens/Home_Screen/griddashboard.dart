@@ -9,8 +9,14 @@ import 'package:fyp_management/widgets/navigator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'components/Pages/Groups/groups.dart';
+import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class GridDashboard extends StatelessWidget {
+  String email = FirebaseAuth.instance.currentUser.email;
+  int dateTime = int.parse(DateFormat("yyyy-MM-dd")
+      .format(DateTime.now())
+      .replaceAll(new RegExp(r'[^\w\s]+'), ''));
   @override
   Widget build(BuildContext context) {
     return Flexible(
@@ -36,7 +42,7 @@ class GridDashboard extends StatelessWidget {
   dashboard(BuildContext context) {
     return InkWell(
       onTap: () {
-        getUserProfile(context);
+        getDates(context);
       },
       splashColor: kPrimaryColor,
       child: Container(
@@ -200,13 +206,32 @@ class GridDashboard extends StatelessWidget {
     );
   }
 
-  getUserProfile(BuildContext context) async {
+  getDates(BuildContext context) async {
     showLoadingDialog(context);
+
     return await FirebaseFirestore.instance
         .collection('Dates')
         .doc('dates')
         .get()
         .then((value) {
+      DocumentReference ref =
+          FirebaseFirestore.instance.collection('Users').doc(email);
+      ref.get().then((user) {
+        int step;
+        step = user['Current Step'];
+        //// if SRS date has passed and user didn't submitted SRS then move to submit SDD ////
+        if (step == 3 && dateTime > value['srs']) {
+          ref.update({'Current Step': 4});
+        }
+        //// if SDD date has passed and user didn't submitted SDD then move to submit Report ////
+        if (step == 4 && dateTime > value['sdd']) {
+          ref.update({'Current Step': 5});
+        }
+        //// if Report date has passed and user didn't submitted Report then move to Success Message ////
+        if (step == 5 && dateTime > value['report']) {
+          ref.update({'Current Step': 6});
+        }
+      });
       pushReplacement(
           context,
           Dashboard(

@@ -94,7 +94,7 @@ class _DashboardState extends State<Dashboard> {
                                 department:
                                     department == 'SE' ? 'CS' : department,
                               )
-                            // if group is confirmed then ask for SRS Submission //
+                            // if group is confirmed then go for SRS Submission //
                             : currentStep == 3 &&
                                     widget.proposalDate < dateTime &&
                                     dateTime <= widget.srsDate
@@ -104,6 +104,7 @@ class _DashboardState extends State<Dashboard> {
                                     srsDate: widget.sddDate.toString(),
                                     groupID: groupID,
                                   )
+                                // if SRS is Submitted then go for SDD Submission //
                                 : currentStep == 4 &&
                                         widget.srsDate < dateTime &&
                                         dateTime <= widget.sddDate
@@ -112,6 +113,7 @@ class _DashboardState extends State<Dashboard> {
                                         sddDate: widget.srsDate.toString(),
                                         groupID: groupID,
                                       )
+                                    // if SDD is Submitted then go for Report Submission //
                                     : currentStep == 5 &&
                                             widget.sddDate < dateTime &&
                                             dateTime <= widget.reportDate
@@ -121,6 +123,7 @@ class _DashboardState extends State<Dashboard> {
                                                 widget.reportDate.toString(),
                                             groupID: groupID,
                                           )
+                                        // else check for these messages  //
                                         : Center(
                                             child: Padding(
                                               padding:
