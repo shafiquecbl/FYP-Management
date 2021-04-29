@@ -1,15 +1,6 @@
-# E-Commerce Complate Flutter UI Staring code
+# fyp_management
 
-### Note that: This is not complete yet
+FYP Management developed using Flutter & Firebase. It is Final Year Project Management app developed for Comsats University Isalamabad.
 
-## [Watch it on YouTube](https://youtu.be/YEJPg2jwzI8)
-
-**Packages we are using:**
-
-- flutter_svg: [link](https://pub.dev/packages/flutter_svg)
-
-Complete responsive e-commerce app UI by using flutter.
-
-### Previews of Final UI
-
-![Preview](/splash_intro.gif)
+**Some Demo Images**
+![2p](https://user-images.githubusercontent.com/57300829/116603977-01a08000-a947-11eb-80e1-5505640ce95f.jpeg)
