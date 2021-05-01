@@ -90,7 +90,10 @@ class _SubmitReportFormState extends State<SubmitReportForm> {
     );
   }
 
+  // ignore: deprecated_member_use
+// ignore: deprecated_member_use
   RaisedButton picFile() {
+    // ignore: deprecated_member_use
     return RaisedButton.icon(
         padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
         onPressed: () {

@@ -192,7 +192,7 @@ class _ContactUsState extends State<ContactUs> {
                 padding: EdgeInsets.symmetric(vertical: 15),
                 child: Row(
                   children: <Widget>[
-                    FlatButton(
+                    TextButton(
                       child: Icon(
                         Icons.close,
                       ),

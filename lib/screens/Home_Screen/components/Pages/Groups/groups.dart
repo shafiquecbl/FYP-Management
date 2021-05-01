@@ -209,6 +209,7 @@ class _GroupsState extends State<Groups> {
         title: Text(snapshot['Registeration No'].toUpperCase()),
         trailing: SizedBox(
           width: 120,
+          // ignore: deprecated_member_use
           child: RaisedButton.icon(
             color: Colors.blue,
             shape:
@@ -371,7 +372,7 @@ class _GroupsState extends State<Groups> {
   }
 
   moreDialog(DocumentSnapshot snapshot) {
-    Widget message = FlatButton(
+    Widget message = TextButton(
       onPressed: () {
         Navigator.maybePop(context).then((value) => Navigator.push(
             context,
@@ -390,7 +391,7 @@ class _GroupsState extends State<Groups> {
     );
     Widget accept = checkLength == 2
         ? Container()
-        : FlatButton(
+        : TextButton(
             onPressed: () {
               Navigator.pop(context);
               showLoadingDialog(context);

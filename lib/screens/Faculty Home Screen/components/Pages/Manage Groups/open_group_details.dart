@@ -343,6 +343,7 @@ class _GroupDetailsState extends State<GroupDetails> {
   Widget message(DocumentSnapshot snapshot, member) {
     return SizedBox(
       width: 140,
+      // ignore: deprecated_member_use
       child: RaisedButton.icon(
         color: Colors.blue,
         onPressed: () {
@@ -371,6 +372,7 @@ class _GroupDetailsState extends State<GroupDetails> {
       ),
       trailing: SizedBox(
         width: 140,
+        // ignore: deprecated_member_use
         child: RaisedButton.icon(
           color: Colors.purple,
           onPressed: () {
@@ -405,6 +407,7 @@ class _GroupDetailsState extends State<GroupDetails> {
       ),
       trailing: SizedBox(
         width: 140,
+        // ignore: deprecated_member_use
         child: RaisedButton.icon(
           color: Colors.purple,
           onPressed: () {
@@ -436,6 +439,7 @@ class _GroupDetailsState extends State<GroupDetails> {
             children: [
               SizedBox(
                 width: 140,
+                // ignore: deprecated_member_use
                 child: RaisedButton.icon(
                   color: Colors.purple,
                   onPressed: () {
@@ -458,6 +462,7 @@ class _GroupDetailsState extends State<GroupDetails> {
             children: [
               SizedBox(
                 width: 140,
+                // ignore: deprecated_member_use
                 child: RaisedButton.icon(
                   color: Colors.green,
                   onPressed: () {
@@ -474,6 +479,7 @@ class _GroupDetailsState extends State<GroupDetails> {
               ),
               SizedBox(
                 width: 140,
+                // ignore: deprecated_member_use
                 child: RaisedButton.icon(
                   color: Colors.red,
                   onPressed: () {
@@ -662,6 +668,7 @@ class _GroupDetailsState extends State<GroupDetails> {
       ),
       trailing: SizedBox(
         width: 140,
+        // ignore: deprecated_member_use
         child: RaisedButton.icon(
           color: Colors.purple,
           onPressed: () {
@@ -693,6 +700,7 @@ class _GroupDetailsState extends State<GroupDetails> {
             children: [
               SizedBox(
                 width: 140,
+                // ignore: deprecated_member_use
                 child: RaisedButton.icon(
                   color: Colors.purple,
                   onPressed: () {
@@ -715,6 +723,7 @@ class _GroupDetailsState extends State<GroupDetails> {
             children: [
               SizedBox(
                 width: 140,
+                // ignore: deprecated_member_use
                 child: RaisedButton.icon(
                   color: Colors.green,
                   onPressed: () {
@@ -731,6 +740,7 @@ class _GroupDetailsState extends State<GroupDetails> {
               ),
               SizedBox(
                 width: 140,
+                // ignore: deprecated_member_use
                 child: RaisedButton.icon(
                   color: Colors.red,
                   onPressed: () {
@@ -919,6 +929,7 @@ class _GroupDetailsState extends State<GroupDetails> {
       ),
       trailing: SizedBox(
         width: 140,
+        // ignore: deprecated_member_use
         child: RaisedButton.icon(
           color: Colors.purple,
           onPressed: () {
@@ -950,6 +961,7 @@ class _GroupDetailsState extends State<GroupDetails> {
             children: [
               SizedBox(
                 width: 140,
+                // ignore: deprecated_member_use
                 child: RaisedButton.icon(
                   color: Colors.purple,
                   onPressed: () {
@@ -972,6 +984,7 @@ class _GroupDetailsState extends State<GroupDetails> {
             children: [
               SizedBox(
                 width: 140,
+                // ignore: deprecated_member_use
                 child: RaisedButton.icon(
                   color: Colors.green,
                   onPressed: () {
@@ -988,6 +1001,7 @@ class _GroupDetailsState extends State<GroupDetails> {
               ),
               SizedBox(
                 width: 140,
+                // ignore: deprecated_member_use
                 child: RaisedButton.icon(
                   color: Colors.red,
                   onPressed: () {

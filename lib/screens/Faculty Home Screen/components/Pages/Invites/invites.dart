@@ -146,6 +146,7 @@ class _InvitesState extends State<Invites> {
   accept(DocumentSnapshot snapshot) {
     return SizedBox(
       width: 140,
+      // ignore: deprecated_member_use
       child: RaisedButton.icon(
         color: Colors.green,
         onPressed: () {
@@ -164,6 +165,7 @@ class _InvitesState extends State<Invites> {
   reject(DocumentSnapshot snapshot) {
     return SizedBox(
       width: 140,
+      // ignore: deprecated_member_use
       child: RaisedButton.icon(
         color: Colors.red,
         onPressed: () {
@@ -189,6 +191,7 @@ class _InvitesState extends State<Invites> {
   message(DocumentSnapshot snapshot) {
     return SizedBox(
       width: 140,
+      // ignore: deprecated_member_use
       child: RaisedButton.icon(
         color: Colors.blue,
         onPressed: () {
@@ -212,6 +215,7 @@ class _InvitesState extends State<Invites> {
   download(DocumentSnapshot snapshot) {
     return SizedBox(
       width: 140,
+      // ignore: deprecated_member_use
       child: RaisedButton.icon(
         color: Colors.purple,
         onPressed: () {

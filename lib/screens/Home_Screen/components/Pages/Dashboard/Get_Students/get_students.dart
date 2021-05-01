@@ -131,6 +131,7 @@ class _GetStudentsState extends State<GetStudents> {
   }
 
   message(DocumentSnapshot snapshot) {
+    // ignore: deprecated_member_use
     return RaisedButton.icon(
       onPressed: () {
         navigator(
@@ -149,6 +150,7 @@ class _GetStudentsState extends State<GetStudents> {
   invite(DocumentSnapshot snapshot) {
     return SizedBox(
       width: 140,
+      // ignore: deprecated_member_use
       child: RaisedButton.icon(
         onPressed: () {
           showLoadingDialog(context);
@@ -162,6 +164,7 @@ class _GetStudentsState extends State<GetStudents> {
   }
 
   alreadyInvited() {
+    // ignore: deprecated_member_use
     return RaisedButton.icon(
       disabledColor: hexColor,
       onPressed: null,

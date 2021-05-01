@@ -24,7 +24,10 @@ class _SettingState extends State<Setting> {
       appBar: customAppBar('Settings'),
       body: ListView(
         children: [
-          FlatButton(
+          TextButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.all(15),
+            ),
             onPressed: () async {
               navigator(context, ContactUs());
               return await FirebaseFirestore.instance
@@ -35,7 +38,6 @@ class _SettingState extends State<Setting> {
                   .update({'Status': "read"}).catchError(
                       (e) => {print('Document Not Exist')});
             },
-            padding: EdgeInsets.all(15),
             child: Align(
                 alignment: Alignment.centerLeft,
                 child: Row(
@@ -89,9 +91,11 @@ class _SettingState extends State<Setting> {
               thickness: 1.5,
             ),
           ),
-          FlatButton(
+          TextButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.all(15),
+            ),
             onPressed: () {},
-            padding: EdgeInsets.all(15),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -107,9 +111,11 @@ class _SettingState extends State<Setting> {
               thickness: 1.5,
             ),
           ),
-          FlatButton(
+          TextButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.all(15),
+            ),
             onPressed: () {},
-            padding: EdgeInsets.all(15),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -125,11 +131,13 @@ class _SettingState extends State<Setting> {
               thickness: 1.5,
             ),
           ),
-          FlatButton(
+          TextButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.all(15),
+            ),
             onPressed: () {
               confirmSignout(context);
             },
-            padding: EdgeInsets.all(15),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(

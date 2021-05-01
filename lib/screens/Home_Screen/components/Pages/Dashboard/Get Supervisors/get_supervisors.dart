@@ -146,6 +146,7 @@ class _GetSupervisorsState extends State<GetSupervisors> {
   }
 
   message(DocumentSnapshot snapshot) {
+    // ignore: deprecated_member_use
     return RaisedButton.icon(
       onPressed: () {
         navigator(
@@ -164,6 +165,7 @@ class _GetSupervisorsState extends State<GetSupervisors> {
   invite(DocumentSnapshot snapshot) {
     return SizedBox(
       width: 140,
+      // ignore: deprecated_member_use
       child: RaisedButton.icon(
         onPressed: () {
           navigator(
@@ -180,6 +182,7 @@ class _GetSupervisorsState extends State<GetSupervisors> {
   }
 
   alreadyInvited() {
+    // ignore: deprecated_member_use
     return RaisedButton.icon(
       disabledColor: hexColor,
       onPressed: null,
@@ -190,6 +193,7 @@ class _GetSupervisorsState extends State<GetSupervisors> {
   }
 
   groupLimitReached() {
+    // ignore: deprecated_member_use
     return RaisedButton.icon(
       disabledColor: hexColor,
       onPressed: null,
@@ -200,6 +204,7 @@ class _GetSupervisorsState extends State<GetSupervisors> {
   }
 
   teacherMoreDialog(DocumentSnapshot snapshot) {
+    // ignore: deprecated_member_use
     Widget message = FlatButton(
       onPressed: () {},
       child: ListTile(
@@ -209,6 +214,7 @@ class _GetSupervisorsState extends State<GetSupervisors> {
           ),
           title: Text("Message")),
     );
+    // ignore: deprecated_member_use
     Widget invite = FlatButton(
       onPressed: () {
         Navigator.pushReplacement(

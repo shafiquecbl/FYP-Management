@@ -45,9 +45,11 @@ Widget offline = WillPopScope(
                 borderRadius: BorderRadius.all(Radius.circular(50)),
                 border: Border.all(width: 1.5, color: Colors.grey[300]),
               ),
-              child: FlatButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                ),
                 onPressed: () {},
                 child: Text(
                   tryAgain,
