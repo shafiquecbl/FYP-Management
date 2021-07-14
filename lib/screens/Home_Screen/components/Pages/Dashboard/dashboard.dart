@@ -101,7 +101,7 @@ class _DashboardState extends State<Dashboard> {
                                 ? SubmitSRS(
                                     supervisorEmail: supervisorEmail,
                                     supervisorName: supervisorName,
-                                    srsDate: widget.sddDate.toString(),
+                                    srsDate: widget.srsDate.toString(),
                                     groupID: groupID,
                                   )
                                 // if SRS is Submitted then go for SDD Submission //
@@ -110,7 +110,7 @@ class _DashboardState extends State<Dashboard> {
                                         dateTime <= widget.sddDate
                                     ? SubmitSDD(
                                         supervisorEmail: supervisorEmail,
-                                        sddDate: widget.srsDate.toString(),
+                                        sddDate: widget.sddDate.toString(),
                                         groupID: groupID,
                                       )
                                     // if SDD is Submitted then go for Report Submission //
