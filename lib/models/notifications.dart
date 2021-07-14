@@ -10,7 +10,7 @@ sendAndRetrieveMessage(
     @required String title,
     @required String body}) async {
   await http.post(
-    'https://fcm.googleapis.com/fcm/send',
+    Uri.parse('https://fcm.googleapis.com/fcm/send'),
     headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': 'key=$serverToken',

@@ -17,7 +17,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   User user = FirebaseAuth.instance.currentUser;
   String token;
-  FirebaseMessaging messaging = FirebaseMessaging();
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   void getToken() async {
     token = await messaging.getToken();
